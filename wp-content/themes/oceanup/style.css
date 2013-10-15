@@ -1,0 +1,219 @@
+/*
+Theme Name: Oceanup a child theme for Canvas
+Theme URI: 
+Author: Quadshot
+Author URI: http://quadshot.com
+Description: Oceanup is a stylish and pixel-perfect blog theme. Simple, refined design coded with the latest most effective techniques.
+Version: 1.0.1
+License: GNU General Public License version 3.0
+License URI: http://www.gnu.org/licenses/gpl-3.0.html
+Template: canvas
+
+Dark Blue Gray Backgrounds: #E6E6E6
+Medium Blue Gray: ##E6E6E6
+Darkest Gray (Post Titles / Standout Text: #181818
+Medium Gray (Widget Titles): #E6E6E6
+Lightest Gray #f4f4f4
+
+*/
+@import url('../canvas/style.css');
+
+.alt-style-darkblue #navigation{
+	clear: none !important;
+	width: auto !important;
+}
+.left { float: left; }
+.right { float: right; }
+.clearfix{ clear:both; }
+.relative { position: relative; }
+
+/* Padding and Margins */
+
+.alt-style-darkblue #content, .alt-style-darkblue #footer, #oceanup-header-widgets-top .widget, #oceanup-header-widgets-bottom .widget, .alt-style-darkblue #wrapper, #header.container { padding: .8em; }
+.alt-style-darkblue #inner-wrapper { padding: 20px 0 0 0; }
+.entry { padding-bottom: 25px;} 
+.alt-style-darkblue #wrapper { margin-top: 10px; }
+.post, .search .page { margin-bottom: 20px; }
+.post-meta { margin-bottom: .5em; }
+
+/* Fonts and Titles */
+.alt-style-darkblue .page-title, .alt-style-darkblue .post .title, .alt-style-darkblue .page .title,  #star-hunt-container, .alt-style-darkblue .searchform input.s, .alt-style-darkblue #searchform input#s  { text-transform: uppercase;}
+.alt-style-darkblue a:link, .alt-style-darkblue a:hover {text-decoration: none; }
+.alt-style-darkblue .post h2.title a:hover { text-decoration: none; color: #0094d2; }
+
+.alt-style-darkblue .post  { border-bottom: 4px solid #EEEEEE; }
+.alt-style-darkblue #wrapper { background-color: #cacfd8; }
+.alt-style-darkblue #inner-wrapper { border: 1px solid #a2aab9; }
+.alt-style-darkblue .entry, .alt-style-darkblue .entry p { font-size: 13px; line-height: 22px; font-family: 'Droid Sans',sans-serif; }
+.alt-style-darkblue .widget ul { list-style: none;}
+.alt-style-darkblue .widget ul li a:hover { text-decoration: none; }
+.alt-style-darkblue .widget h3 { margin: 0; padding: 0 0 .2em 0; }
+.alt-style-darkblue .widget h3, h1, h2, .widget #menu-hot-uppers a { letter-spacing: .02em; }
+.alt-style-darkblue.widget #menu-hot-uppers a, #star-hunt-container, #search-wrapper { font-family: 'Oswald',sans-serif; font-weight: 500; }
+.alt-style-darkblue #connect .related-posts ul { list-style: none; }
+.addthis_toolbox { padding: 10px; background: #f4f4f4; display: inline-block; position: absolute; bottom: 0; right: 0; }
+.alt-style-darkblue .post-more { display: inline: block;width: 250px; position: absolute; bottom: 0; left: 0; }
+
+/* Overwrite our Woo Styles */
+#logo a { display: inline-block; }
+.alt-style-darkblue #navigation,
+.alt-style-darkblue #navigation ul.nav > li a:hover, 
+.alt-style-darkblue #navigation ul.nav > li:hover, 
+.alt-style-darkblue #navigation ul.nav li:hover,  
+.alt-style-darkblue #navigation ul li:first-child a { border-radius: 0; border: none; background: none; }
+.alt-style-darkblue #navigation ul li:first-child, .alt-style-darkblue, #navigation ul li:first-child a { border-radius: 0;}
+.alt-style-darkblue ul.nav { margin: 0; }
+
+.alt-style-darkblue #navigation { margin:0;}
+
+/* Header Layout */
+#navigation.box, #social-nav-wrapper.box, #star-hunt-container.box, #search-wrapper.box { margin-right: 10px; }
+#social-nav-wrapper.box, #star-hunt-container.box, #social-nav-wrapper.box, #search-wrapper.box { margin-top: 1em; font-size: .8em;  }
+#star-hunt-container { padding: 0 8px; height: 25px; line-height:25px; }
+#search-wrapper { width: 115px; }
+
+/* Main Search Form */
+#search-wrapper .searchform input.s, #search-wrapper #searchform input#s { padding: 0;}
+#search-wrapper .searchform, #search-wrapper #searchform { margin: 0; padding-left: 8px; height:25px; line-height: 25px; }
+#search-wrapper .searchform button.submit { right: 8px; top: 0;
+}
+.searchform input.s, #searchform input#s { color: #b9c0cc; }
+
+/* Main Menu Adjustments */
+.alt-style-darkblue ul.nav li a { padding: 0 .3em }
+
+/* Main Social Media Menu */
+#navigation ul#social-nav.nav > li { border: none; }
+#social-nav li { display: inline-block; text-indent: -9999px; }
+#social-nav li a, #social-nav.nav li a, #social-nav.nav li a, #social-nav a, #social-nav ul.nav li a { margin-right: 3px; width: 22px; height: 22px; }
+#social-nav li { background: url(images/sprite.png); }
+#social-nav li.facebook, #social-nav li.facebook:hover, .facebook { background-position: 0 0; }
+#social-nav li.twitter, #social-nav li.twitter:hover, .twitter { background-position: -27px 0; }
+#social-nav li.tumblr, #social-nav li.tumblr:hover, .tumblr { background-position: -55px 0;}
+#social-nav.nav li a, #social-nav.nav li a, #social-nav a, #social-nav ul.nav li a  { padding: 0 !important; }
+
+/* Top Widget Areas */
+#oceanup-header-widgets-top li, #oceanup-header-widgets-bottom li { list-style: none; }
+#oceanup-header-widgets-top .widget, #oceanup-header-widgets-bottom .widget { margin: 10px 0; }
+#oceanup-header-widgets-bottom { background: url(images/bg-tiger.jpg) no-repeat center center; border-bottom: 1px solid #d1d1d1; text-align: center; margin: 0 auto;
+	-webkit-box-shadow: 0px 6px 5px rgba(50, 50, 50, 0.50);
+	-moz-box-shadow:    0px 6px 5px rgba(50, 50, 50, 0.50);
+	box-shadow:         0px 6px 5px rgba(50, 50, 50, 0.50); 
+}
+
+/* FleXcroll */
+.star-hunt-container { position: relative;}
+.arrow { display: block; width: 20px; height: 10px; background: url(images/sprite.png) no-repeat -55px -72px; position: absolute; right: 25px; bottom: -6px;   }
+#star-hunt-container.box { background-color: #E9EEF4; position: relative; 
+	-webkit-border-radius: 5px;
+		-moz-border-radius: 5px;
+			border-radius: 5px;}
+#star-hunt-container a:hover { color: #b9c0cc; }
+
+.flexcroll {
+	padding: 8px 0;
+	background-color: #fff;
+	border: 2px solid #bbb;
+	border-top: 4px solid #2a9bd3;
+	display: none;
+	height: 350px;
+	overflow: auto;
+	position: absolute;
+	width: 160px;
+	z-index: 50;
+	right: 0;
+	top: 30px;
+	-webkit-box-shadow: 0px 6px 5px rgba(50, 50, 50, 0.50);
+	-moz-box-shadow:    0px 6px 5px rgba(50, 50, 50, 0.50);
+	box-shadow:         0px 6px 5px rgba(50, 50, 50, 0.50);
+}
+.flexcroll a{
+	display: block;
+	text-transform: none;
+	font-size: 13px;
+	padding: 0 8px;
+}
+.scrollgeneric {line-height: 1px;font-size: 1px;position: absolute;top: 0; left: 0;}
+
+/* force fleXcroll to always display the vertical scrollbase */
+.vscrollerbase {
+visibility: visible !important;
+}
+/* fleXcroll adapts to this CSS setting and sets positions correctly */
+
+
+/* And style your scrollbar like you normally do */
+.vscrollerbase {
+width: 15px;
+background: #D7EBDF url(basebarcaps_verticalbarbody.png) 0px 0px repeat-y;
+}
+.vscrollerbar {
+width: 15px;
+background: #99CBCB url(basebarcaps_verticalbarbody.png) -15px 0px repeat-y;
+}
+.hscrollerbase {
+height: 15px;
+background: #D7EBDF url(horizontalbarbody_cornerjog.png) 0px -15px repeat-x;
+}
+.hscrollerbar {
+height: 15px;
+background: #99CBCB url(horizontalbarbody_cornerjog.png) 0px -30px repeat-x;
+}
+.vscrollerbar, .hscrollerbar {
+padding: 10px;
+z-index: 2;
+}
+.vscrollerbarbeg {
+background: url(basebarcaps_verticalbarbody.png) -45px -30px no-repeat;
+width: 15px;
+height: 15px !important;
+}
+.vscrollerbarend {
+background: url(basebarcaps_verticalbarbody.png) -45px 0px no-repeat;
+width: 15px;
+height: 15px;
+}
+.hscrollerbarbeg {
+background: url(basebarcaps_verticalbarbody.png) -60px -15px no-repeat;
+height: 15px;
+width: 15px !important;
+}
+.hscrollerbarend {
+background: url(basebarcaps_verticalbarbody.png) -30px -15px no-repeat;
+height: 15px;
+width: 15px;
+}
+.scrollerjogbox {
+width: 15px;
+height: 15px;
+top: auto; left: auto;
+bottom: 0px; right: 0px;
+background: #4E727C url(horizontalbarbody_cornerjog.png) 0px 0px;
+}
+.vscrollerbasebeg {
+background: url(basebarcaps_verticalbarbody.png) -30px -30px no-repeat;
+width: 15px;
+height: 15px !important;
+}
+.vscrollerbaseend {
+background: url(basebarcaps_verticalbarbody.png) -60px -30px no-repeat;
+height: 15px;
+width: 15px;
+}
+.hscrollerbasebeg {
+background: url(basebarcaps_verticalbarbody.png) -60px 0px no-repeat;
+height: 15px;
+width: 15px !important;
+}
+.hscrollerbaseend {
+height: 15px;
+width: 15px;
+background: url(basebarcaps_verticalbarbody.png) -30px 0px no-repeat;
+}
+.scrollerjogbox:hover {
+background: #5E828C url(basebarcaps_verticalbarbody.png) -45px -15px;
+}
+/* Scroll Bar Master Styling Ends Here */
+
+
+ 
