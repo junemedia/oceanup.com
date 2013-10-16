@@ -206,3 +206,110 @@ function woo_logo () {
 <?php
 } // End woo_logo()
 }
+
+// stuff from tsmith functions.php
+if( !function_exists( 'oc_add_embed_img' ) ) {
+	function oc_add_embed_img( $atts = 0 ) {
+		if( is_array( $atts ) ) {
+			//do stuff
+			$id = array_shift( $atts );
+			$img = wp_get_attachment_image( $id, 'large' );
+			echo '<div class="from-legacy-table">' . $img . '</div>';
+		}
+	}
+	add_shortcode( 'oc_add_embed_img', 'oc_add_embed_img');
+}
+
+
+// function to add CPT to site
+function oc_set_post_types() {
+	$labels = array(
+		'name' => 'OC Gallery',
+		'singular_name' => 'OC Gallery',
+		'add_new' => 'Add new OC gallery',
+		'add_new_item' => 'Add New Book',
+		'edit_item' => 'Edit Gallery',
+		'new_item' => 'New Gallery',
+		'all_items' => 'All Galleries',
+		'view_item' => 'View Gallery',
+		'search_items' => 'Search Galleries',
+		'not_found' =>  'No galleries found',
+		'not_found_in_trash' => 'No galleries found in Trash', 
+		'parent_item_colon' => '',
+		'menu_name' => 'OC Galleries'
+	);
+	$args = array(
+		'labels' => $labels,
+		'public' => true,
+		'publicly_queryable' => true,
+		'show_ui' => true, 
+		'show_in_menu' => true, 
+		'query_var' => true,
+		'rewrite' => array( 'slug' => 'gallery' ),
+		'capability_type' => 'post',
+		'has_archive' => true, 
+		'hierarchical' => false,
+		'menu_position' => null,
+		'supports' => array( 'title', 'editor', 'author', 'thumbnail', 'comments' )
+	); 
+	register_post_type( 'oc_gallery', $args );
+}
+
+// call the previously defined function
+add_action( 'init', 'oc_set_post_types' );
+
+/**
+ * Prints the attached image with a link to the next attached image.
+ *
+ * @since Twenty Thirteen 1.0
+ *
+ * @return void
+ */
+function twentythirteen_the_attached_image() {
+	$post                = get_post();
+	var_dump( $post );
+	$attachment_size     = apply_filters( 'twentythirteen_attachment_size', array( 724, 724 ) );
+	$next_attachment_url = wp_get_attachment_url();
+
+	/**
+	 * Grab the IDs of all the image attachments in a gallery so we can get the URL
+	 * of the next adjacent image in a gallery, or the first image (if we're
+	 * looking at the last image in a gallery), or, in a gallery of one, just the
+	 * link to that image file.
+	 */
+	$attachment_ids = get_posts( array(
+		'post_parent'    => $post->post_parent,
+		'fields'         => 'ids',
+		'numberposts'    => -1,
+		'post_status'    => 'inherit',
+		'post_type'      => 'attachment',
+		'post_mime_type' => 'image',
+		'order'          => 'ASC',
+		'orderby'        => 'menu_order ID'
+	) );
+
+	// If there is more than 1 attachment in a gallery...
+	if ( count( $attachment_ids ) > 1 ) {
+		foreach ( $attachment_ids as $attachment_id ) {
+			if ( $attachment_id == $post->ID ) {
+				$next_id = current( $attachment_ids );
+				break;
+			}
+		}
+
+		// get the URL of the next image attachment...
+		if ( $next_id )
+			$next_attachment_url = get_attachment_link( $next_id );
+
+		// or get the URL of the first image attachment.
+		else
+			$next_attachment_url = get_attachment_link( array_shift( $attachment_ids ) );
+	}
+
+	printf( '<a href="%1$s" title="%2$s" rel="attachment">%3$s</a>',
+		esc_url( $next_attachment_url ),
+		the_title_attribute( array( 'echo' => false ) ),
+		wp_get_attachment_image( $post->ID, $attachment_size )
+	);
+}
+
