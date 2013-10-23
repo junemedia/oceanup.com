@@ -74,7 +74,8 @@ add_action( 'widgets_init', 'oceanup_register_header_widget_areas' );
 // Gallery/Attachments
 if ( ! function_exists( 'oceanup_attachment_title' ) ) {
 	function oceanup_attachment_title( $_post_title = '', $_post_id = 0 ){
-		if ( get_post_type($GLOBALS['post']->ID) == 'attachment' ){
+		if (empty($_post_id)) $_post_id = $GLOBALS['post']->ID;
+		if ( get_post_type($_post_id) == 'attachment' ){
 			$parent = get_post($GLOBALS['post']->post_parent);
 			$_post_title = $parent->post_title;
 		}
@@ -85,7 +86,8 @@ add_filter( 'the_title', 'oceanup_attachment_title', 10, 2 );
 
 if ( ! function_exists( 'oceanup_attachment_content' ) ) {
 	function oceanup_attachment_content( $_post_content = '', $_post_id = 0 ){
-		if ( get_post_type($GLOBALS['post']->ID) == 'attachment' ){
+		if (empty($_post_id)) $_post_id = $GLOBALS['post']->ID;
+		if ( get_post_type($_post_id) == 'attachment' ){
 			$_post_content = '<p class="attachment">'.wp_get_attachment_link(0, 'full', false).'</p>';
 		}
 		return $_post_content;
@@ -313,3 +315,180 @@ function twentythirteen_the_attached_image() {
 	);
 }
 
+function qsou_change_gallery_output($attr) {
+	$post = get_post();
+
+	$owp_query = clone $GLOBALS['wp_query'];
+
+	// We're trusting author input, so let's at least make sure it looks like a valid orderby statement
+	if ( isset( $attr['orderby'] ) ) {
+		$attr['orderby'] = sanitize_sql_orderby( $attr['orderby'] );
+		if ( !$attr['orderby'] )
+			unset( $attr['orderby'] );
+	}
+
+	extract(shortcode_atts(array(
+		'order'      => 'ASC',
+		'orderby'    => 'menu_order ID',
+		'id'         => $post ? $post->ID : 0,
+		'itemtag'    => 'dl',
+		'icontag'    => 'dt',
+		'captiontag' => 'dd',
+		'columns'    => 3,
+		'size'       => 'thumbnail',
+		'include'    => '',
+		'exclude'    => ''
+	), $attr, 'gallery'));
+
+	ob_start();
+
+	$id = intval($id);
+	if ( 'RAND' == $order )
+		$orderby = 'none';
+
+	$args = array(
+		'post_status' => 'inherit',
+		'post_type' => 'attachment',
+		'post_mime_type' => 'image',
+		'order' => $order,
+		'orderby' => $orderby,
+	);
+	if (!empty($include)) {
+		$args['include'] = $include;
+	} elseif (!empty($exclude)) {
+		$args['post_parent'] = $id;
+		$args['exclude'] = $exclude;
+	} else {
+		$args['post_parent'] = $id;
+	}
+
+	query_posts($args);
+	qsou_gallery_output();
+
+	$out = ob_get_contents();
+	ob_end_clean();
+
+	$GLOBALS['wp_query'] = $owp_query;
+	wp_reset_postdata();
+
+	return $out;
+}
+add_filter('post_gallery', 'qsou_change_gallery_output');
+
+function qsou_gallery_output_from_gallery_post($post=null, $current_id=null) {
+	if (is_numeric($post)) $post = get_post($post);
+	elseif (!is_object($post)) $post = get_post();
+
+	$owp_query = clone $GLOBALS['wp_query'];
+
+	$in = qsou_get_gallery_image_ids($post->ID, $current_id);
+
+	$args = array(
+		'posts_per_page' => -1,
+		'post_status' => 'inherit',
+		'post_type' => 'attachment',
+		'post_mime_type' => 'image',
+		'order' => 'ASC',
+		'orderby' => 'post__in',
+		'post__in' => wp_parse_id_list($in),
+	);
+
+	query_posts($args);
+	qsou_gallery_output();
+
+	$GLOBALS['wp_query'] = $owp_query;
+	wp_reset_postdata();
+}
+add_action('qsou-gallery-from-gallery-id', 'qsou_gallery_output_from_gallery_post', 10, 2);
+
+function qsou_get_gallery_image_ids($parent_id, $current_id=false) {
+	$args = array(
+		'fields' => 'ids',
+		'posts_per_page' => -1,
+		'post_status' => 'inherit',
+		'post_type' => 'attachment',
+		'post_mime_type' => 'image',
+		'post_parent' => $parent_id,
+	);
+	$ids = get_posts($args);
+
+	if (!is_array($ids) || empty($ids)) return array();
+	if (empty($current_id)) $current_id = array_shift(array_values($ids));
+
+	$front = $back = $in = array();
+	$pos = array_search($current_id, $ids);
+	$pos = empty($pos) ? 0 : $pos;
+	$front = array_slice($ids, $pos);
+	$back = $pos > 0 ? array_slice($ids, 0, $pos) : array();
+
+	return array_merge($front, $back);
+}
+
+function qsou_gallery_thumb_image_id($gallery_id) {
+	$img_id = get_post_thumbnail_id($gallery_id);
+	if (empty($img_id)) {
+		$ids = qsou_get_gallery_image_ids($gallery_id);
+		$img_id = array_shift($ids);
+	}
+	return $img_id;
+}
+
+function qsou_gallery_image_link($current, $parent_id, $image_id, $type=false) {
+	$ids = qsou_get_gallery_image_ids($parent_id, $image_id);
+	$ids = is_array($ids) ? $ids : array();
+
+	switch (strtolower($type)) {
+		case 'next':
+			$img_id = isset($ids[1]) ? $ids[1] : 0;
+			$current = get_permalink($img_id);
+		break;
+
+		case 'prev':
+			$img_id = count($ids) > 1 ? array_pop(array_values($ids)) : 0;
+			$current = get_permalink($img_id);
+		break;
+	}
+
+	return $current;
+}
+add_action('qsou-gallery-image-link', 'qsou_gallery_image_link', 10, 4);
+
+function qsou_gallery_output() {
+	static $u = 0;
+
+	if (have_posts()):
+		?>
+			<div class="qsou-gallery jcarousel-skin-tango" id="qsou-gallery-<?php echo $u ?>">
+				<ul class="gallery-image-list">
+					<?php while (have_posts()): the_post(); ?>
+						<li class="gallery-image-outer"><div class="gallery-image-inner"><div class="gallery-image-wrap"><a href="<?php echo esc_attr(get_permalink()) ?>" class="gallery-image-link"><?php
+							echo wp_get_attachment_image(get_the_ID(), array(150, 150), array('class' => 'gallery-image'))
+						?></a></div></div></li>
+					<?php endwhile; ?>
+				</ul>
+				<div class="clear"></div>
+			</div>
+
+			<script language="javascript">
+				jQuery(function($) {
+					$('#qsou-gallery-<?php echo $u ?>').jcarousel({
+						buttonNextHTML: '<div>&gt;</div>',
+						buttonPrevHTML: '<div>&lt;</div>'
+					});
+				});
+			</script>
+		<?php
+		$u++;
+	endif;
+}
+
+function qsou_enqueue_scripts() {
+	wp_enqueue_script('qsou-jcarousel', get_stylesheet_directory_uri().'/jc/jquery.jcarousel.min.js', array('jquery'), '0.2.9');
+	wp_enqueue_style('qsou-jcarousel', get_stylesheet_directory_uri().'/jc/tango/skin.css', array(), '0.2.9');
+}
+add_action('woothemes_add_javascript', 'qsou_enqueue_scripts');
+
+function qsou_debug($out, $ret=true) {
+	echo '<pre>'; is_scalar($out) ? var_dump($out) : print_r($out); echo '</pre>';
+	return $ret ? $out : '';
+}
