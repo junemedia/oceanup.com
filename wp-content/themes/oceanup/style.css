@@ -277,3 +277,6 @@ background: #5E828C url(basebarcaps_verticalbarbody.png) -45px -15px;
 	.gallery-list .gallery-item .gallery header img.too-tall { width:125px; }
 	.gallery-list .gallery-item .gallery header img.too-wide { height:94px; }
 }
+
+.addthis_default_style .at15t_expanded, .addthis_default_style .at15t_compact { margin-right:0 !important; }
+.addthis_counter { display:none !important; }

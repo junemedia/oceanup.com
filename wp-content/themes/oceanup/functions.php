@@ -492,3 +492,8 @@ function qsou_debug($out, $ret=true) {
 	echo '<pre>'; is_scalar($out) ? var_dump($out) : print_r($out); echo '</pre>';
 	return $ret ? $out : '';
 }
+
+function qsou_remove_woo_cat() {
+	return '';
+}
+add_filter( 'woo_shortcode_post_categories', 'qsou_remove_woo_cat' );
