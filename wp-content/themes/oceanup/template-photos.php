@@ -48,11 +48,13 @@ get_header();
 				</section><!-- /#main -->
 				<?php woo_main_after(); ?>
 
-				<?php get_sidebar(); ?>
+						<?php get_sidebar('top-ad'); ?>
+						
+            <?php get_sidebar(); ?>
+
+						<?php get_sidebar( 'alt' ); ?>
 
 			</div><!-- /#main-sidebar-container -->         
-
-			<?php get_sidebar('alt'); ?>
 
     </div><!-- /#content -->
 	<?php woo_content_after(); ?>

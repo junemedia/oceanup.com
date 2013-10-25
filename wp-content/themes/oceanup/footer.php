@@ -10,12 +10,20 @@
 
  global $woo_options;
 
- woo_footer_top();
+	woo_footer_top();
  	woo_footer_before();
+
+	$barname = 'bottom-widget-area';
+	$barsuffix = '';
+	if (is_singular(array('attachment', 'oc_gallery'))) $barsuffix = '-photos';
 ?>
-	<?php if (is_active_sidebar('bottom-widget-area')): ?>
+	<?php if (is_active_sidebar($barname.$barsuffix)): ?>
 		<div class="bottom-widget-area">
-			<?php dynamic_sidebar('bottom-widget-area'); ?>
+			<?php dynamic_sidebar($barname.$barsuffix); ?>
+		</div>
+	<?php elseif (is_active_sidebar($barname)): ?>
+		<div class="bottom-widget-area">
+			<?php dynamic_sidebar($barname); ?>
 		</div>
 	<?php endif; ?>
 

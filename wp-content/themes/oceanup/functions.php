@@ -1,6 +1,24 @@
 <?php
 
 function qsou_extra_widget_areas() {
+	register_sidebar(array(
+		'name' => 'Header Widgets Top',
+		'id' => 'oceanup-header-widgets-top',
+		'description' => __( 'Widgets in this area will be shown on the header/top widget area.' ),
+		'before_widget' => '<div id="%1$s" class="widget %2$s">',
+		'after_widget' => '</div>',
+		'before_title' => '<h3>',
+		'after_title' => '</h3>'
+	));
+	register_sidebar(array(
+		'name' => 'Header Widgets Bottom',
+		'id' => 'oceanup-header-widgets-bottom',
+		'description' => __( 'Widgets in this area will be shown on the header/bottom widget area.' ),
+		'before_widget' => '<div id="%1$s" class="widget %2$s">',
+		'after_widget' => '</div>',
+		'before_title' => '<h3>',
+		'after_title' => '</h3>'
+	));
 	register_sidebar( array(
 		'name' => __( 'Top Sidebar Ad', 'woothemes' ),
 		'id' => 'top-sidebar-ad-area',
@@ -19,8 +37,56 @@ function qsou_extra_widget_areas() {
 		'before_title' => '<h3>',
 		'after_title' => '</h3>'
 	) );
+	
+	/**** PHOTOS PAGE SPECIFIC ******/
+	register_sidebar(array(
+		'name' => 'Photos - Header Widgets Top',
+		'id' => 'oceanup-header-widgets-top-photos',
+		'description' => __( 'Widgets in this area will be shown on the header/top widget area, on the photos pages.' ),
+		'before_widget' => '<div id="%1$s" class="widget %2$s">',
+		'after_widget' => '</div>',
+		'before_title' => '<h3>',
+		'after_title' => '</h3>'
+	));
+	register_sidebar(array(
+		'name' => 'Photos - Header Widgets Bottom',
+		'id' => 'oceanup-header-widgets-bottom-photos',
+		'description' => __( 'Widgets in this area will be shown on the header/bottom widget area, on the photos pages.' ),
+		'before_widget' => '<div id="%1$s" class="widget %2$s">',
+		'after_widget' => '</div>',
+		'before_title' => '<h3>',
+		'after_title' => '</h3>'
+	));
+	register_sidebar( array(
+		'name' => __( 'Photos - Top Sidebar Ad', 'woothemes' ),
+		'id' => 'top-sidebar-ad-area-photos',
+		'description' => __( 'Top of double sidebar, on the photos pages, usually to hold ads.', 'woothemes' ),
+		'before_widget' => '<div id="%1$s" class="widget %2$s">',
+		'after_widget' => '</div>',
+		'before_title' => '<h3>',
+		'after_title' => '</h3>'
+	) );
+	register_sidebar( array(
+		'name' => __( 'Photos - Bottom Bar', 'woothemes' ),
+		'id' => 'bottom-widget-area-photos',
+		'description' => __( 'Bottom bar, on the photos pages, usually to hold ads.', 'woothemes' ),
+		'before_widget' => '<div id="%1$s" class="widget %2$s">',
+		'after_widget' => '</div>',
+		'before_title' => '<h3>',
+		'after_title' => '</h3>'
+	) );
+		// Widgetized sidebars
+	    register_sidebar( array( 'name' => __( 'Photos - Primary', 'woothemes' ), 'id' => 'primary-photos', 'description' => __( 'The default primary sidebar for your website, used in two or three-column layouts.', 'woothemes' ), 'before_widget' => '<div id="%1$s" class="widget %2$s">', 'after_widget' => '</div>', 'before_title' => '<h3>', 'after_title' => '</h3>' ) );
+	    register_sidebar( array( 'name' => __( 'Photos - Secondary', 'woothemes' ), 'id' => 'secondary-photos', 'description' => __( 'A secondary sidebar for your website, used in three-column layouts.', 'woothemes' ), 'before_widget' => '<div id="%1$s" class="widget %2$s">', 'after_widget' => '</div>', 'before_title' => '<h3>', 'after_title' => '</h3>' ) );
+	
+		// Footer widgetized areas
+		$total = get_option( 'woo_footer_sidebars', 4 );
+		if ( ! $total ) $total = 4;
+		for ( $i = 1; $i <= intval( $total ); $i++ ) {
+			register_sidebar( array( 'name' => sprintf( __( 'Photos - Footer %d', 'woothemes' ), $i ), 'id' => sprintf( 'footer-%d-photos', $i ), 'description' => sprintf( __( 'Widgetized Footer Region %d.', 'woothemes' ), $i ), 'before_widget' => '<div id="%1$s" class="widget %2$s">', 'after_widget' => '</div>', 'before_title' => '<h3>', 'after_title' => '</h3>' ) );
+		}
 }
-qsou_extra_widget_areas();
+add_action('init', 'qsou_extra_widget_areas', 11);
 
 if ( ! function_exists( 'oceanup_nav_social' ) ) {
 	function oceanup_nav_social() {
@@ -59,36 +125,26 @@ add_action( 'woo_nav_after', 'oceanup_search_field', 50 );
 // Header Widget Areas
 if ( ! function_exists( 'oceanup_header_widget_areas' ) ) {
 	function oceanup_header_widget_areas() {
-		echo '<aside id="oceanup-header-widgets-top" class="clearfix col-full">';
-		dynamic_sidebar( 'oceanup-header-widgets-top' );
-		echo '</aside>';
-		echo '<aside id="oceanup-header-widgets-bottom" class="clearfix col-full">';
-		dynamic_sidebar( 'oceanup-header-widgets-bottom' );
-		echo '</aside>';
+		$barsuffix = '';
+		if (is_singular(array('attachment', 'oc_gallery'))) $barsuffix = '-photos';
+
+		foreach (array('oceanup-header-widgets-top', 'oceanup-header-widgets-bottom') as $barname) {
+			if (is_active_sidebar($barname.$barsuffix)) {
+				echo '<aside id="'.$barname.'" class="clearfix col-full">';
+				dynamic_sidebar( $barname.$barsuffix );
+				echo '</aside>';
+			} elseif (is_active_sidebar($barname)) {
+				echo '<aside id="'.$barname.'" class="clearfix col-full">';
+				dynamic_sidebar( $barname );
+				echo '</aside>';
+			}
+		}
 	}
 }
 add_action( 'woo_header_after', 'oceanup_header_widget_areas' );
 
 if ( ! function_exists( 'oceanup_register_header_widget_areas' ) ) {
 	function oceanup_register_header_widget_areas(){
-		register_sidebar(array(
-			'name' => 'Header Widgets Top',
-			'id' => 'oceanup-header-widgets-top',
-			'description' => __( 'Widgets in this area will be shown on the header/top widget area.' ),
-			'before_widget' => '<div id="%1$s" class="widget %2$s">',
-			'after_widget' => '</div>',
-			'before_title' => '<h3>',
-			'after_title' => '</h3>'
-		));
-		register_sidebar(array(
-			'name' => 'Header Widgets Bottom',
-			'id' => 'oceanup-header-widgets-bottom',
-			'description' => __( 'Widgets in this area will be shown on the header/bottom widget area.' ),
-			'before_widget' => '<div id="%1$s" class="widget %2$s">',
-			'after_widget' => '</div>',
-			'before_title' => '<h3>',
-			'after_title' => '</h3>'
-		));
 	}
 }
 add_action( 'widgets_init', 'oceanup_register_header_widget_areas' );

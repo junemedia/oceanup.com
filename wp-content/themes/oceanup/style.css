@@ -281,4 +281,43 @@ background: #5E828C url(basebarcaps_verticalbarbody.png) -45px -15px;
 .addthis_default_style .at15t_expanded, .addthis_default_style .at15t_compact { margin-right:0 !important; }
 .addthis_counter { display:none !important; }
 .bottom-widget-area { text-align:center; }
+.adspace-widget { text-align:center; }
+.adspace-widget .qc-ad-160x600 { margin:0 auto; }
+.adspace-widget .GoogleActiveViewClass > div { margin:0 auto; }
 
+@media only screen and (min-width: 768px) {
+	#sidebar-top-ad { clear:right; float:right; width:46.5%; text-align:center; padding-top:20px; }
+
+	html .three-col-left #main-sidebar-container #sidebar {
+		margin-left:4%;
+		float:left;
+	}
+
+  /* 300 / 940 */
+  html .three-col-left #main-sidebar-container #sidebar,
+  html .three-col-middle #main-sidebar-container #sidebar,
+  html .three-col-right #main-sidebar-container #sidebar {
+    width: 22%;
+  }
+  /* 300 / 760 */
+  html .three-col-left #main-sidebar-container,
+  html .three-col-middle #main-sidebar-container,
+  html .three-col-right #main-sidebar-container {
+    width: 100%;
+  }
+  /* 760 / 940 */
+  html .three-col-left #main-sidebar-container #main,
+  html .three-col-middle #main-sidebar-container #main,
+  html .three-col-right #main-sidebar-container #main {
+    width: 50%;
+  }
+  /* 440 / 760 */
+  html #sidebar-alt {
+    width: 22%;
+  }
+}
+
+@media only screen and (max-width: 767px) {
+	#sidebar-top-ad { clear:none; float:none; }
+	body .entry img, img.thumbnail, #portfolio .group.portfolio-img img { padding:0; }
+}
