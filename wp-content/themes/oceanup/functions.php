@@ -91,6 +91,25 @@ function qsou_extra_widget_areas_special() {
 }
 add_action('init', 'qsou_extra_widget_areas_special', 11);
 
+if ( ! function_exists( 'woo_post_meta' ) ) {
+	function woo_post_meta() {
+		if ( is_page() ) { return; }
+
+		$post_info = '<span class="small">'
+			. __( 'By', 'woothemes' )
+			. '</span>&nbsp; [post_author_posts_link] <span class="small">'
+			. _x( 'on', 'post datetime', 'woothemes' )
+			. '</span>&nbsp; [post_date]&nbsp; <span class="small">';
+		printf( '<div class="post-meta">%s</div>' . "\n", apply_filters( 'woo_filter_post_meta', $post_info ) );
+
+	} // End woo_post_meta()
+}
+
+if (!function_exists('woo_postnav')) {
+	function woo_postnav() {
+	}
+}
+
 if ( ! function_exists( 'oceanup_nav_social' ) ) {
 	function oceanup_nav_social() {
 		echo '<div id="social-nav-wrapper" class="box left">';
@@ -211,7 +230,7 @@ if ( ! function_exists( 'oceanup_post_meta' ) ) {
 		return $_post_info;
 	}
 }
-add_filter( 'woo_filter_post_meta', 'oceanup_post_meta' );
+//add_filter( 'woo_filter_post_meta', 'oceanup_post_meta' );
 
 // Enqueue custom JS for our child theme
 if (!function_exists('oceanup_enqueue_scripts')){
