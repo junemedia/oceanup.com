@@ -16,6 +16,15 @@
 <link rel="pingback" href="<?php echo esc_url( get_bloginfo( 'pingback_url' ) ); ?>" />
 <?php wp_head(); ?>
 <?php woo_head(); ?>
+<script type="text/javascript">
+(function() {
+var a, s = document.getElementsByTagName("script")[0];
+a = document.createElement("script");
+a.type="text/javascript";  a.async = true;
+a.src = "http://www.luminate.com/widget/async/11c0daab2be/";
+s.parentNode.insertBefore(a, s);
+})();
+</script>
 </head>
 <body <?php body_class(); ?>>
 

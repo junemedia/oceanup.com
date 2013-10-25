@@ -1,5 +1,27 @@
 <?php
 
+function qsou_extra_widget_areas() {
+	register_sidebar( array(
+		'name' => __( 'Top Sidebar Ad', 'woothemes' ),
+		'id' => 'top-sidebar-ad-area',
+		'description' => __( 'Top of double sidebar, usually to hold ads.', 'woothemes' ),
+		'before_widget' => '<div id="%1$s" class="widget %2$s">',
+		'after_widget' => '</div>',
+		'before_title' => '<h3>',
+		'after_title' => '</h3>'
+	) );
+	register_sidebar( array(
+		'name' => __( 'Bottom Bar', 'woothemes' ),
+		'id' => 'bottom-widget-area',
+		'description' => __( 'Bottom bar, usually to hold ads.', 'woothemes' ),
+		'before_widget' => '<div id="%1$s" class="widget %2$s">',
+		'after_widget' => '</div>',
+		'before_title' => '<h3>',
+		'after_title' => '</h3>'
+	) );
+}
+qsou_extra_widget_areas();
+
 if ( ! function_exists( 'oceanup_nav_social' ) ) {
 	function oceanup_nav_social() {
 		echo '<div id="social-nav-wrapper" class="box left">';
@@ -226,9 +248,9 @@ if( !function_exists( 'oc_add_embed_img' ) ) {
 // function to add CPT to site
 function oc_set_post_types() {
 	$labels = array(
-		'name' => 'OC Gallery',
-		'singular_name' => 'OC Gallery',
-		'add_new' => 'Add new OC gallery',
+		'name' => 'Gallery',
+		'singular_name' => 'Gallery',
+		'add_new' => 'Add new gallery',
 		'add_new_item' => 'Add New Book',
 		'edit_item' => 'Edit Gallery',
 		'new_item' => 'New Gallery',
@@ -238,7 +260,7 @@ function oc_set_post_types() {
 		'not_found' =>  'No galleries found',
 		'not_found_in_trash' => 'No galleries found in Trash', 
 		'parent_item_colon' => '',
-		'menu_name' => 'OC Galleries'
+		'menu_name' => 'Galleries'
 	);
 	$args = array(
 		'labels' => $labels,
