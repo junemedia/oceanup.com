@@ -240,23 +240,27 @@ background: #5E828C url(basebarcaps_verticalbarbody.png) -45px -15px;
 .qsou-gallery .gallery-image-wrap img { width:100%; padding:0; margin:0; border:0; }
 
 .jcarousel-skin-tango img { max-width:none; max-height:none; width:100%; height:auto; }
-.single-post .jcarousel-skin-tango .jcarousel-container-horizontal { padding:10px 25px; }
-.single-post .jcarousel-skin-tango .jcarousel-container-horizontal .gallery-image-wrap { height:80px; }
-.single-post .jcarousel-skin-tango .jcarousel-next-horizontal { margin-top:-6px; }
-.single-post .jcarousel-skin-tango .jcarousel-prev-horizontal { margin-top:-6px; }
+.jcarousel-skin-tango .jcarousel-container-horizontal .gallery-image-wrap { height:80px; }
 
-.gallery-list .gallery-item { width:auto; padding:4px 0; float:left; }
+.single-oc_gallery .jcarousel-skin-tango .jcarousel-container-horizontal,
+.single-attachment .jcarousel-skin-tango .jcarousel-container-horizontal { padding:0 25px 25px; }
+.single-oc_gallery .jcarousel-skin-tango .jcarousel-next-horizontal,
+.single-attachment .jcarousel-skin-tango .jcarousel-next-horizontal { margin-top:-18px; }
+.single-oc_gallery .jcarousel-skin-tango .jcarousel-prev-horizontal,
+.single-attachment .jcarousel-skin-tango .jcarousel-prev-horizontal { margin-top:-18px; }
+
+.gallery-list .gallery-item { width:auto; padding:2px 0; float:left; }
 .gallery-list .gallery-item .gallery { margin:0 4px; display:block; background-color:#eeeeee; padding:5px 0; width:150px; }
 .gallery-list .gallery-item .gallery header { margin:0 5px; display:block; height:105px; width:140px; overflow:hidden; }
 .gallery-list .gallery-item .gallery header .image-wrap { height:105px; width:140px; margin:0 0 5px 0; overflow:hidden; }
 .gallery-list .gallery-item .gallery header img { max-width:none; max-height:none; }
 .gallery-list .gallery-item .gallery header img.too-tall { width:140px; height:auto; padding:0; margin:0; border:0; }
 .gallery-list .gallery-item .gallery header img.too-wide { width:auto; height:105px; padding:0; margin:0; border:0; }
-	.gallery-list .gallery-item .gallery { margin:0 2px 0 1px; padding:3px 0; width:136px; }
-	.gallery-list .gallery-item .gallery header { margin:0 3px; height:97.5px; width:130px; }
-	.gallery-list .gallery-item .gallery header .image-wrap { height:97.5px; width:130px; margin:0 0 3px; }
-	.gallery-list .gallery-item .gallery header img.too-tall { width:130px; }
-	.gallery-list .gallery-item .gallery header img.too-wide { height:97.5px; }
+	.gallery-list .gallery-item .gallery { margin:0 2px 0 1px; padding:2px 0; width:124px; }
+	.gallery-list .gallery-item .gallery header { margin:0 2px; height:90px; width:120px; }
+	.gallery-list .gallery-item .gallery header .image-wrap { height:90px; width:120px; margin:0 0 3px; }
+	.gallery-list .gallery-item .gallery header img.too-tall { width:120px; }
+	.gallery-list .gallery-item .gallery header img.too-wide { height:90px; }
 
 @media only screen and (max-width: 768px) and (min-width: 481px) {
 	.qsou-gallery .gallery-image-outer { width:20%; }
@@ -285,11 +289,14 @@ background: #5E828C url(basebarcaps_verticalbarbody.png) -45px -15px;
 .adspace-widget .qc-ad-160x600 { margin:0 auto; }
 .adspace-widget .GoogleActiveViewClass > div { margin:0 auto; }
 
+.entry .from-legacy-table { padding:3px; border:1px solid #eeeeee; }
+.entry .from-legacy-table img { padding:0; border:0; }
+
 @media only screen and (min-width: 768px) {
 	#sidebar-top-ad { clear:right; float:right; width:46.5%; text-align:center; padding-top:20px; }
 
 	html .three-col-left #main-sidebar-container #sidebar {
-		margin-left:4%;
+		margin-left:2%;
 		float:left;
 	}
 
@@ -309,7 +316,7 @@ background: #5E828C url(basebarcaps_verticalbarbody.png) -45px -15px;
   html .three-col-left #main-sidebar-container #main,
   html .three-col-middle #main-sidebar-container #main,
   html .three-col-right #main-sidebar-container #main {
-    width: 50%;
+    width: 53%;
   }
   /* 440 / 760 */
   html #sidebar-alt {

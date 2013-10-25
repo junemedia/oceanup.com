@@ -37,7 +37,10 @@ function qsou_extra_widget_areas() {
 		'before_title' => '<h3>',
 		'after_title' => '</h3>'
 	) );
+}
+qsou_extra_widget_areas();
 	
+function qsou_extra_widget_areas_special() {
 	/**** PHOTOS PAGE SPECIFIC ******/
 	register_sidebar(array(
 		'name' => 'Photos - Header Widgets Top',
@@ -86,7 +89,7 @@ function qsou_extra_widget_areas() {
 			register_sidebar( array( 'name' => sprintf( __( 'Photos - Footer %d', 'woothemes' ), $i ), 'id' => sprintf( 'footer-%d-photos', $i ), 'description' => sprintf( __( 'Widgetized Footer Region %d.', 'woothemes' ), $i ), 'before_widget' => '<div id="%1$s" class="widget %2$s">', 'after_widget' => '</div>', 'before_title' => '<h3>', 'after_title' => '</h3>' ) );
 		}
 }
-add_action('init', 'qsou_extra_widget_areas', 11);
+add_action('init', 'qsou_extra_widget_areas_special', 11);
 
 if ( ! function_exists( 'oceanup_nav_social' ) ) {
 	function oceanup_nav_social() {
@@ -393,7 +396,7 @@ function twentythirteen_the_attached_image() {
 	);
 }
 
-function qsou_change_gallery_output($attr) {
+function qsou_change_gallery_output($current, $attr) {
 	$post = get_post();
 
 	$owp_query = clone $GLOBALS['wp_query'];
@@ -432,10 +435,10 @@ function qsou_change_gallery_output($attr) {
 		'orderby' => $orderby,
 	);
 	if (!empty($include)) {
-		$args['include'] = $include;
+		$args['post__in'] = wp_parse_id_list($include);
 	} elseif (!empty($exclude)) {
 		$args['post_parent'] = $id;
-		$args['exclude'] = $exclude;
+		$args['post__not_in'] = wp_parse_id_list($exclude);
 	} else {
 		$args['post_parent'] = $id;
 	}
@@ -451,11 +454,13 @@ function qsou_change_gallery_output($attr) {
 
 	return $out;
 }
-add_filter('post_gallery', 'qsou_change_gallery_output');
+add_filter('post_gallery', 'qsou_change_gallery_output', 0, 2);
 
 function qsou_gallery_output_from_gallery_post($post=null, $current_id=null) {
 	if (is_numeric($post)) $post = get_post($post);
 	elseif (!is_object($post)) $post = get_post();
+
+	if (!is_object($post) || $post->ID == $current_id) return;
 
 	$owp_query = clone $GLOBALS['wp_query'];
 
@@ -559,6 +564,9 @@ function qsou_gallery_output() {
 		$u++;
 	endif;
 }
+
+//add_action('template_include', function($a) { die(__log('here', $a, $GLOBALS['wp_query'])); }, 0, 1);
+
 
 function qsou_enqueue_scripts() {
 	wp_enqueue_script('qsou-jcarousel', get_stylesheet_directory_uri().'/jc/jquery.jcarousel.min.js', array('jquery'), '0.2.9');
