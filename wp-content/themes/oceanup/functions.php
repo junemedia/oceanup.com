@@ -41,6 +41,17 @@ function qsou_extra_widget_areas() {
 qsou_extra_widget_areas();
 	
 function qsou_extra_widget_areas_special() {
+	/**** POSTS ONLY ****/
+	register_sidebar(array(
+		'name' => 'Posts - Below Post Text',
+		'id' => 'post-content-widget-area',
+		'description' => __( 'Shows below post content, and above post comments.' ),
+		'before_widget' => '<div id="%1$s" class="widget %2$s">',
+		'after_widget' => '</div>',
+		'before_title' => '<h3>',
+		'after_title' => '</h3>'
+	));
+
 	/**** PHOTOS PAGE SPECIFIC ******/
 	register_sidebar(array(
 		'name' => 'Photos - Header Widgets Top',

@@ -73,6 +73,11 @@ if ( 'content' == $settings['post_content'] || is_singular() ) wp_link_pages( $p
 <?php
 woo_post_inside_after();
 ?>
+<?php if (is_singular() && is_active_sidebar('post-content-widget-area')): ?>
+	<div class="post-content-widgets">
+		<?php dynamic_sidebar('post-content-widget-area') ?>
+	</div>
+<?php endif; ?>
 </article><!-- /.post -->
 <?php
 woo_post_after();
