@@ -239,7 +239,7 @@ if (!function_exists('oceanup_enqueue_scripts')){
 			'oceanup-js',
 			get_stylesheet_directory_uri() . '/js/oceanup.js',
 			'jquery',
-			null,
+			'1.0.6',
 			true
 		);
 

@@ -24,6 +24,7 @@ eval(function(p,a,c,k,e,r){e=function(c){return(c<a?'':e(parseInt(c/a)))+((c=c%a
 
 /* Custom JS for OceanUp */
 jQuery(function(){
+	/*
 	jQuery('a, a img').hover(
 		function(){
 			jQuery(this).animate({'opacity': '0.7'}, 200);
@@ -32,6 +33,7 @@ jQuery(function(){
 			jQuery(this).animate({'opacity': '1'}, 200);
 		}
 	);
+	*/
 	
 	jQuery("#flexcroll-toggle").click(function(){
 		jQuery(this).siblings(".flexcroll").fadeToggle();
