@@ -25,6 +25,7 @@ a.src = "http://www.luminate.com/widget/async/11c0daab2be/";
 s.parentNode.insertBefore(a, s);
 })();
 </script>
+<script type="text/javascript"> window._taboola = window._taboola || []; _taboola.push({article: 'auto'}); !function (e, f, u) { e.async = 1; e.src = u; f.parentNode.insertBefore(e, f); } (document.createElement('script'), document.getElementsByTagName('script')[0], '//cdn.taboola.com/libtrc/oceanup-oceanup/loader.js'); </script> 
 </head>
 <body <?php body_class(); ?>>
 
