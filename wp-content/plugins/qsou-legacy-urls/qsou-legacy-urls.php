@@ -15,7 +15,7 @@ class qsou_legacy_url_redirector {
 	}
 
 	public static function maybe_redirect($wp) {
-		if (is_404() && isset($wp->query_vars['pagename']) && !empty($wp->query_vars['pagename'])) {
+		if (isset($wp->query_vars['pagename']) && !empty($wp->query_vars['pagename'])) {
 			global $wpdb;
 			$q = $wpdb->prepare('select object_id, urltype from '.$wpdb->prefix.'qsou_legacy_urls where olduri = %s', $wp->query_vars['pagename']);
 			$row = $wpdb->get_row($q);
