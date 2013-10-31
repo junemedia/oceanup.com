@@ -595,6 +595,12 @@ function qsou_gallery_output() {
 	endif;
 }
 
+
+// Add Widgets
+foreach( glob(dirname(__FILE__) . '/widgets/*.php') as $filename ){
+	include_once( $filename );
+}
+
 //add_action('template_include', function($a) { die(__log('here', $a, $GLOBALS['wp_query'])); }, 0, 1);
 
 

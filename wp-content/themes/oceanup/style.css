@@ -217,7 +217,12 @@ background: #5E828C url(basebarcaps_verticalbarbody.png) -45px -15px;
 }
 /* Scroll Bar Master Styling Ends Here */
 
-
+/* Featured Posts - Widget */
+.featured-posts-list .post-item{
+	border: 0;
+	float: left;
+	margin-right: 10px;
+}
  
 /* Gallery styling */
 .current-image-wrapper { width:100%; background-color:#EEEEEE; position:relative; }
