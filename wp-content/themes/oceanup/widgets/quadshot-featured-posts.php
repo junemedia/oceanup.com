@@ -153,7 +153,7 @@ class Genesis_Featured_Post extends WP_Widget {
 
 			echo '</div><!--end post_class()-->'."\n\n";
 
-		endwhile; echo '</div>'; endif;
+		endwhile; echo '<div class="clear"></div></div>'; endif;
 
 		/** The EXTRA Posts (list) */
 		if ( ! empty( $instance['extra_num'] ) ) {
