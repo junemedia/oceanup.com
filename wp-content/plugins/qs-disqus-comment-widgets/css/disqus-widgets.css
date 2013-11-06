@@ -1,0 +1,16 @@
+/* default styling for disqus widgets */
+
+.qsda-recent-comments .comment-item { border-top:1px dotted #dddddd; padding:10px 0 5px; }
+.qsda-recent-comments .comment-item:first-child { border-top:0; }
+.qsda-recent-comments .comment-author { margin-bottom:4px; }
+.qsda-recent-comments .comment-avatar-wrap { width:32px; height:32px; overflow:hidden; margin-right:5px; float:left; }
+.qsda-recent-comments .comment-avatar-wrap img { width:100%; max-width:none; height:auto; max-height:none; }
+.qsda-recent-comments .comment-author-name { height:32px; overflow:hidden; font-size:0.8em; }
+.qsda-recent-comments .post-link-wrap a { font-weight:bold; font-size:1.1em; }
+.qsda-recent-comments .comment-text { font-size:0.9em; font-style:italic; }
+
+.qsda-most-commented .post-item { border-top:1px dotted #dddddd; padding:3px 0 3px; }
+.qsda-most-commented .post-item:first-child { border-top:0; }
+.qsda-most-commented .post-link-wrap a { font-weight:bold; font-size:1em; }
+.qsda-most-commented .comment-count { margin-left:5px; color:#ffffff; background-color:#428BCA; border:1px solid #428BCA; border-radius:5px; font-size:0.8em; padding:0 3px; vertical-align:middle;
+		text-align:center; line-height:1.3; display:inline-block; }
