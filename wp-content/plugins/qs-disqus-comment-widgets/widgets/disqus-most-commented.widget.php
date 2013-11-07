@@ -215,7 +215,7 @@ class QSDCW_Most_Commented extends QSDCW_Widget {
 		$new_inst = parent::update($new_inst, $old_inst);
 		$new_inst['limit'] = $new_inst['limit'] > 100 ? 100 : (int)$new_inst['limit'];
 		$new_inst['limit'] = $new_inst['limit'] < 0 ? 0 : (int)$new_inst['limit'];
-		$new_inst['interval'] = in_array($new_inst['interval'], self::$intervals) ? $new_inst['interval'] : self::$defaults['interval'];
+		$new_inst['interval'] = in_array($new_inst['interval'], self::$intervals) ? $new_inst['interval'] : $this->defaults['interval'];
 		return $new_inst;
 	}
 }
