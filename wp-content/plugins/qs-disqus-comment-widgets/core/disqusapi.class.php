@@ -101,7 +101,7 @@ class QS_Disqus_API {
 
 			if (isset($resp['response'])) {
 				if (isset($resp['response']['code']) && $resp['response']['code'] != '200') {
-					return new WP_Error('Problem getting response from Disqus.', 'response_problem');
+					return new WP_Error('Problem getting response from Disqus.', 'response_problem', $resp);
 				}
 			}
 

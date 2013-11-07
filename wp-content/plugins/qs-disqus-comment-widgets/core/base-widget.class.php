@@ -317,6 +317,9 @@ abstract class QSDCW_Widget extends WP_Widget {
 		include $templ_file;
 	}
 
+	protected function _do_error($error) {
+	}
+
 	// locates a template based on the template cache and the template name
 	protected function _find_templ($templ) {
 		// first check to see if there is an override template in the theme, regardless of whether the file exists in the cache or not

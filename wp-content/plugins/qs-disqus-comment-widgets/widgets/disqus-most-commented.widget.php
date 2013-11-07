@@ -1,6 +1,6 @@
 <?php (__FILE__ == $_SERVER['SCRIPT_FILENAME']) ? die(header('Location: /')) : null;
 
-if (!class_exists('QSDCW_Recent_Comments')):
+if (!class_exists('QSDCW_Most_Commented')):
 
 class QSDCW_Most_Commented extends QSDCW_Widget {
 	protected $proper_name = 'QS - Disqus Most Commented';
@@ -12,7 +12,7 @@ class QSDCW_Most_Commented extends QSDCW_Widget {
 		'filter' => '',
 	);
 	protected $timer = 0;
-	protected $intervals = array(
+	protected static $intervals = array(
 		'1h' => '1 Hour',
 		'6h' => '6 Hours',
 		'12h' => '12 Hours',
@@ -49,8 +49,8 @@ class QSDCW_Most_Commented extends QSDCW_Widget {
 							value="<?php echo esc_attr($inst['title']) ?>" />
 				</div>
 				<div class="setting">
-					<label>Comments to Display</label>
-					<input type="text" class="widefat"
+					<label>Posts to Display</label>
+					<input type="number" class="widefat"
 							id="<?php echo $this->get_field_id('limit') ?>"
 							name="<?php echo $this->get_field_name('limit') ?>"
 							value="<?php echo esc_attr($inst['limit']) ?>" />
@@ -190,12 +190,6 @@ class QSDCW_Most_Commented extends QSDCW_Widget {
 		return $str;
 	}
 
-	protected function _do_error($error) {
-		echo '<pre style="background-color:#ffdddd; position:absolute; left:0;">';
-		var_dump($error);
-		die('</pre>');
-	}
-
 	protected function _get_posts_data($args, $instance) {
 		$forum = apply_filters('qsda-option', '', 'disqus_forum_url');
 		if (empty($forum)) return new WP_Error('Forum URL setting is missing.', 'misconfiguration');
@@ -219,8 +213,8 @@ class QSDCW_Most_Commented extends QSDCW_Widget {
 
 	public function update($new_inst, $old_inst) {
 		$new_inst = parent::update($new_inst, $old_inst);
-		$new_inst['limit'] = $new_inst['limit'] > 100 ? 100 : $new_inst['limit'];
-		$new_inst['limit'] = $new_inst['limit'] < 0 ? 0 : $new_inst['limit'];
+		$new_inst['limit'] = $new_inst['limit'] > 100 ? 100 : (int)$new_inst['limit'];
+		$new_inst['limit'] = $new_inst['limit'] < 0 ? 0 : (int)$new_inst['limit'];
 		$new_inst['interval'] = in_array($new_inst['interval'], self::$intervals) ? $new_inst['interval'] : self::$defaults['interval'];
 		return $new_inst;
 	}

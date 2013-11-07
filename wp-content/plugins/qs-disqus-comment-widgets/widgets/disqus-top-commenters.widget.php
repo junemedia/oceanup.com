@@ -1,15 +1,14 @@
 <?php (__FILE__ == $_SERVER['SCRIPT_FILENAME']) ? die(header('Location: /')) : null;
 
-if (!class_exists('QSDCW_Recent_Comments')):
+if (!class_exists('QSDCW_Top_Commenters')):
 
-class QSDCW_Recent_Comments extends QSDCW_Widget {
-	protected $proper_name = 'QS - Disqus Recent Comments';
-	protected $short_name = 'disqus-recent-comments';
+class QSDCW_Top_Commenters extends QSDCW_Widget {
+	protected $proper_name = 'QS - Disqus Top Commenters';
+	protected $short_name = 'disqus-top-commenters';
 	protected $defaults = array(
-		'title' => 'Recent Comments',
+		'title' => 'Top Commenters',
 		'limit' => 5,
-		'length' => 200,
-		'filter' => '',
+		'post_limit' => 1,
 	);
 	protected $timer = 0;
 
@@ -22,7 +21,7 @@ class QSDCW_Recent_Comments extends QSDCW_Widget {
 		do_action('qsda-register-widget', __CLASS__);
 	}
 
-	public function QSDCW_Recent_Comments() {
+	public function QSDCW_Top_Commenters() {
 		parent::WP_Widget(false, $this->proper_name);
 		$this->_setup_widget(__CLASS__, __FILE__);
 	}
@@ -38,25 +37,18 @@ class QSDCW_Recent_Comments extends QSDCW_Widget {
 							value="<?php echo esc_attr($inst['title']) ?>" />
 				</div>
 				<div class="setting">
-					<label>Comments to Display</label>
-					<input type="number" class="widefat"
+					<label>Commenters to Display</label>
+					<input type="text" class="widefat"
 							id="<?php echo $this->get_field_id('limit') ?>"
 							name="<?php echo $this->get_field_name('limit') ?>"
 							value="<?php echo esc_attr($inst['limit']) ?>" />
 				</div>
 				<div class="setting">
-					<label>Comment Excerpt Length</label>
-					<input type="number" class="widefat"
-							id="<?php echo $this->get_field_id('length') ?>"
-							name="<?php echo $this->get_field_name('length') ?>"
-							value="<?php echo esc_attr($inst['length']) ?>" />
-				</div>
-				<div class="setting">
-					<label>Filter out users (comma delimited)</label>
-					<textarea rows="5" class="widefat"
-							id="<?php echo $this->get_field_id('length') ?>"
-							name="<?php echo $this->get_field_name('filter') ?>"><?php echo force_balance_tags($inst['filter']) ?></textarea>
-					<span class="helper">Leave blank to show all comments</span>
+					<label>Posts per Commenter</label>
+					<input type="text" class="widefat"
+							id="<?php echo $this->get_field_id('post_limit') ?>"
+							name="<?php echo $this->get_field_name('post_limit') ?>"
+							value="<?php echo esc_attr($inst['post_limit']) ?>" />
 				</div>
 			</div>
 		<?php
@@ -138,10 +130,10 @@ class QSDCW_Recent_Comments extends QSDCW_Widget {
 			$out = $this->_get_cache_file_contents($this->_cache_file_name());
 			$out .= '<!-- FROM CACHE: '.$lock_key.'|'.implode(':', array_values($lock)).':'.$timer.' -->';
 		} else {
-			$comments = $this->_get_comment_data($args, $instance);
-			if (is_wp_error($comments)) return $this->_do_error($comments);
+			$commenters = $this->_get_commenter_data($args, $instance);
+			if (is_wp_error($commenters)) return $this->_do_error($commenters);
 			list($r, $of, $time_left) = apply_filters('qsda-ratelimit', array(999, 1000, 3600));
-			$args['comments'] = $comments;
+			$args['commenters'] = $commenters;
 
 			ob_start();
 			$this->_display_widget($args, $instance);
@@ -155,12 +147,13 @@ class QSDCW_Recent_Comments extends QSDCW_Widget {
 			$rratio = $r / $of; // ratio of remaining requests to max requests
 			$timer_length = 300;
 			$buffer_adjust = .95; // calculate timer totals based on this percentage of the actual numbers, to allow for a percentage of margin of error. .95 would leave a 5% margin of error
-			$burnrate = 1 + $instance['limit']; // one request to pull the list of comments, then one request per comment to find the post that it links to
+			$burnrate = 1 + (($instance['post_limit'] + 2) * $instance['limit']); // one request to pull the list of comments, then one request per comment to find the post that it links to
 
 			// adjust the cache lock timer so that we do not burn through our requests too quickly, based on our current burnrate.
 			$timer = $r / $burnrate; // current gap of time needed to space out requests, such that we do not hit the limit
 			$timer = ceil($timer/$buffer_adjust); // allow for margin of error
 			$timer = $timer < 30 ? 30 : $timer;
+			$timer = 300; // force 5 minutes until we fix cache
 			update_option($timer_key, $timer);
 
 			$package = array(
@@ -182,67 +175,71 @@ class QSDCW_Recent_Comments extends QSDCW_Widget {
 		return $str;
 	}
 
-	protected function _get_comment_data($args, $instance) {
+	protected function _get_commenter_data($args, $instance) {
 		$forum = apply_filters('qsda-option', '', 'disqus_forum_url');
 		if (empty($forum)) return new WP_Error('Forum URL setting is missing.', 'misconfiguration');
 
 		$data = apply_filters('qsda-query', array(), array(
-			'resource' => 'posts/list',
+			'resource' => 'forums/listMostActiveUsers',
 			'data' => array(
 				'forum' => $forum,
-				'include' => 'approved',
-				'limit' => $instance['limit'] * 4,
+				'limit' => $instance['limit'],
+				'order' => 'desc',
 			),
 		));
 		if (is_wp_error($data)) return $data;
 		if (!is_object($data) && !isset($data->response)) return new WP_Error('Invalid response.', 'invalid_response');
-	
-		$filter = trim($instance['filter']);
-		$filter = empty($filter) ? array() : preg_split('#\s*,\s*#', $filter);
 
-		$comments = array();
-		$cnt = 0;
-		foreach ($data->response as $item) {
-			if (in_array($item->author->name, $filter)) continue;
-			$cnt++;
-			$comments[] = $item;
-			if ($cnt >= $instance['limit']) break;
-		}
+		$commenters = $data->response;
 
-		foreach ($comments as $ind => $comment) {
-			if (isset($comment->thread)) {
-				$thread_data = apply_filters('qsda-query', array(), array(
-					'resource' => 'threads/details',
+		foreach ($commenters as $ind => $commenter) {
+			if ($instance['post_limit'] > 0 && isset($commenter->id)) {
+				$comments = apply_filters('qsda-query', array(), array(
+					'resource' => 'users/listPosts',
 					'data' => array(
-						'forum' => $forum,
-						'thread' => $comment->thread,
+						'limit' => $instance['post_limit'],
+						'user' => $commenter->id,
+						'include' => 'approved',
+						'order' => 'desc',
 					),
 				));
-				if (!is_wp_error($thread_data) && isset($thread_data->response)) {
-					$comments[$ind]->thread_info = $thread_data->response;
+				if (!is_wp_error($comments) && isset($comments->response) && is_array($comments->response)) {
+					$commenters[$ind]->recent_posts = array();
+					foreach ($comments->response as $comment) {
+						$thread_data = apply_filters('qsda-query', array(), array(
+							'resource' => 'threads/details',
+							'data' => array(
+								'forum' => $forum,
+								'thread' => $comment->thread,
+							),
+						));
+						if (!is_wp_error($thread_data) && isset($thread_data->response)) {
+							$commenters[$ind]->recent_posts[] = $thread_data->response;
+						}
+					}
+					if (empty($commenters[$ind]->recent_posts)) $commenters[$ind]->recent_posts = false;
 				} else {
-					$comments[$ind]->thread_info = false;
+					$commenters[$ind]->recent_posts = false;
 				}
 			} else {
-				$comments[$ind]->thread = 0;
-				$comments[$ind]->thread_info = false;
+				$commenters[$ind]->recent_posts = false;
 			}
 		}
 
-		return $comments;
+		return $commenters;
 	}
 
 	public function update($new_inst, $old_inst) {
 		$new_inst = parent::update($new_inst, $old_inst);
 		$new_inst['limit'] = $new_inst['limit'] > 100 ? 100 : (int)$new_inst['limit'];
 		$new_inst['limit'] = $new_inst['limit'] < 0 ? 0 : (int)$new_inst['limit'];
-		$new_inst['length'] = (int)$new_inst['length'];
+		$new_inst['post_limit'] = (int)$new_inst['post_limit'];
 		return $new_inst;
 	}
 }
 
 if (defined('ABSPATH') && function_exists('add_action')) {
-	QSDCW_Recent_Comments::pre_init();
+	QSDCW_Top_Commenters::pre_init();
 }
 
 endif;
