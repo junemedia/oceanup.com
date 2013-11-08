@@ -21,11 +21,20 @@ get_header();
 
 							$per_page = 18;
 							$pg = 1;
+							
 							$args = array(
-								'post_type' => 'oc_gallery',
-								'post_status' => 'publish',
-								'posts_per_page' => 18,
-							);
+							'post_type' => array('oc_gallery', 'post'),
+							'posts_per_page' => 18,
+							'post_status' => 'publish',
+							'meta_query' => array(
+								array(
+									'key' => '_has_gallery',
+									'value' => 1,
+									'compare' => '=',
+								     )
+								)
+						   	);
+
 							if (isset($owp_query->query_vars['paged'])) $pg = $args['paged'] = $owp_query->query_vars['paged'];
 							query_posts($args);
 
@@ -33,8 +42,11 @@ get_header();
 							
 							if (have_posts()) { $count = 0;
 								while (have_posts()) { the_post(); $count++;
-									
-									woo_get_template_part( 'photos', get_post_type() ); // Get the post content template file, contextually.
+									// Get the post content template file, contextually.
+									//woo_get_template_part( 'photos', get_post_type() ); 
+
+									// get teh gallery part, whether it is a post w/ a gallery or an oc_gallery 
+									woo_get_template_part( 'photos', 'oc_gallery' ); 
 								}
 							}
 
