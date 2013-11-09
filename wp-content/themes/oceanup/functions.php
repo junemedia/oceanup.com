@@ -619,3 +619,15 @@ function qsou_remove_woo_cat() {
 	return '';
 }
 add_filter( 'woo_shortcode_post_categories', 'qsou_remove_woo_cat' );
+
+function qsou_save_post( $post_id, $post ) {
+	if( $post->post_type == 'post' ) {
+		if( strpos( $post->post_content, '[gallery' ) !== false ) {
+			update_post_meta( $post_id, '_has_gallery', 1 );
+		} else {
+			update_post_meta( $post_id, '_has_gallery', 0 );
+		}
+	}
+
+}
+add_action( 'save_post', 'qsou_save_post', 10, 2 );
