@@ -37,6 +37,26 @@ function qsou_extra_widget_areas() {
 		'before_title' => '<h3>',
 		'after_title' => '</h3>'
 	) );
+	
+	register_sidebar( array(
+		'name' => __( 'Home 2nd post ad', 'woothemes' ),
+		'id' => 'home-river',
+		'description' => __( 'To display an ad inline in homepage post river.', 'woothemes' ),
+		'before_widget' => '<div id="%1$s" class="widget %2$s">',
+		'after_widget' => '</div>',
+		'before_title' => '<h3>',
+		'after_title' => '</h3>'
+	) );
+	register_sidebar( array(
+		'name' => __( 'Tag Archives 2nd post ad', 'woothemes' ),
+		'id' => 'tag-river',
+		'description' => __( 'To display an ads inline in tag archive  post river.', 'woothemes' ),
+		'before_widget' => '<div id="%1$s" class="widget %2$s">',
+		'after_widget' => '</div>',
+		'before_title' => '<h3>',
+		'after_title' => '</h3>'
+	) );
+
 }
 qsou_extra_widget_areas();
 	
