@@ -13,6 +13,8 @@
 <meta charset="<?php echo esc_attr( get_bloginfo( 'charset' ) ); ?>" />
 <title><?php woo_title(); ?></title>
 <?php woo_meta(); ?>
+<?php qsou_meta(); ?>
+
 <link rel="pingback" href="<?php echo esc_url( get_bloginfo( 'pingback_url' ) ); ?>" />
 <?php wp_head(); ?>
 <?php woo_head(); ?>

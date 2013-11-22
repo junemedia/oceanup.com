@@ -1712,6 +1712,8 @@ function woo_post_inside_after_default() {
 	$post_info ='[post_tags before=""]';
 	printf( '<div class="post-utility">%s</div>' . "\n", apply_filters( 'woo_post_inside_after_default', $post_info ) );
 
+
+
 } // End woo_post_inside_after_default()
 }
 

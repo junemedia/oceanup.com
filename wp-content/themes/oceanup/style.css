@@ -240,6 +240,8 @@ background: #5E828C url(basebarcaps_verticalbarbody.png) -45px -15px;
 .current-image-wrapper .image-nav.next { right:3px; }
 .current-image-wrapper .attribution { line-height:10px; font-size:10px; position:absolute; text-align:right; right:25px; bottom:13px; color:#b2b2b2; }
 
+.attribution { color: #a8a8a8; font-weight: bold; margin-bottom: 10px; }
+
 .qsou-gallery .gallery-image-list,
 .qsou-gallery .gallery-image-outer { list-style:none outside none; padding:0; margin:0; border:0; }
 .qsou-gallery .gallery-image-outer { padding:1px 0; width:auto; float:left; }

@@ -89,6 +89,17 @@ function qsou_extra_widget_areas_special() {
 		'before_title' => '<h3>',
 		'after_title' => '</h3>'
 	) );
+
+	register_sidebar( array(
+		'name' => __( 'Photos - Under Carousel', 'woothemes' ),
+		'id' => 'under-carousel-photos',
+		'description' => __( 'Box under gallery carousel, for taboola.', 'woothemes' ),
+		'before_widget' => '<div id="%1$s" class="widget %2$s">',
+		'after_widget' => '</div>',
+		'before_title' => '<h3>',
+		'after_title' => '</h3>'
+	) );
+
 		// Widgetized sidebars
 	    register_sidebar( array( 'name' => __( 'Photos - Primary', 'woothemes' ), 'id' => 'primary-photos', 'description' => __( 'The default primary sidebar for your website, used in two or three-column layouts.', 'woothemes' ), 'before_widget' => '<div id="%1$s" class="widget %2$s">', 'after_widget' => '</div>', 'before_title' => '<h3>', 'after_title' => '</h3>' ) );
 	    register_sidebar( array( 'name' => __( 'Photos - Secondary', 'woothemes' ), 'id' => 'secondary-photos', 'description' => __( 'A secondary sidebar for your website, used in three-column layouts.', 'woothemes' ), 'before_widget' => '<div id="%1$s" class="widget %2$s">', 'after_widget' => '</div>', 'before_title' => '<h3>', 'after_title' => '</h3>' ) );
@@ -631,3 +642,75 @@ function qsou_save_post( $post_id, $post ) {
 
 }
 add_action( 'save_post', 'qsou_save_post', 10, 2 );
+
+function qsou_meta() { 
+	global $post, $wp_query;
+
+	// for a photo page, get the tags of post_parent, otherwise get tags
+	if( is_attachment() ) {
+		$tags = get_the_tags($post->post_parent);
+	} else {
+		$tags = get_the_tags();
+	}
+
+	// if we have tags, then make a string of them comma-separated
+	if( $tags ) {
+		foreach( $tags as $tag ) {
+			$out .= "$tag->name,";
+		}
+		$out = substr( $out, 0, -1);
+	} else {
+		$out = '';
+	}
+
+	//$thumb = wp_get_attachment_image( get_post_thumbnail_id() ); //get img tag + classes
+	//$thumb = get_the_post_thumbnail( $post->ID , 'post-thumbnail' );
+
+	// Act a little differently depending on page-type: home, tag or single post
+	if( is_home() ) {
+		$thumb = array( '/wp-content/uploads/2013/11/oceanup-logo.png' );
+		$title = get_bloginfo( 'title' );
+		$permalink = get_bloginfo( 'home' );
+	} elseif( is_tag() ) {
+		$thumb = array( '/wp-content/uploads/2013/11/oceanup-logo.png' );
+		$title = get_bloginfo( 'title' );
+		$permalink = get_term_link( get_query_var( 'tag' ), 'post_tag' );
+	} else {
+		$thumb = wp_get_attachment_image_src( get_post_thumbnail_id($post->ID), 'thumb');
+		$title = $post->post_title;
+		$permalink = get_permalink();
+	}
+?>
+	<meta property="og:url" content="<?=$permalink;?>" />
+	<meta property="og:title" content="<?=$title;?>" />
+	<meta name="keywords" content="<?=$out;?>" />
+	<meta property="og:description" content="OCEANUP - Teen Gossip, Celebrity and Entertainment News, Photos and Videos" />
+	<meta property="og:image" content="<?=$thumb[0];?>" />
+<?php
+}
+
+// override of canvas theme
+function woo_post_inside_after_default() {
+	global $post;
+
+	$post_info ='[post_tags before=""]';
+	printf( '<div class="post-utility">%s</div>' . "\n", apply_filters( 'woo_post_inside_after_default', $post_info ) );
+
+
+	$attachments = get_posts( array( 'post_status' => 'inherit', 'post_type' => 'attachment', 'post_parent' => $post->ID) );
+	$out = array();
+	foreach( $attachments as $att ) {
+		$meta = get_post_meta( $att->ID, '_wp_attachment_metadata', true );
+		$out[] = $meta['image_meta']['credit'];
+	}
+
+	//$attribution = isset($image_meta['image_meta'], $image_meta['image_meta']['credit']) ? $image_meta['image_meta']['credit'] : '';
+	$attribution = array_shift( array_unique( $out ) );
+
+	if (!empty($attribution)) {
+		echo '<div class="attribution">Photo Credit: ';
+		echo force_balance_tags($attribution) . '</div>';
+	}
+
+} // End woo_post_inside_after_default()
+

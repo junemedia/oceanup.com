@@ -65,14 +65,22 @@ $attribution = isset($image_meta['image_meta'], $image_meta['image_meta']['credi
 			<a href="<?php echo esc_attr(apply_filters('qsou-gallery-image-link', get_permalink(), wp_get_post_parent_id(get_the_ID()), get_the_ID(), 'next')) ?>" class="next image-nav">&gt;</a>
 			<a href="<?php echo esc_attr(apply_filters('qsou-gallery-image-link', get_permalink(), wp_get_post_parent_id(get_the_ID()), get_the_ID(), 'prev')) ?>" class="prev image-nav">&lt;</a>
 
-			<?php if (!empty($attribution)): ?>
-				<div class="attribution">Photo Credit: <?php echo force_balance_tags($attribution) ?></div>
-			<?php endif; ?>
 		</div>
 
 		<?php do_action('qsou-gallery-from-gallery-id', wp_get_post_parent_id(get_the_ID()), get_the_ID()); ?>
 	</section><!-- /.entry -->
 	<div class="fix"></div>
+	<?php 
+	// this shows a credit/attribution under the photo, above the carousel
+	if (!empty($attribution)): ?>
+		<div class="attribution">Photo Credit: <?php echo force_balance_tags($attribution) ?></div>
+	<?php endif; ?>
+
+<?php if ( is_active_sidebar( 'under-carousel-photos' ) ) : ?>
+<ul id="boola">
+	<?php dynamic_sidebar( 'under-carousel-photos' ); ?>
+</ul>
+<?php endif; ?>
 <?php
 woo_post_inside_after();
 ?>
