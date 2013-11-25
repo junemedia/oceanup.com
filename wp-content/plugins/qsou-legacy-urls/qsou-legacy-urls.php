@@ -12,6 +12,7 @@
 class qsou_legacy_url_redirector {
 	public static function pre_init() {
 		add_action('wp', array(__CLASS__, 'maybe_redirect'), 1, 1);
+		add_action('wp', array(__CLASS__, 'maybe_redirect_404'), 2, 1);
 	}
 
 	public static function maybe_redirect($wp) {
@@ -39,6 +40,24 @@ class qsou_legacy_url_redirector {
 						wp_safe_redirect($permalink, 301);
 						exit;
 					}
+				}
+			}
+		}
+	}
+
+	public static function maybe_redirect_404($wp) {
+		global $wp_query;
+
+		if ($wp_query->is_404) {
+			$name = isset($wp->query_vars['name']) ? $wp->query_vars['name'] : '';
+			if (!empty($name)) {
+				global $wpdb;
+				$q = $wpdb->prepare('select id from '.$wpdb->posts.' where post_name = %s', $name);
+				$id = $wpdb->get_var($q);
+				if ($id) {
+					query_posts(array('p' => $id));
+					$wp->handle_404();
+					$GLOBALS['wp_the_query'] = $GLOBALS['wp_query'];
 				}
 			}
 		}
