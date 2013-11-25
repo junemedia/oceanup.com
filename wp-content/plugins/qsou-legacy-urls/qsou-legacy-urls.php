@@ -55,9 +55,15 @@ class qsou_legacy_url_redirector {
 				$q = $wpdb->prepare('select id from '.$wpdb->posts.' where post_name = %s', $name);
 				$id = $wpdb->get_var($q);
 				if ($id) {
-					query_posts(array('p' => $id));
-					$wp->handle_404();
-					$GLOBALS['wp_the_query'] = $GLOBALS['wp_query'];
+					if (preg_match('#.*\.html#', $name)) {
+						query_posts(array('p' => $id));
+						$wp->handle_404();
+						$GLOBALS['wp_the_query'] = $GLOBALS['wp_query'];
+					} else {
+						$permalink = get_permalink($id);
+						wp_safe_redirect($permalink, 301);
+						exit;
+					}
 				}
 			}
 		}
