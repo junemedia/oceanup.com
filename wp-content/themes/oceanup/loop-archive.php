@@ -36,6 +36,12 @@ if (have_posts()) { $count = 0;
 
 		woo_get_template_part( 'content', get_post_type() );
 
+		if( $count == 1 ) {
+			if( is_active_sidebar( 'tag-taboola' ) ) {
+				dynamic_sidebar( 'tag-taboola' );
+			}
+		}
+
 		if( $count == 2 ) {
 			if( is_active_sidebar( 'tag-river' ) ) {
 				dynamic_sidebar( 'tag-river' );
