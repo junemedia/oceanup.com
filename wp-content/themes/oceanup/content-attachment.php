@@ -72,9 +72,9 @@ $attribution = isset($image_meta['image_meta'], $image_meta['image_meta']['credi
 	<div class="fix"></div>
 	<?php 
 	// this shows a credit/attribution under the photo, above the carousel
-	if (!empty($attribution)): ?>
+	/*if (!empty($attribution)): ?>
 		<div class="attribution">Photo Credit: <?php echo force_balance_tags($attribution) ?></div>
-	<?php endif; ?>
+	<?php endif; */ ?>
 
 <?php if ( is_active_sidebar( 'under-carousel-photos' ) ) : ?>
 <ul id="boola">
