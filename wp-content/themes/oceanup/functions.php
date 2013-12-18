@@ -57,6 +57,26 @@ function qsou_extra_widget_areas() {
 		'after_title' => '</h3>'
 	) );
 
+	register_sidebar( array(
+		'name' => __( 'Home Taboola', 'woothemes' ),
+		'id' => 'home-taboola',
+		'description' => __( 'To display a taboola widget after first post on home post river.', 'woothemes' ),
+		'before_widget' => '<div id="%1$s" class="widget %2$s">',
+		'after_widget' => '</div>',
+		'before_title' => '<h3>',
+		'after_title' => '</h3>'
+	) );
+	register_sidebar( array(
+		'name' => __( 'Tags Taboola', 'woothemes' ),
+		'id' => 'tag-taboola',
+		'description' => __( 'To display a taboola widget after first post on  tag/archive post river.', 'woothemes' ),
+		'before_widget' => '<div id="%1$s" class="widget %2$s">',
+		'after_widget' => '</div>',
+		'before_title' => '<h3>',
+		'after_title' => '</h3>'
+	) );
+
+
 }
 qsou_extra_widget_areas();
 	

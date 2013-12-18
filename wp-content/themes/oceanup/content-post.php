@@ -68,9 +68,17 @@ if( $gallery_id ) {
 if ( 'content' == $settings['post_content'] || is_single() ) { the_content( __( 'Continue Reading &rarr;', 'woothemes' ) ); } else { the_excerpt(); }
 if ( 'content' == $settings['post_content'] || is_singular() ) wp_link_pages( $page_link_args );
 ?>
+<?php if( !is_singular() ) {
+	echo '<div class="post-river-tags">';
+	the_tags('<i class="icon-tag"></i> ');
+	echo '</div>';
+} ?>
 	</section><!-- /.entry -->
+
+
 	<div class="fix"></div>
 <?php
+
 woo_post_inside_after();
 ?>
 <?php if (is_singular() && is_active_sidebar('post-content-widget-area')): ?>
