@@ -734,3 +734,12 @@ function woo_post_inside_after_default() {
 
 } // End woo_post_inside_after_default()
 
+function qscomments($out, $atts='') {
+	global $post;
+	$url = get_permalink();
+	//$url = parse_url($url);
+	//$url  = 'http://oceanup.com'.$url['path'];
+	return '<a href="'.$url.'"><i class="icon-comment"></i></a> <a href="'.$url.'#disqus_thread">'.$post->comment_count.'</a>';
+	//str_replace('#comments', '#disqus_thread', $out);
+}
+add_filter('woo_shortcode_post_comments', 'qscomments', PHP_INT_MAX, 2);
