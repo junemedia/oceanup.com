@@ -763,3 +763,9 @@ function qscomments($out, $atts='') {
 	//str_replace('#comments', '#disqus_thread', $out);
 }
 add_filter('woo_shortcode_post_comments', 'qscomments', PHP_INT_MAX, 2);
+
+function qs_default_att_page() {
+	$u = uniqid('marker');
+	?><script> (function($) { var v = $('#tmpl-attachment-display-settings'); v.text(v.text() + '<div class="<?php echo $u ?>"></div><script>jQuery(".<?php echo $u ?>").parent().find(".setting .link-to option").removeAttr("selected").filter("[value=post]").attr("selected", "selected").closest("select").change();</scr'+'ipt>'); })(jQuery); </script><?php
+}
+add_action('print_media_templates', 'qs_default_att_page');
