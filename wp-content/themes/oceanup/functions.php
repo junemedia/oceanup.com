@@ -773,4 +773,4 @@ add_action('print_media_templates', 'qs_default_att_page');
 function qs_hide_admin_bar_on_frontend($show) {
 	return is_admin();
 }
-add_filter('show_admin_bar', 'qs_hide_admin_bar_on_frontend', 10, 1); 
+//add_filter('show_admin_bar', 'qs_hide_admin_bar_on_frontend', 10, 1); 
