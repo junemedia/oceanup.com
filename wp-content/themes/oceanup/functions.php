@@ -769,3 +769,8 @@ function qs_default_att_page() {
 	?><script> (function($) { var v = $('#tmpl-attachment-display-settings'); v.text(v.text() + '<div class="<?php echo $u ?>"></div><script>jQuery(".<?php echo $u ?>").parent().find(".setting .link-to option").removeAttr("selected").filter("[value=post]").attr("selected", "selected").closest("select").change();</scr'+'ipt>'); })(jQuery); </script><?php
 }
 add_action('print_media_templates', 'qs_default_att_page');
+
+function qs_hide_admin_bar_on_frontend($show) {
+	return is_admin();
+}
+add_filter('show_admin_bar', 'qs_hide_admin_bar_on_frontend', 10, 1); 
