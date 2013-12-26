@@ -741,7 +741,7 @@ function woo_post_inside_after_default() {
 	$out = array();
 	foreach( $attachments as $att ) {
 		$meta = get_post_meta( $att->ID, '_wp_attachment_metadata', true );
-		$out[] = $meta['image_meta']['credit'];
+		if (is_array($meta)) $out[] = $meta['image_meta']['credit'];
 	}
 
 	//$attribution = isset($image_meta['image_meta'], $image_meta['image_meta']['credit']) ? $image_meta['image_meta']['credit'] : '';
