@@ -21,25 +21,24 @@ if (!class_exists("nxs_class_SNAP_FB")) { class nxs_class_SNAP_FB {
       
       //## Some OLD Format Conversion
       if (!isset($options['attachType']) && isset($options['fbAttch'])) $options['attachType'] = $options['fbAttch'];
-      if (!isset($options['postType']) && isset($options['fbPostType'])) $options['postType'] = $options['fbPostType'];
-      if (!isset($options['pgID']) && isset($options['fbPgID'])) $options['pgID'] = $options['fbPgID'];
-      
+      if (!isset($options['postType']) && isset($options['fbPostType'])) $options['postType'] = $options['fbPostType'];  $fbPostType = $options['postType'];
+      if (!isset($options['pgID']) && isset($options['fbPgID'])) $options['pgID'] = $options['fbPgID'];      
+            
       //## Get URL info.      
       if ($fbPostType!='I' && $fbPostType!='T' && isset($options['useFBGURLInfo']) && $options['useFBGURLInfo']=='1') { $url =  $message['url']; $params = array(); 
         $flds = array('id'=>$url, 'scrape'=>'true');      $response =  wp_remote_post('http://graph.facebook.com', array('body' => $flds)); 
-        if (is_wp_error($response)) $badOut['Error'] = print_r($response, true)." - ERROR"; else { $response = json_decode($response['body'], true);    //   prr($response);     die();
-            if (trim($response['description']!='')) $message['urlDescr'] = $response['description'];  if (trim($response['title']!='')) $message['urlTitle'] =  $response['title'];
+        if (is_wp_error($response)) $badOut['Error'] = print_r($response, true)." - ERROR"; else { $response = json_decode($response['body'], true);     //  prr($response);     die();
+            if (!empty($response['description'])) $message['urlDescr'] = $response['description'];  if (!empty($response['title'])) $message['urlTitle'] =  $response['title'];
             if (!empty($response['site_name'])) $message['siteName'] = $response['site_name']; elseif ($message['siteName']=='') $message['siteName'] = $message['title'];
             if (!empty($response['image'][0]['url'])) $message['imageURL'] = $response['image'][0]['url'];
         }
       } // prr($message);
-      $msg = nxs_doFormatMsg($options['fbMsgFormat'], $message); $imgURL = $message['imageURL']; $fbPostType = $options['postType'];  $fbWhere = 'feed'; 
+      $msg = nxs_doFormatMsg($options['fbMsgFormat'], $message); $imgURL = $message['imageURL']; $fbWhere = 'feed'; 
       $attachType = $options['attachType']; if ($attachType=='1') $attachType = 'A'; else $attachType = 'S';
       if ($options['imgUpl']!='2') $options['imgUpl'] = 'T'; else $options['imgUpl'] = 'A'; $page_id = $options['pgID'];        
       $msg = strip_tags($msg); $msg = str_ireplace('&lt;(")','<(")', $msg); //## FB Smiles FIX 3
       if (substr($msg, 0, 1)=='@') $msg = ' '.$msg; // ERROR] couldn't open file fix
-      $mssg = array('access_token'  => $options['fbAppPageAuthToken'], 'message' => $msg); //prr($message);
-      
+      $mssg = array('access_token'  => $options['fbAppPageAuthToken'], 'message' => $msg);       
       if ($fbPostType=='I' && trim($imgURL)=='') $fbPostType='T';
       if ($fbPostType=='A' || $fbPostType=='') {
         if (($attachType=='A' || $attachType=='S')) { $attArr = array('name' => $message['urlTitle'], 'caption' => $message['siteName'], 'link' =>$message['url'], 'description' => $message['urlDescr']); $mssg = array_merge($mssg, $attArr); ; }
@@ -54,7 +53,6 @@ if (!class_exists("nxs_class_SNAP_FB")) { class nxs_class_SNAP_FB {
           if (isset($chosen_album) && isset($chosen_album["id"])) $page_id = $chosen_album["id"];
         }        
       }
-      // prr($message); prr($mssg); prr($options);  // die();
       try { $ret = $facebook->api("/$page_id/".$fbWhere, "post", $mssg);} catch (NXS_FacebookApiException $e) { $badOut['Error'] = ' [ERROR] '.$e->getMessage()."<br/>\n";
         if (stripos($e->getMessage(),'This API call requires a valid app_id')!==false) { 
           if ( !is_numeric($page_id) && stripos($options['fbURL'], '/groups/')!=false) $badOut['Error'] .= ' [ERROR] Unrecognized Facebook Group ID. Please use numeric ID.'; 

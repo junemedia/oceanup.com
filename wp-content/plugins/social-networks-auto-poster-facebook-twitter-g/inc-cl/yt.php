@@ -15,20 +15,20 @@ if (!class_exists("nxs_snapClassYT")) { class nxs_snapClassYT {
       <div class="nxs_box_inside">
         <?php if(!function_exists('doPostToGooglePlus')) {?> YouTube doesn't have a built-in API for automated posts yet. The current <a href="http://developers.google.com/+/api/">YouTube API</a> is "Read Only" and can't be used for posting.  <br/>You need to get a special <a target="_blank" href="http://www.nextscripts.com/google-plus-automated-posting">library module</a> to be able to publish your content to YouTube. 
         <?php } else foreach ($ntOpts as $indx=>$pbo){ if (trim($pbo['nName']=='')) $pbo['nName'] = $pbo[$ntInfo['defNName']]; ?>
-          <p style="margin:0px;margin-left:5px;">
-            <input value="1" name="<?php echo $ntInfo['lcode']; ?>[<?php echo $indx; ?>][apDo<?php echo $ntInfo['code']; ?>]" onchange="doShowHideBlocks('<?php echo $ntInfo['code']; ?>');" type="checkbox" <?php if ((int)$pbo['do'.$ntInfo['code']] == 1) echo "checked"; ?> /> 
+          <p style="margin:0px;margin-left:5px;"> <img id="<?php echo $ntInfo['code'].$indx;?>LoadingImg" style="display: none;" src='<?php echo $nxs_plurl; ?>img/ajax-loader-sm.gif' />
+            <input value="1" name="<?php echo $ntInfo['lcode']; ?>[<?php echo $indx; ?>][apDo<?php echo $ntInfo['code']; ?>]" onchange="<?php if (isset($pbo['catSel']) && (int)$pbo['catSel'] == 1) { ?>nxs_doShowWarning(jQuery(this), '<?php echo (substr_count($pbo['catSelEd'], ",")+1); ?>', '<?php echo $ntInfo['code'];?>', '<?php echo $indx;?>');<?php } ?>" type="checkbox" <?php if ((int)$pbo['do'.$ntInfo['code']] == 1 && $pbo['catSel']!='1') echo "checked"; ?> /> 
             <?php if (isset($pbo['catSel']) && (int)$pbo['catSel'] == 1) { ?> <span onmouseout="nxs_hidePopUpInfo('popOnlyCat');" onmouseover="nxs_showPopUpInfo('popOnlyCat', event);"><?php echo "*[".(substr_count($pbo['catSelEd'], ",")+1)."]*" ?></span><?php } ?>
             <?php if (isset($pbo['rpstOn']) && (int)$pbo['rpstOn'] == 1) { ?> <span onmouseout="nxs_hidePopUpInfo('popReActive');" onmouseover="nxs_showPopUpInfo('popReActive', event);"><?php echo "*[R]*" ?></span><?php } ?>
             <strong><?php  _e('Auto-publish to', 'nxs_snap'); ?> <?php echo $ntInfo['name']; ?> <i style="color: #005800;"><?php if($pbo['nName']!='') echo "(".$pbo['nName'].")"; ?></i></strong>
-          &nbsp;&nbsp;<?php if ($ntInfo['tstReq'] && (!isset($pbo[$ntInfo['lcode'].'OK']) || $pbo[$ntInfo['lcode'].'OK']=='')){ ?><b style="color: #800000"><?php  _e('Attention requred. Unfinished setup', 'nxs_snap'); ?> ==&gt;</b><?php } ?><a id="do<?php echo $ntInfo['code'].$indx; ?>A" href="#" onclick="doShowHideBlocks2('<?php echo $ntInfo['code'].$indx; ?>');return false;">[<?php  _e('Show Settings', 'nxs_snap'); ?>]</a>&nbsp;&nbsp;
+          &nbsp;&nbsp;<?php if ($ntInfo['tstReq'] && (!isset($pbo[$ntInfo['lcode'].'OK']) || $pbo[$ntInfo['lcode'].'OK']=='')){ ?><b style="color: #800000"><?php  _e('Attention requred. Unfinished setup', 'nxs_snap'); ?> ==&gt;</b><?php } ?><a id="do<?php echo $ntInfo['code'].$indx; ?>AG" href="#" onclick="doGetHideNTBlock('<?php echo $ntInfo['code'];?>' , '<?php echo $indx; ?>');return false;">[<?php  _e('Show Settings', 'nxs_snap'); ?>]</a>&nbsp;&nbsp;
           <a href="#" onclick="doDelAcct('<?php echo $ntInfo['lcode']; ?>', '<?php echo $indx; ?>', '<?php if (isset($pbo['bgBlogID'])) echo $pbo['nName']; ?>');return false;">[<?php  _e('Remove Account', 'nxs_snap'); ?>]</a>
-          </p><?php $pbo['ntInfo'] = $ntInfo; $this->showNTSettings($indx, $pbo);             
+          </p><div id="nxsNTSetDiv<?php echo $ntInfo['code'].$indx; ?>"></div><?php // $pbo['ntInfo'] = $ntInfo; $this->showNTSettings($indx, $pbo);             
         }?>
       </div>
     </div> <?php 
   }  
   //#### Show NEW Settings Page
-  function showNewNTSettings($myto){ $options = array('nName'=>'', 'doYT'=>'1', 'ytUName'=>'', 'ytPageID'=>'', 'ytCommID'=>'', 'postType'=>'A', 'ytPass'=>''); $options['ntInfo']= array('lcode'=>'yt'); $this->showNTSettings($myto, $options, true);}
+  function showNewNTSettings($myto){ $options = array('nName'=>'', 'doYT'=>'1', 'ytUName'=>'', 'ytPageID'=>'', 'ytGPPageID'=>'', 'postType'=>'A', 'ytPass'=>''); $options['ntInfo']= array('lcode'=>'yt'); $this->showNTSettings($myto, $options, true);}
   //#### Show Unit  Settings
   function showNTSettings($ii, $options, $isNew=false){  global $nxs_plurl; $nt = $options['ntInfo']['lcode']; $ntU = strtoupper($nt); 
     if (!isset($options['nHrs'])) $options['nHrs'] = 0; if (!isset($options['nMin'])) $options['nMin'] = 0;  if (!isset($options['catSel'])) $options['catSel'] = 0;  if (!isset($options['catSelEd'])) $options['catSelEd'] = ''; 
@@ -38,7 +38,7 @@ if (!class_exists("nxs_snapClassYT")) { class nxs_snapClassYT {
             <b><?php _e('YouTube API Library not found', 'nxs_snap'); ?></b>
              <br/><br/> <?php _e('YouTube doesn\'t have a built-in API for automated posts yet.', 'nxs_snap'); ?> <br/><?php _e('The current <a target="_blank" href="http://developers.google.com/+/api/">YouTube API</a> is "Read Only" and can\'t be used for posting.  <br/><br/>You need to get a special <a target="_blank" href="http://www.nextscripts.com/google-plus-automated-posting"><b>API Library Module</b></a> to be able to publish your content to YouTube.', 'nxs_snap'); ?></span></div>
             <?php return; }; ?>            
-            <div class="nsx_iconedTitle" style="float: right; background-image: url(<?php echo $nxs_plurl; ?>img/yt16.png);"><a style="font-size: 12px;" target="_blank"  href="http://www.nextscripts.com/setup-installation-google-plus-social-networks-auto-poster-wordpress/"><?php $nType="YouTube"; printf( __( 'Detailed %s Installation/Configuration Instructions', 'nxs_snap' ), $nType); ?></a></div>
+            <div class="nsx_iconedTitle" style="float: right; background-image: url(<?php echo $nxs_plurl; ?>img/yt16.png);"><a style="font-size: 12px;" target="_blank"  href="http://www.nextscripts.com/instructions/youtube-social-networks-auto-poster-wordpress-setup-installation/"><?php $nType="YouTube"; printf( __( 'Detailed %s Installation/Configuration Instructions', 'nxs_snap' ), $nType); ?></a></div>
             
             <div style="width:100%;"><strong><?php _e('Account Nickname', 'nxs_snap'); ?>:</strong> <i><?php _e('Just so you can easily identify it', 'nxs_snap'); ?></i> </div><input name="yt[<?php echo $ii; ?>][nName]" id="ytnName<?php echo $ii; ?>" style="font-weight: bold; color: #005800; border: 1px solid #ACACAC; width: 40%;" value="<?php _e(apply_filters('format_to_edit', htmlentities($options['nName'], ENT_COMPAT, "UTF-8")), 'nxs_snap') ?>" /><br/>
             <?php echo nxs_addQTranslSel('yt', $ii, $options['qTLng']); ?>
@@ -46,7 +46,7 @@ if (!class_exists("nxs_snapClassYT")) { class nxs_snapClassYT {
               <br/>
     <ul class="nsx_tabs">
     <li><a href="#nsx<?php echo $nt.$ii ?>_tab1"><?php _e('Account Info', 'nxs_snap'); ?></a></li>    
-    <li><a href="#nsx<?php echo $nt.$ii ?>_tab2"><?php _e('Advanced', 'nxs_snap'); ?></a></li>
+    <?php if (!$isNew) { ?>  <li><a href="#nsx<?php echo $nt.$ii ?>_tab2"><?php _e('Advanced', 'nxs_snap'); ?></a></li>  <?php } ?>
     </ul>
     <div class="nsx_tab_container"><?php /* ######################## Account Tab ####################### */ ?>
     <div id="nsx<?php echo $nt.$ii ?>_tab1" class="nsx_tab_content" style="background-image: url(<?php echo $nxs_plurl; ?>img/<?php echo $nt; ?>-bg.png); background-repeat: no-repeat;  background-position:90% 10%;">
@@ -79,37 +79,29 @@ if (!class_exists("nxs_snapClassYT")) { class nxs_snapClassYT {
             <b><?php _e('Test your settings', 'nxs_snap'); ?>:</b>&nbsp;&nbsp;&nbsp; <a href="#" class="NXSButton" onclick="testPost('YT', '<?php echo $ii; ?>'); return false;"><?php printf( __( 'Submit Test Post to %s', 'nxs_snap' ), $nType); ?></a>              <?php } 
             ?></div>
             <?php /* ######################## Advanced Tab ####################### */ ?>
-    <div id="nsx<?php echo $nt.$ii ?>_tab2" class="nsx_tab_content">
+   <?php if (!$isNew) { ?>   <div id="nsx<?php echo $nt.$ii ?>_tab2" class="nsx_tab_content">
     
-    <?php if (!$isNew) { ?> <div class="nxs_tls_cpt"><?php _e('Categories', 'nxs_snap'); ?></div>
-    <div style="width:100%;"><strong><?php _e('Categories', 'nxs_snap'); ?>:</strong>
-       <input value="0" id="catSelA<?php echo $ii; ?>" type="radio" name="<?php echo $nt; ?>[<?php echo $ii; ?>][catSel]" <?php if ((int)$options['catSel'] != 1) echo "checked"; ?> /> All                                  
-       <input value="1" id="catSelS<?php echo $ntU; ?><?php echo $ii; ?>" type="radio" name="<?php echo $nt; ?>[<?php echo $ii; ?>][catSel]" <?php if ((int)$options['catSel'] == 1) echo "checked"; ?> /> <a href="#" style="text-decoration: none;" class="showCats" id="nxs_SCA_<?php echo $ntU; ?><?php echo $ii; ?>" onclick="jQuery('#catSelS<?php echo $ntU; ?><?php echo $ii; ?>').attr('checked', true); jQuery('#tmpCatSelNT').val('<?php echo $ntU; ?><?php echo $ii; ?>'); nxs_markCats( jQuery('#nxs_SC_<?php echo $ntU; ?><?php echo $ii; ?>').val() ); jQuery('#showCatSel').bPopup({ modalClose: false, appendTo: '#nsStForm', opacity: 0.6, follow: [false, false], position: [75, 'auto']}); return false;">Selected<?php if ($options['catSelEd']!='') echo "[".(substr_count($options['catSelEd'], ",")+1)."]"; ?></a>       
-       <input type="hidden" name="<?php echo $nt; ?>[<?php echo $ii; ?>][catSelEd]" id="nxs_SC_<?php echo $ntU; ?><?php echo $ii; ?>" value="<?php echo $options['catSelEd']; ?>" />
-    <br/><i><?php _e('Only selected categories will be autoposted to this account', 'nxs_snap'); ?></i></div> 
-    <br/>
-    <?php } ?>
-    
-    <?php nxs_addPostingDelaySelV3($nt, $ii, $options['nHrs'], $options['nMin'], $options['nDays']); ?>
-    <?php nxs_showRepostSettings($nt, $ii, $options); ?>
+   <?php nxs_showCatTagsCTFilters($nt, $ii, $options); 
+      nxs_addPostingDelaySelV3($nt, $ii, $options['nHrs'], $options['nMin'], $options['nDays']); 
+      nxs_showRepostSettings($nt, $ii, $options); ?>
             
             
-    </div> <?php /* #### End of Tab #### */ ?>
+    </div>     <?php } ?> <?php /* #### End of Tab #### */ ?>
     </div><br/> <?php /* #### End of Tabs #### */ ?>
     
-    <div class="submit clear" style="padding-bottom: 0px;"><input type="submit" class="button-primary" name="update_NS_SNAutoPoster_settings" value="<?php _e('Update Settings', 'nxs_snap') ?>" /></div></div><?php
+    <div class="submit nxclear" style="padding-bottom: 0px;"><input type="submit" class="button-primary" name="update_NS_SNAutoPoster_settings" value="<?php _e('Update Settings', 'nxs_snap') ?>" /></div></div><?php
   }
   //#### Set Unit Settings from POST
-  function setNTSettings($post, $options){ global $nxs_snapThisPageUrl; $code = 'YT'; $lcode = 'yt'; 
+  function setNTSettings($post, $options){ $code = 'YT'; $lcode = 'yt'; 
     foreach ($post as $ii => $pval){ 
       if (isset($pval['apYTUName']) && $pval['apYTUName']!=''){ if (!isset($options[$ii])) $options[$ii] = array();
         if (isset($pval['apYTUName']))   $options[$ii]['ytUName'] = trim($pval['apYTUName']);
         if (isset($pval['nName']))          $options[$ii]['nName'] = trim($pval['nName']);
         if (isset($pval['apYTPass']))    $options[$ii]['ytPass'] = 'n5g9a'.nsx_doEncode($pval['apYTPass']); else $options[$ii]['ytPass'] = '';  
         if (isset($pval['apYTPage']))    $options[$ii]['ytPageID'] = trim($pval['apYTPage']);  
-        if (isset($pval['ytCommID']))    $options[$ii]['ytCommID'] = trim($pval['ytCommID']);  
+        if (isset($pval['ytGPPageID']))    $options[$ii]['ytGPPageID'] = trim($pval['ytGPPageID']);  
         
-        if (isset($pval['catSel'])) $options[$ii]['catSel'] = trim($pval['catSel']);
+        if (isset($pval['catSel'])) $options[$ii]['catSel'] = trim($pval['catSel']); else $options[$ii]['catSel'] = 0;
         if ($options[$ii]['catSel']=='1' && trim($pval['catSelEd'])!='') $options[$ii]['catSelEd'] = trim($pval['catSelEd']); else $options[$ii]['catSelEd'] = '';
                       
         if (isset($pval['postType']))   $options[$ii]['postType'] = $pval['postType'];         
@@ -121,7 +113,7 @@ if (!class_exists("nxs_snapClassYT")) { class nxs_snapClassYT {
         if (isset($pval['delayDays'])) $options[$ii]['nDays'] = trim($pval['delayDays']);
         if (isset($pval['delayHrs'])) $options[$ii]['nHrs'] = trim($pval['delayHrs']); if (isset($pval['delayMin'])) $options[$ii]['nMin'] = trim($pval['delayMin']); 
         if (isset($pval['qTLng'])) $options[$ii]['qTLng'] = trim($pval['qTLng']); 
-      }
+      } elseif ((isset($pval['catSel'])) && $pval['catSel']=='X' && (isset($pval['apDoFB'])) && $pval['apDoFB']=='1') $options[$ii]['catSel'] = trim($pval['catSel']);
     } return $options;
   }  
   //#### Show Post->Edit Meta Box Settings
@@ -130,7 +122,9 @@ if (!class_exists("nxs_snapClassYT")) { class nxs_snapClassYT {
         $doYT = $ntOpt['doYT'] && (is_array($pMeta) || $ntOpt['catSel']!='1');   
         $isAvailYT =  $ntOpt['ytUName']!='' && $ntOpt['ytPass']!='';   $ytMsgFormat = htmlentities($ntOpt['ytMsgFormat'], ENT_COMPAT, "UTF-8");              
       ?>  
-      <tr><th style="text-align:left;" colspan="2"><?php if ( $ntOpt['catSel']=='1' && trim($ntOpt['catSelEd'])!='' )  { ?> <input type="hidden" class="nxs_SC" id="nxs_SC_YT<?php echo $ii; ?>" value="<?php echo $ntOpt['catSelEd']; ?>" /> <?php } ?>
+      <tr><th style="text-align:left;" colspan="2">
+      <?php if ($ntOpt['catSel']=='1' && trim($ntOpt['catSelEd'])!='')  { ?> <input type="hidden" class="nxs_SC" id="nxs_SC_<?php echo $ntU; ?><?php echo $ii; ?>" value="<?php echo $ntOpt['catSelEd']; ?>" /> <?php } ?>
+      <?php if (!empty($ntOpt['tagsSelX'])) { ?>  <input type="hidden" class="nxs_TG" id="nxs_TG_<?php echo $ntU; ?><?php echo $ii; ?>" value="<?php echo $ntOpt['tagsSelX']; ?>" /> <?php } ?>
       <?php if ($isAvailYT) { ?><input class="nxsGrpDoChb" value="1" id="doYT<?php echo $ii; ?>" <?php if ($post->post_status == "publish") echo 'disabled="disabled"';?> type="checkbox" name="yt[<?php echo $ii; ?>][doYT]" <?php if ((int)$doYT == 1) echo 'checked="checked" title="def"';  ?> /> 
       <?php if ($post->post_status == "publish") { ?> <input type="hidden" name="yt[<?php echo $ii; ?>][doYT]" value="<?php echo $doYT;?>"> <?php } ?> <?php } ?>
       
@@ -151,8 +145,8 @@ if (!class_exists("nxs_snapClassYT")) { class nxs_snapClassYT {
                 
                 <?php if ($ntOpt['rpstOn']=='1') { ?> 
                 
-                <tr id="altFormat1" style=""><th scope="row" style="vertical-align:top; padding-top:6px; text-align:right; width:60px; padding-right:10px;">
-                <input value="0"  type="hidden" name="<?php echo $nt; ?>[<?php echo $ii; ?>][rpstPostIncl]"/><input value="nxsi<?php echo $ii; ?>yt" type="checkbox" name="<?php echo $nt; ?>[<?php echo $ii; ?>][rpstPostIncl]"  <?php if ($ntOpt['rpstPostIncl'] != '0') echo "checked"; ?> />
+                <tr id="altFormat1" style=""><th scope="row" class="nxsTHRow">
+                <input value="0"  type="hidden" name="<?php echo $nt; ?>[<?php echo $ii; ?>][rpstPostIncl]"/><input value="nxsi<?php echo $ii; ?>yt" type="checkbox" name="<?php echo $nt; ?>[<?php echo $ii; ?>][rpstPostIncl]"  <?php if (!empty($ntOpt['rpstPostIncl'])) echo "checked"; ?> />
                 </th>
                 <td> <?php _e('Include in "Auto-Reposting" to this network.', 'nxs_snap') ?>                
                 </td></tr> <?php } ?>

@@ -4,8 +4,8 @@ Contributors: NextScripts
 Donate link: http://www.nextscripts.com/social-networks-auto-poster-for-wordpress
 Tags: automation, autopost, auto-post, auto post, socialnetworks, socialnetwork, social networks, social network, facebook, google, google+, twitter, google plus, pinterest, tumblr, blogger, blogspot, blogpost, linkedin, delicious, delicious.com, reddit, reddit.com, plugin, links, Post, posts, api, automatic, seo, integration, bookmark, FriendFeed, bookmarks, admin, images, image, social, sharing, share, repost, re-post, wordpress.com, StumbleUpon, Diigo, vBulletin, Plurk, forums, vKontakte, open graph, LiveJournal, YouTube
 Requires at least: 3.1
-Tested up to: 3.7.1
-Stable tag: 3.0.8
+Tested up to: 3.8.0
+Stable tag: 3.1.2
 License: GPLv2 or later
 
 Automatically re-publishes blogposts to Facebook, Twitter, Google+, Pinterest, LinkedIn, Blogger, Tumblr, Delicious, Plurk, etc profiles and/or pages
@@ -150,6 +150,51 @@ Please see more <a href="http://www.nextscripts.com/faq/">Frequently asked quest
 4. Google+: Types of Post 
 
 == Changelog ==
+
+= 3.1.2 [01/15/2013] =
+
+* [Critical] Bug Fix - [ERROR] (#100) actions should be a JSON-encoded dictionary with 'name' and 'link' keys
+* Improvement/Bug Fix - Plugin will import all comments from Facebook posts, not just the first 100.  
+* Bug Fix - Plugin were re-posting the same "Sticky" post in some configurations.  
+
+= 3.1.1 [01/14/2013] =
+
+* Improvement/Bug Fix - Update for Jan 14 Twitter API change - requirement for ONLY secured SSL connections
+* Improvement/Bug Fix - Better compatibility with some WP Admin themes - like fixed missing "Update Settings" button 
+* Improvement/Bug Fix - Stability improvements and better error handling for Wordpress based sites.
+* Improvement/Bug Fix - Some fixes, improvements and optimizations to the re-posting functionality.
+* Improvement/Bug Fix - More clear interface for category filters. 
+* Bug Fix - Missing Twitter image on servers without proper "Content-Length" header
+* Bug Fix - Duplicate categories filter for Twitter has been removed. 
+* Bug Fix - vBulletin module optimization and better error handling.
+* Bug Fix - General options were getting overwritten by post options in some configurations. 
+* Bug Fix - Memory limit problem for servers with more then 1GB of allowed for PHP memory. 
+
+= 3.1.0 [12/12/2013] =
+
+* New - Wordpress 3.8 Compatibility
+* New - New Ajax based settings page - 7 times lighter and faster. 
+* New - Filter autoposting by tags and custom taxonomies. 
+* New - Ability to set all posts "Enabled/Disabled for repost" according to the Categories/Tags/Custom Taxonomies filters
+* Improvement - Performance/compatibility improvement with latest LastPass extension. 
+* Improvement - Better compatibility with SSL.
+* Improvement/Bug Fix - HTML tags and shortcodes are now removed from Facebook attached titles. 
+* Improvement/Bug Fix - Compatibility with new LinkedIn security feature "We just sent you the code". 
+* Bug Fix - Facebook - wrong image was selected for "Image" posts in some configurations.
+* Bug Fix - broken reposting if "Newer then XX Days" value is too big. 
+* Bug Fix - FriendFeed was ignoring message format and posting checkbox. 
+* Bug Fix - Incorrect display of "Time to Post" for scheduled posts. 
+* Bug Fix - incorrect "Autopost Cancelled" messages. 
+
+= 3.0.9 [11/22/2013] =
+
+* New - %FULLTITLE% tag will insert processed title.
+* Bug Fix - YouTube - Google+ page setting were not saved.
+* Bug Fix - LinkedIn - Titles for groups were ignored.
+* Bug Fix - Set Time was not working in Firefox.
+* Bug Fix - Plurk authorization problems.
+* Bug Fix - Individual Category Excluded was breaking autoposting.
+* Bug Fix - Wordpress [caption] tag were broken
 
 = 3.0.8 [11/18/2013] =
 
