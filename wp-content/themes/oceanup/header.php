@@ -52,7 +52,7 @@ if ((typeof(f311044)=='undefined' || f311044 > 0) ) {
 </script>
 <!-- END AD TAG -->
 <?php endif; ?>
-
+<meta name="google-site-verification" content="TgIB1gz9bK1CokHPqDr6z6K6RPM5_qPOoEdjghctIas" />
 </head>
 <body <?php body_class(); ?>>
 
