@@ -22,6 +22,10 @@ define('WP_CACHE', false);
 define('SHORTINIT', true);
 
 require_once PATH_TO_ABSPATH.'wp-load.php';
+require_once PATH_TO_ABSPATH.'wp-includes/link-template.php';
+require_once PATH_TO_ABSPATH.'wp-includes/general-template.php';
+require_once PATH_TO_ABSPATH.'wp-includes/http.php';
+require_once PATH_TO_ABSPATH.'wp-includes/class-http.php';
 
 if (!function_exists('_lou_db_check')) { function _lou_db_check() {
 	require_once ABSPATH.WPINC.'/formatting.php';
