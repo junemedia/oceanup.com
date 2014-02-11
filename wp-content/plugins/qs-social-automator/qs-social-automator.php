@@ -549,6 +549,8 @@ class qs_social_automator {
 		$post = $_POST;
 		$acct->save($post, self::$settings);
 		$acct_info = $acct->instance_info();
+		self::$settings['post_types'] = array_unique(array_merge(self::$settings['post_types'], $acct->post_types()));
+		self::_save_settings();
 
 		// add the account base data to the response
 		$resp['acct'] = $acct;
@@ -1081,6 +1083,7 @@ class qs_social_automator {
 
 		// sanitize, just in case
 		self::$settings['accounts'] = is_array(self::$settings['accounts']) ? self::$settings['accounts'] : self::$defaults['accounts'];
+		self::$settings['post_types'] = is_array(self::$settings['post_types']) ? self::$settings['post_types'] : array();
 	}
 
 	// load all the accounts that are currently registered
