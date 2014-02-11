@@ -24,9 +24,9 @@ define('SHORTINIT', true);
 require_once PATH_TO_ABSPATH.'wp-load.php';
 
 if (!function_exists('_lou_db_check')) { function _lou_db_check() {
+	require_once ABSPATH.WPINC.'/formatting.php';
 	$dbv = get_option('_lou_dbv', 0);
 	if (version_compare($dbv, LOUSPAWNV) >= 0) return;
-	require_once ABSPATH.WPINC.'/formatting.php';
 
 	global $wpdb;
 	$wpdb->query('drop table if exists '.$wpdb->prefix.'qssa_spawn_cron');
