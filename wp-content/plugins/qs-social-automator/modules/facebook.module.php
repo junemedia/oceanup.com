@@ -436,6 +436,7 @@ class qssa_facebook extends qssa__base_module {
 			switch ($type) {
 				default:
 				case 'feed':
+					$og = $this->_get_post_og($post);
 					// describe the post to attach
 					$args = array(
 						'name' => apply_filters('the_title', $post->post_title),

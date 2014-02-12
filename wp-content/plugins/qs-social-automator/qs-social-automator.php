@@ -3,7 +3,7 @@
  * Plugin Name: Quadshot Social Automator Lite
  * Plugin URI:  http://quadshot.com/
  * Description: Easy to use, reliable, social network autoposting tool.
- * Version:     1.1.3
+ * Version:     1.1.4
  * Author:      Quadshot Software LLC
  * Author URI:  http://quadshot.com/
  * License: OpenTickets Software License Agreement
@@ -14,7 +14,7 @@
 if (!class_exists('qs_social_automator')):
 // loader class w/ admin pages
 class qs_social_automator {
-	protected static $version = '1.1.3'; // plugin version
+	protected static $version = '1.1.4'; // plugin version
 	protected static $plugin_url = ''; // holder for plugin url, for assets
 	protected static $plugin_path = ''; // holder for plugin path, for includes
 	protected static $def_ret_type = 'application/json'; // default ajax return type
@@ -209,7 +209,7 @@ class qs_social_automator {
 		$args = wp_parse_args($args, array('attempt' => 1));
 		$acct = self::_get_acct_by_id($args['instance_id']);
 		$post = get_post($args['post_id']);
-		$process = $success = $has_acct = $has_psot = true;
+		$process = $success = $has_acct = $has_post = true;
 
 		do_action('qs-sa/autopost/log', 'details', 0, 'Started attempting auto post for post ['.$args['post_id'].'] on account ['.$args['name'].'].');
 
@@ -234,7 +234,7 @@ class qs_social_automator {
 			do_action('qs-sa/autopost/log', 'log', $post->ID,
 				'Failed autoposting post ['.$args['post_id'].':'.$post->post_title.'] to account ['.$args['name'].'].', 'bad');
 			do_action('qs-sa/autopost/log', 'details', $post->ID,
-				'While trying to process the autoposing of post ['.$post->ID.'] on account ['.$acct->name().'], and Exception was thrown. Here are the details: '
+				'('.__LINE__.')'.'While trying to process the autoposing of post ['.$post->ID.'] on account ['.$acct->name().'], and Exception was thrown. Here are the details: '
 						.$e->getMessage().' in ['.$e->getFile().'] @ '.$e->getLine(), 'bad');
 		}
 
