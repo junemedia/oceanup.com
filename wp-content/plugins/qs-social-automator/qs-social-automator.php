@@ -3,7 +3,7 @@
  * Plugin Name: Quadshot Social Automator Lite
  * Plugin URI:  http://quadshot.com/
  * Description: Easy to use, reliable, social network autoposting tool.
- * Version:     1.1.4
+ * Version:     1.1.5
  * Author:      Quadshot Software LLC
  * Author URI:  http://quadshot.com/
  * License: OpenTickets Software License Agreement
@@ -14,7 +14,7 @@
 if (!class_exists('qs_social_automator')):
 // loader class w/ admin pages
 class qs_social_automator {
-	protected static $version = '1.1.4'; // plugin version
+	protected static $version = '1.1.5'; // plugin version
 	protected static $plugin_url = ''; // holder for plugin url, for assets
 	protected static $plugin_path = ''; // holder for plugin path, for includes
 	protected static $def_ret_type = 'application/json'; // default ajax return type

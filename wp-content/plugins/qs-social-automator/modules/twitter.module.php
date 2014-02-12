@@ -259,6 +259,39 @@ class qssa_twitter extends qssa__base_module {
 		return true;
 	}
 
+	protected function _get_image_filename($image_id) {
+		$file = '';
+		$u = wp_upload_dir();
+		$meta = wp_get_attachment_metadata($image_id);
+		$full = $meta && isset($meta['file']) ? $meta['file'] : '';
+
+		if ($full && is_array($u) && isset($u['basedir'])) {
+			$lives_in = trailingslashit(dirname($full));
+			$basedir = trailingslashit($u['basedir']).$lives_in;
+			$full = basename($full);
+
+			$k = isset($meta['width'], $meta['height']) ? $meta['width'] * $meta['height'] : '0-error';
+			$potential_filenames = array($k.'' => $full);
+			if (isset($meta['sizes']) && !empty($meta['sizes'])) foreach ($meta['sizes'] as $size_slug => $data) {
+				$k = $data['width'] * $data['height'];
+				$potential_filenames[$k.''] = $data['file'];
+			}
+
+			krsort($potential_filenames, SORT_NUMERIC);
+
+			foreach ($potential_filenames as $filename) {
+				$fullname = $basedir.$filename;
+				$file_size = @filesize($fullname);
+				if ($file_size && $file_size <= $this->settings['config']['photo_size_limit']) {
+					$file = $fullname;
+					break;
+				}
+			}
+		}
+
+		return $file;
+	}
+
 	public function autopost($post) {
 		$post = get_post($post);
 
