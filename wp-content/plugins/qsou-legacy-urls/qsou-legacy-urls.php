@@ -16,9 +16,15 @@ class qsou_legacy_url_redirector {
 	}
 
 	public static function maybe_redirect($wp) {
-		if (isset($wp->query_vars['pagename']) && !empty($wp->query_vars['pagename'])) {
+		global $wp_query;
+		if ($wp_query->is_404) {
+			$uri = $_SERVER['REQUEST_URI'];
+			$puri = parse_url($uri);
+			$name = trim($puri['path'], '/');
+		//if (isset($wp->query_vars['pagename']) && !empty($wp->query_vars['pagename'])) {
+			//$name = $wp->query_vars['pagename'];
 			global $wpdb;
-			$q = $wpdb->prepare('select object_id, urltype from '.$wpdb->prefix.'qsou_legacy_urls where olduri = %s', $wp->query_vars['pagename']);
+			$q = $wpdb->prepare('select object_id, urltype from '.$wpdb->prefix.'qsou_legacy_urls where olduri = %s', $name);
 			$row = $wpdb->get_row($q);
 			if (is_object($row) && !is_wp_error($row)) {
 				$id = $row->object_id;
