@@ -745,13 +745,14 @@ function woo_post_inside_after_default() {
 	}
 
 	//$attribution = isset($image_meta['image_meta'], $image_meta['image_meta']['credit']) ? $image_meta['image_meta']['credit'] : '';
+	/*
 	$attribution = array_shift( array_unique( $out ) );
 
 	if (!empty($attribution)) {
 		echo '<div class="attribution">Photo Credit: ';
 		echo force_balance_tags($attribution) . '</div>';
 	}
-
+	*/
 } // End woo_post_inside_after_default()
 
 function qscomments($out, $atts='') {
