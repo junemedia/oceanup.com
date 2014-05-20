@@ -775,3 +775,21 @@ function qs_hide_admin_bar_on_frontend($show) {
 	return is_admin();
 }
 //add_filter('show_admin_bar', 'qs_hide_admin_bar_on_frontend', 10, 1); 
+
+function qsou_after_post() {
+	if (is_single()):
+		?>
+			<div id="hexagram_3972"></div>
+			<script src="//ssl-nau.hexagram.com/js/hexagram.min.js"></script>
+		<?php
+	endif;
+}
+add_action('woo_after_post', 'qsou_after_post');
+
+function qsou_loop_after() {
+	?>
+		<div id="hexagram_3972"></div>
+		<script src="//ssl-nau.hexagram.com/js/hexagram.min.js"></script>
+	<?php
+}
+add_action('woo_loop_after', 'qsou_loop_after');
