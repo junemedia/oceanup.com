@@ -59,7 +59,8 @@ $attribution = isset($image_meta['image_meta'], $image_meta['image_meta']['credi
 		<div class="current-image-wrapper" id="image-<?php echo get_the_ID() ?>">
 			<div class="current-image-outer"><div class="current-image-inner"><div class="current-image-wrap"><a
 				href="<?php echo esc_attr(apply_filters('qsou-gallery-image-link', get_permalink(), wp_get_post_parent_id(get_the_ID()), get_the_ID(), 'next')) ?>" class="current-image-link"><?php
-					echo wp_get_attachment_image(get_the_ID(), array(700, 9999), false, array('class' => 'current-image'))
+//echo 'id: ' . get_the_ID();
+					echo wp_get_attachment_image(get_the_ID(), array(407, 9999), false, array('class' => 'current-image'))
 			?></a></div></div></div>
 
 			<a href="<?php echo esc_attr(apply_filters('qsou-gallery-image-link', get_permalink(), wp_get_post_parent_id(get_the_ID()), get_the_ID(), 'next')) ?>" class="next image-nav">&gt;</a>

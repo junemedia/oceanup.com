@@ -626,7 +626,7 @@ function qsou_gallery_output() {
 				<ul class="gallery-image-list">
 					<?php while (have_posts()): the_post(); ?>
 						<li class="gallery-image-outer"><div class="gallery-image-inner"><div class="gallery-image-wrap"><a href="<?php echo esc_attr(get_permalink()) ?>" class="gallery-image-link"><?php
-							echo wp_get_attachment_image(get_the_ID(), array(150, 150), array('class' => 'gallery-image'))
+							echo wp_get_attachment_image(get_the_ID(), array(80,999), array('class' => 'gallery-image'))
 						?></a></div></div></li>
 					<?php endwhile; ?>
 				</ul>
@@ -793,3 +793,16 @@ function qsou_loop_after() {
 	<?php
 }
 add_action('woo_loop_after', 'qsou_loop_after');
+
+function qs_add_image_size() {
+        global $_wp_addititional_image_sizes;
+        //error_log( print_r( $wp_additional_image_sizes, true), 3, $_SERVER['DOCUMENT_ROOT'] . '/LOG' );
+        
+        add_image_size( 'gallery-thumb', 80, 80 );
+        add_image_size( 'hot-uppers', 120, 120 );
+        add_image_size( 'river-gallery', 407 );
+        add_image_size( 'river-single', 457 );
+}
+add_action( 'plugins_loaded', 'qs_add_image_size' );
+add_action( 'admin_init', 'qs_add_image_size' );
+
