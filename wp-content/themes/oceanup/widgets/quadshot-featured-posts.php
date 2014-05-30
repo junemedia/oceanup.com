@@ -84,6 +84,13 @@ class Genesis_Featured_Post extends WP_Widget {
 	 */
 	function widget( $args, $instance ) {
 		global $_wp_additional_image_sizes;
+		$sizes = $_wp_additional_image_sizes;
+		if (!isset($sizes['thumbnail'])) {
+			$sizes['thumbnail'] = array(
+				'width' => get_option('thumbnail_size_w'),
+				'height' => get_option('thumbnail_size_h'),
+			);
+		}
 
 		extract( $args );
 
@@ -98,8 +105,8 @@ class Genesis_Featured_Post extends WP_Widget {
 			echo $before_title . $instance['title'] . $after_title;
 		//var_dump($_wp_additional_image_sizes["{$instance['image_size']}"]);
 		$thumb_size_arr = array(
-			$_wp_additional_image_sizes["{$instance['image_size']}"]['width'],
-			$_wp_additional_image_sizes["{$instance['image_size']}"]['height']
+			$sizes["{$instance['image_size']}"]['width'],
+			$sizes["{$instance['image_size']}"]['height']
 		);
 
 		$query_args = array(
