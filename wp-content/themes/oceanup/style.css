@@ -18,6 +18,8 @@ Lightest Gray #f4f4f4
 */
 @import url('../canvas/style.css');
 
+body img { height:auto; }
+
 .alt-style-darkblue #navigation{
 	clear: none !important;
 	width: auto !important;
