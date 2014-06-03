@@ -10,6 +10,7 @@
 ?><!DOCTYPE html>
 <html <?php language_attributes(); ?>>
 <head>
+<link rel="publisher" href="https://plus.google.com/112032429635316978822"/>
 <meta charset="<?php echo esc_attr( get_bloginfo( 'charset' ) ); ?>" />
 <title><?php woo_title(); ?></title>
 <?php woo_meta(); ?>
