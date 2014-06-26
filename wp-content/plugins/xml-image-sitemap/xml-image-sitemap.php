@@ -37,12 +37,12 @@ function xml_image_sitemap_page() {
 	<div class="wrap">
 	<h2>XML Image Sitemap</h2>
 
-	<p>Your image sitemap is now ready at <a href="<?= get_bloginfo('url') . "/sitemap-image.xml" ?>" target="_blank"><?= get_bloginfo('url') . "/sitemap-image.xml" ?></a>.</p>
+	<p>Your image sitemap is now ready at <a href="<?= get_bloginfo('url') . "/sm-image.xml" ?>" target="_blank"><?= get_bloginfo('url') . "/sm-image.xml" ?></a>.</p>
 
 	<p>Submit your sitemap to:
 		<ul>
 			<li><a href="http://www.google.com/webmasters/tools/" target="_blank">Google</a></li>
-			<li><a href="http://www.bing.com/toolbox/webmasters/" target="_blank">Bing</a> [<a href="http://www.bing.com/webmaster/ping.aspx?sitemap=<?= str_replace('http://', '', get_bloginfo('url')) . "/sitemap-image.xml" ?>" target="_blank">SUBMIT TO BING</a>]</li>
+			<li><a href="http://www.bing.com/toolbox/webmasters/" target="_blank">Bing</a> [<a href="http://www.bing.com/webmaster/ping.aspx?sitemap=<?= str_replace('http://', '', get_bloginfo('url')) . "/sm-image.xml" ?>" target="_blank">SUBMIT TO BING</a>]</li>
 			<li><a href="https://siteexplorer.search.yahoo.com/submit" target="_blank">Yahoo</a></li>
 		</ul></p>
 
@@ -58,7 +58,7 @@ function xml_image_sitemap_page() {
 
 function xml_image_sitemap() {
 
-	if (!preg_match("/sitemap\-image\.xml$/", $_SERVER['REQUEST_URI'])) {
+	if (!preg_match("/sm\-image\.xml$/", $_SERVER['REQUEST_URI'])) {
 		return;
 	} // ends
 
@@ -71,7 +71,7 @@ function xml_image_sitemap() {
 
 	header("HTTP/1.1 200 OK");
 	header("Content-Type: text/xml");
-	$xml   = '<?xml version="1.0" encoding="UTF-8"?>' . "\n";
+	$xml   = '<'.'?xml version="1.0" encoding="UTF-8"?'.'>' . "\n";
 	$xml  .= '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">' . "\n";
 	$xml  .= '<!-- XML Image Sitemap Version 1.04 http://www.ericnagel.com/2010/10/image-sitemap-for-wordpress.html -->' . "\n";
 
