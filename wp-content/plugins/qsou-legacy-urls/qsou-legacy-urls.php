@@ -89,3 +89,16 @@ class qsou_legacy_url_redirector {
 if (defined('ABSPATH') && function_exists('add_action')) {
 	qsou_legacy_url_redirector::pre_init();
 }
+
+function qswp_logout() {
+	setcookie('wpSSDQSIAUE', '', time()-100000, '/');
+}
+add_action('wp_logout', 'qswp_logout', 1);
+
+function qs_cookie_test() {
+	if (is_user_logged_in() && current_user_can('edit_posts') && (!isset($_COOKIE) || !is_array($_COOKIE) || !isset($_COOKIE['wpSSDQSIAUE']))) {
+		$u = wp_get_current_user();
+		setcookie('wpSSDQSIAUE', sha1(md5($u->ID.':'.$u->user_login)), 0, '/');
+	}
+}
+add_action('admin_init', 'qs_cookie_test', 1);

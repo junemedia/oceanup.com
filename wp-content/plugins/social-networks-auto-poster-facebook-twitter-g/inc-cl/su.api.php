@@ -7,8 +7,8 @@ if (!class_exists("nxs_class_SNAP_SU")) { class nxs_class_SNAP_SU {
     var $ntCode = 'SU';
     var $ntLCode = 'su';     
     
-    function doPost($options, $message){ if (!is_array($options)) return false; 
-      foreach ($options as $ntOpts) $out[] = $this->doPostToNT($ntOpts, $message);
+    function doPost($options, $message){ if (!is_array($options)) return false; $out = array();
+      foreach ($options as $ii=>$ntOpts) $out[$ii] = $this->doPostToNT($ntOpts, $message);
       return $out;
     }    
     function nxs_getSUHeaders($ref, $post=false, $xhr=true){ $hdrsArr = array(); 
@@ -92,7 +92,7 @@ if (!class_exists("nxs_class_SNAP_SU")) { class nxs_class_SNAP_SU {
       if (!isset($options['suUName']) || trim($options['suPass'])=='') { $badOut['Error'] = 'Not Configured'; return $badOut; }            
       $pass = (substr($options['suPass'], 0, 5)=='n5g9a'?nsx_doDecode(substr($options['suPass'], 5)):$options['suPass']);      
       //## Format
-      $msg = nxs_doFormatMsg($options['suMsgFormat'], $message);  $urlToGo = (!empty($message['url']))?$message['url']:''; $tags = $message['tags'];
+      if (!empty($message['pText'])) $msg = $message['pText']; else $msg = nxs_doFormatMsg($options['suMsgFormat'], $message);  $urlToGo = (!empty($message['url']))?$message['url']:''; $tags = $message['tags'];
       
       if (isset($options['suSvC'])) $nxs_suCkArray = maybe_unserialize( $options['suSvC']); $loginError = true;
       if (is_array($nxs_suCkArray)) $loginError = $this->nxs_doCheckSU(); if ($loginError!=false) $loginError = $this->nxs_doConnectToSU($options['suUName'], $pass);       
@@ -102,7 +102,7 @@ if (!class_exists("nxs_class_SNAP_SU")) { class nxs_class_SNAP_SU {
       
       if ($ret=='OK') $ret = array("code"=>"OK", "post_id"=>'');
       if ( (!is_array($ret)) && $ret!='OK') { $badOut['Error'] .= 'Something went wrong - '.print_r($ret, true);  } 
-        elseif (isset($ret['code']) && $ret['code']=='OK') return array('isPosted'=>'1', 'postID'=>$ret['post_id'], 'postURL'=>$ret['post_id'], 'pDate'=>date('Y-m-d H:i:s')); else $badOut['Error'] .= 'Error - '.print_r($ret, true);
+        elseif (isset($ret['code']) && $ret['code']=='OK') return array('isPosted'=>'1', 'postID'=>$ret['post_id'], 'postURL'=>'http://www.stumbleupon.com/content/'.$ret['post_id'].'/comments', 'pDate'=>date('Y-m-d H:i:s')); else $badOut['Error'] .= 'Error - '.print_r($ret, true);
       return $badOut;      
    }    
 }}

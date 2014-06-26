@@ -62,8 +62,9 @@ if (!class_exists("nxs_class_SNAP_AP")) { class nxs_class_SNAP_AP {
       //## Check settings
       if (!is_array($options)) { $badOut['Error'] = 'No Options'; return $badOut; }      
       if (!isset($options['apAppAuthToken']) || trim($options['apAppAuthToken'])=='') { $badOut['Error'] = 'Not Authorized'; return $badOut; }      
+      if (empty($options['imgSize'])) $options['imgSize'] = '';
       //## Format Post
-      $text = nxs_doFormatMsg($options['apTextFormat'], $message); $text = nsTrnc($text, 256); 
+      if (!empty($message['pText'])) $text = $message['pText']; else $text = nxs_doFormatMsg($options['apTextFormat'], $message); $text = nsTrnc($text, 256); 
       //## Make Post            
       if (isset($message['imageURL'])) $img = trim(nxs_getImgfrOpt($message['imageURL'], $options['imgSize'])); else $img = '';  
       if ($options['attchImg']!=false && $img!='') $remoteImg = $this->createFile($img, $options['apAppAuthToken']); $ann = array();       

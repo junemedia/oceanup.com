@@ -2,20 +2,20 @@
 
 Contributors: NextScripts
 Donate link: http://www.nextscripts.com/social-networks-auto-poster-for-wordpress
-Tags: automation, autopost, auto-post, auto post, socialnetworks, socialnetwork, social networks, social network, facebook, google, google+, twitter, google plus, pinterest, tumblr, blogger, blogspot, blogpost, linkedin, delicious, delicious.com, reddit, reddit.com, plugin, links, Post, posts, api, automatic, seo, integration, bookmark, FriendFeed, bookmarks, admin, images, image, social, sharing, share, repost, re-post, wordpress.com, StumbleUpon, Diigo, vBulletin, Plurk, forums, vKontakte, open graph, LiveJournal, YouTube
+Tags: automation, autopost, auto-post, auto post, socialnetworks, socialnetwork, social networks, social network, facebook, Flipboard, google, google+, Flickr, twitter, google plus, pinterest, tumblr, blogger, blogspot, blogpost, linkedin, delicious, delicious.com, reddit, reddit.com, plugin, links, Post, posts, api, automatic, seo, scoop.it, integration, bookmark, FriendFeed, bookmarks, admin, images, image, social, sharing, share, repost, re-post, wordpress.com, StumbleUpon, Diigo, vBulletin, Plurk, forums, vKontakte, open graph, LiveJournal, SETT, YouTube
 Requires at least: 3.1
-Tested up to: 3.8.0
-Stable tag: 3.1.2
+Tested up to: 3.9.1
+Stable tag: 3.3.9
 License: GPLv2 or later
 
 Automatically re-publishes blogposts to Facebook, Twitter, Google+, Pinterest, LinkedIn, Blogger, Tumblr, Delicious, Plurk, etc profiles and/or pages
 
 == Description ==
 
-**This plugin automatically publishes posts from your blog to your Social Network accounts** such as Facebook, Twitter, Google+(Google Plus), Blogger, Tumblr, LiveJournal, FriendFeed, DreamWidth, Delicious, Diigo, Instapaper, Stumbleupon, LinkedIn, Pinterest, Plurk, VKontakte(VK.com), YouTube, Wordpress, etc. The whole process is completely automated. Just write a new post and either entire post or it's nicely formatted announcement with backlink will be published to all your configured social networks. You can reach the most audience and tell all your friends, readers and followers about your new post. Plugin works with profiles, business pages, community pages, groups, etc. 
+**This plugin automatically publishes posts from your blog to your Social Network accounts** such as Facebook, Twitter, Google+(Google Plus), Blogger, Tumblr, Flickr, LiveJournal, Flipboard, FriendFeed, DreamWidth, Delicious, Diigo, Instapaper, Stumbleupon, LinkedIn, Pinterest, Plurk, VKontakte(VK.com), YouTube, App.net, Scoop.It, Wordpress, etc. The whole process is completely automated. Just write a new post and either entire post or it's nicely formatted announcement with backlink will be published to all your configured social networks. You can reach the most audience and tell all your friends, readers and followers about your new post. Plugin works with profiles, business pages, community pages, groups, etc. 
 
-* **Latest version 3.0** - Auto-repost existing posts, autoposting query, select what image to use for autopost, "Custom URLs" for posts, New networks: App.net, Reddit and deviantart.com
-
+* **Latest version 3.3** - Post to all social accounts without creating a Wordpress Post. New networks - Flickr, Flipboard, SETT and Scoop.It. 
+* *Version 3.0* - Auto-repost existing posts, autoposting query, select what image to use for autopost, "Custom URLs" for posts, New networks: App.net, Reddit and deviantart.com
 * *Version 2.7* - YouTube Support, FriendFeed support, Auto-import comments from Facebook and Twitter as Wordpress Commnets, goo.gl and YOURLS support, ability to spin message text
 * *Version 2.6* - Better Interface, DreamWidth support, Instapaper support, ability to auto-import comments from social networks
 * *Version 2.5* - Export/Import Plugin settings, direct links to the published posts from the "Edit" page, ability to assign categories to each Social Network. LiveJournal Support.  
@@ -25,11 +25,14 @@ Automatically re-publishes blogposts to Facebook, Twitter, Google+, Pinterest, L
 = Supported Networks =
 
 * **App.net** - Autopost to your account.
-* **Blogger/Blogspot** - Autopost to your Blog. HTML is supported.
+* **Blogger/Blogspot** - Autopost to your blog. HTML is supported.
 * **Delicious** - Auto-submit bookmark to your account. 
 * **Deviantart.com** - Autopost to your blog. HTML is supported.
 * **Diigo** - Auto-submit bookmark to your account. 
+* **Evernote/postach.io** - Auto-post to your Evernote account or postach.io blog.
 * **Facebook** - Autopost to your profile, business page, community page, or Facebook group page. Ability to attach your blogpost to Facebook post. Ability to make "Image" posts.
+* **Flickr** - Autopost images to your photostream and/or sets. Tags are supported. 
+* **Flipboard** (*with third party API library*) - post to your magazines.
 * **FriendFeed** - Autopost to your account. Ability to attach Image to posts.
 * **Instapaper** - Auto-submit bookmark to your account. 
 * **Google+** (*with third party API library*) - Autopost to your profile, business page or community. Ability to attach your blogpost to Google+ post. Ability to make "Image" posts.
@@ -37,6 +40,8 @@ Automatically re-publishes blogposts to Facebook, Twitter, Google+, Pinterest, L
 * **LiveJournal** - Auto-submit your blogpost to LiveJournal blog or community. "LiveJournal Engine" based website DreamWidth.org is also supported. 
 * **Pinterest** (*with third party API library*) - Pin your blogpost's featured image to your Pinterest board.
 * **Reddit** (*with third party API library*) - post to your subreddits.
+* **Scoop.It** - Autopost to your "Topics". Ability to attach your blogpost to scoop. Ability to make "Image" posts.
+* **SETT** - Auto-post to your Sett.com blog.
 * **Stumbleupon** - Auto-submit bookmark to your account. 
 * **Tumblr** - Autopost to your account. Ability to attach your blogpost to Tumblr post. HTML is supported.
 * **Twitter** - Autopost to your account. Ability to attach Image to tweets.
@@ -47,6 +52,8 @@ Automatically re-publishes blogposts to Facebook, Twitter, Google+, Pinterest, L
 * **YouTube** (*with third party API library*) - Post messages to your YouTube channel feed. If blogpost has youtube reference it will be attached.
 
 ... more networks are coming soon ...
+
+* (*with third party API library*) means that you need to have at least "Run-Time Edition" of <a href="http://www.nextscripts.com/snap-api/">SNAP Universal API</a>. SNAP API Run-Time Edition is included in the <a href="http://www.nextscripts.com/social-networks-auto-poster-for-wp-multiple-accounts">SNAP Pro Plugin</a>.
 
 **Plugin makes 100% White Labeled Posts** The main idea behind the plugin is to give you the ability to promote only yourself. Plugin uses your own apps and all posts to all networks come only from you. No "Shared via NextScripts.com" or "Posted by SNAP for Wordpress" messages.
 
@@ -68,7 +75,7 @@ Please see <a href="http://www.nextscripts.com/installation-of-social-networks-a
 * Ability to "Spin" message post templates
 * Auto re-posting of the old posts
 
-** Also included exclusively in the "Pro" version **
+** Also included exclusively in the <a href="http://www.nextscripts.com/social-networks-auto-poster-for-wp-multiple-accounts">SNAP Pro Plugin</a> **
 
 * Ability to make Scheduled and Delayed postings
 * Auto-repost existing random posts from from specific dates or "older then N days and younger then X days".
@@ -113,7 +120,7 @@ Have problems? Please check out the <a href="http://www.nextscripts.com/troubles
 
 Free plugin is limited to one account per each type of connected networks. In other words you can add 1 Facebook, AND 1 Twitter AND 1 LinkedIn AND 1 etc ... accounts in the "Free" version. This is enough for about 95% of users.
 
-Pro plugin is NOT limited in number of accounts per each type of connected networks.  You can add 10 (or 100) Facebook, AND 15 Twitter AND 5 LinkedIn AND 25 etc ... accounts in the "Pro" version. 
+<a href="http://www.nextscripts.com/social-networks-auto-poster-for-wp-multiple-accounts">SNAP Pro Plugin</a> is NOT limited in number of accounts per each type of connected networks.  You can add 10 (or 100) Facebook, AND 15 Twitter AND 5 LinkedIn AND 25 etc ... accounts in the "Pro" version. 
 
 Please see more here: <a href="http://www.nextscripts.com/social-networks-auto-poster-pro-for-wordpress-compare-editions//">Compare Editions</a>
 
@@ -151,13 +158,123 @@ Please see more <a href="http://www.nextscripts.com/faq/">Frequently asked quest
 
 == Changelog ==
 
-= 3.1.2 [01/15/2013] =
+= 3.3.9 [06/06/2014] =
+
+* New - New tag %ORID% - will insert wordpress post ID.
+* Improvement/Bug Fix - [Flickr] Fix for empty error message problem.
+* Bug Fix - [LinkedIn] Fix for some connection issues when URL has special chars.
+* Bug Fix - [Pinterest] Fix for posting to boards with international characters in URL.
+
+= 3.3.8 [05/30/2014] =
+
+* Improvement/Bug Fix - [Flickr] Fix for "SSL is required" problem.
+* Improvement/Bug Fix - Compatibility with "Page Builder" plugin.
+* Bug Fix - [LinkedIn] Fix for impossible captcha authorization.
+* Bug Fix - [LinkedIn] Fix for huge array message.
+* Bug Fix - [Pinterest] Fix for incorrect links to created pins
+* Bug Fix - [Plurk] Better error handling. No more empty error messages.
+* Bug Fix - [DeviantArt] Better error handling. No more empty error messages.
+* Bug Fix - [FriendFeed] No more ugly messages during the post.
+
+
+= 3.3.7 [05/09/2014] =
+
+* [Critical] Googd news!  Facebook backed down on app review requirement. You no longer need to submit your app for review. This version revises this. Please see full story here: <a href="http://www.nextscripts.com/known-issues/facebook-issues/">www.nextscripts.com/known-issues/facebook-issues</a>
+* Bug Fix - Debug Facebook URL message has been removed. 
+
+= 3.3.6 [05/09/2014] =
+
+* [Critical] Bug Fix - Facebook - Facebook API 2.0 Compatibility. Please see here: <a href="http://www.nextscripts.com/known-issues/facebook-issues/">www.nextscripts.com/known-issues/facebook-issues</a>
+* Improvement - Compatibility to up to Wordpress 3.9.1.
+* Improvement - Added support for Twitter multiline posts.
+* Improvement - Twitter - Better 140 characters cut if a lot of tags used.
+* Bug Fix - Contributors can't submit posts for review.
+* Bug Fix - app.net authorization issues. (like "Please contact the website that sent you here and let them know that there is a problem with the authorization URL")
+* Bug Fix - DeviantArt connection problems.
+* Bug Fix - Delicious connection problems.
+* Bug Fix - Delicious broken tags.
+
+= 3.3.4 [04/11/2014] =
+
+* Bug Fix - LinkedIn troubles with entering captcha
+* Bug Fix - LinkedIn "Array - Array" Error
+* Bug Fix - Plurk "Array" message removed
+* Bug Fix - LiveJournal "Array" message removed
+* Bug Fix - Sett error "You need to enter a name and email address"
+* Bug Fix - Twitter "over 140 characters" error when too many tags are used.
+
+= 3.3.3 [04/07/2014] =
+
+* Bug Fix/Improvement - Connection to Facebook has been updated to comply with new requirements. This will fix all "(#100) Tried accessing unexisting field (access_token) on node type (User)" errors.
+
+= 3.3.2 [04/02/2014] =
+
+* New - New network "SETT". Post your blogposts to your Sett Blog. 
+* Bug Fix - LinkedIn Connection issues. 
+* Bug Fix - Entries like nxs_snap_sh_ have been removed from "Custom Fields" list
+* Bug Fix - Many minor bugs. 
+
+= 3.3.1 [03/12/2014] =
+
+* New/Improvement - More advanced auto-reposting configuration. You can now control what should happen when it's finished. You can turn it of, keep it in waiting mode, or reset and auto-start from the beginning. 
+* Improvement - Flipboard is now able so set custom URL for autoposting. 
+* Bug Fix - API message after the tumblr post has been removed.
+* Bug Fix - Cron check could produce inconclusive results.
+
+= 3.3.0 [03/06/2014] =
+
+* New - New network "Flipboard". Post your links to your magazine. 
+* Improvement - A lot of code, error handling and interface optimizations and improvements. 
+* Improvement - Plugin is not using 47kb of official Facebook API for PHP anymore. Facabook autoposting is now more stable and faster.
+* Improvement - Auto-Reposting functionality will be disabled if WP Cron is not configured correctly. 
+* Improvement - Plugin show how many posts is included in auto-reposting on the settings page.
+* Bug Fix - Many bug fixes and improvements to the "Auto-Reposting" and "Posts from Query" functionality.
+* Bug Fix - Checkboxes with selected categories were not saving correctly.
+* Bug Fix - Google+ - custom URL postings were incorrect.
+* Bug Fix - Tumblr is now working "New Post to Social Networks"
+
+= 3.2.3 [02/07/2014] =
+
+* Improvement - More networks show the links to the created posts in the log. 
+* Bug Fix - Flickr was missing from the "add new network" list
+* Bug Fix - Reddit failed to retrieve reddits with "Moderation" rights.
+* Bug Fix - Fixed(removed) an ability for super admin to disable himself for WPMU installations. 
+* Bug Fix - Twitter - %ANOUNCE% tag was causing message to go over 140 characters. 
+
+= 3.2.2 [02/05/2014] =
+
+* New - New network "Flickr". Post your images to your photostream and/or sets. Tags are supported. 
+* Improvement - Some networks show the links to the created posts in the log. 
+* Improvement/Bug Fix - Compatibility with plugins that hijack all requests with the word 'ajax'.
+* Improvement/Bug Fix - Compatibility with custom "post transition" statuses. 
+* Bug Fix - Google+ - Fixed additional URL parameters.
+* Bug Fix - "New Post to social networks" fixed problem with " become \"
+* Bug Fix - "New Post to social networks" link is visible only to people who can use SNAP.
+* Bug Fix - Broken tabs and "-1" messages on WPMU installations. 
+
+= 3.2.1 [01/30/2014] =
+
+* [Critical] Bug Fix - Facebook module could overwrite post type to "Text Only" for existing posts.
+* New - New Post to social networks without creating Wordpress post link is now in the top "New" menu.
+* Bug Fix - fixed link [Enabled/Disabled for Repost according to Categories/Tags/Taxonomies filters] (yes, again)
+
+= 3.2.0 [01/29/2014] =
+
+* New - Post to social networks without creating Wordpress post. 
+* New - New network "Scoop.It". Make text posts, link posts, or image posts. Post with tags. 
+* New - New LinkedIn Showcase pages are supported. (Pro Only) 
+* Improvement/Bug Fix - New interface for checkboxes for networks with excluded categories.
+* Improvement/Bug Fix - %EXCERPT% tags won't cut the actual excerpt to 300 characters anymore. 
+* Bug Fix - fized link [Enabled/Disabled for Repost according to Categories/Tags/Taxonomies filters]
+* Bug Fix - Stability improvements to re-posting functionality.
+
+= 3.1.2 [01/15/2014] =
 
 * [Critical] Bug Fix - [ERROR] (#100) actions should be a JSON-encoded dictionary with 'name' and 'link' keys
 * Improvement/Bug Fix - Plugin will import all comments from Facebook posts, not just the first 100.  
 * Bug Fix - Plugin were re-posting the same "Sticky" post in some configurations.  
 
-= 3.1.1 [01/14/2013] =
+= 3.1.1 [01/14/2014] =
 
 * Improvement/Bug Fix - Update for Jan 14 Twitter API change - requirement for ONLY secured SSL connections
 * Improvement/Bug Fix - Better compatibility with some WP Admin themes - like fixed missing "Update Settings" button 
@@ -1036,10 +1153,8 @@ Author: Next Scripts
 
 Author URL: http://www.nextscripts.com
 
-Copyright 2012  Next Scripts, Inc
+Copyright 2012-2014  Next Scripts, Inc
 
 PHP Twitter API: Copyright 2012 -  themattharris - tmhOAuth
-
-PHP Facebook API: Copyright 2011 Facebook, Inc.
 
 NextScripts.com, Inc

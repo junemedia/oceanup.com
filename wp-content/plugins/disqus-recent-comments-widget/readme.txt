@@ -1,21 +1,19 @@
 === Disqus Recent Comments Widget ===
-Contributors: DeusMachineLLC,aaron.white,Andrew Bartel
+Contributors: DeusMachineLLC,aaron.white,Andrew Bartel,RenettaRenula,spacedmonkey
 Tags: disqus, comments, widget, sidebar
 Requires at least: 3.4.1
-Tested up to: 3.6.1
+Tested up to: 3.8.1
 Stable tag: trunk
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
-Disqus has dropped support for their recent comments widget.  This plugin ceates a configurable widget that will display your latest Disqus comments.
+Disqus has dropped support for their recent comments widget.  This plugin creates a configurable widget that will display your latest Disqus comments.
 
 == Description ==
 
-The Disqus Recent Comments Widget plugin will create a configurable widget that will allow you display comments in any widgetized area of your theme like sidebars and footers.
+The Disqus Recent Comments Widget plugin will create a configurable widget that will allow you to display comments in any widgetized area of your theme like sidebars and footers.
 
-You can customize the comment length and date format, filter users and choose from two different markup templates, among other things.  The plugin has full support for custom markup defined with register_sidebars() and should integrate smoothly with most themes in the wp.org repository.
-
-We're targeting the release of 1.2 to line up with the launch of WordPress 3.7 and we'll be adding the ability to define custom markup for the widget and the ability to cache comments along with new options and more premade markup templates.
+You can customize the comment length and date format, filter users and choose from three different markup templates, among other things.  The plugin has full support for custom markup defined with register_sidebars() and should integrate smoothly with most themes in the wp.org repository.
 
 We try to be very proactive and responsive with support.  So, if you have any issues, please post in the support forums and we'll do our best to resolve your issue promptly.
 
@@ -56,12 +54,23 @@ Or, you can check out the script on github: https://github.com/AaronJWhite/Disqu
 
 Not currently, but if you'd like to put together a translation for us, please do!  We'll happily give you credit in the release notes.
 
-== Screenshots ==
-
-1. The Settings Page
-2. Adding the widget to a sidebar
-
 == Changelog ==
+
+= 1.1.2 =
+
+* Added spacedmonkey as a contributor
+* Removed the check for the disqus comments system on activation
+* Removed references to CURL and replaced with the built-in wp_get_remote function.
+* Fixed bug where admin panel was not accessible by admin accounts.
+* New filter 'disqus_rcw_recent_comment_format' for changing the html markup of each comment
+
+= 1.1.1 =
+
+* Added RenettaRenula as a contributor
+* Plugin now properly displays the title when no comments are present
+* Plugin should now activate properly on multisite (props to Army)
+* Added a new layout, Tight Spacing
+* Rewrote the connection to the disqus api to speed up the comment retrieval (props to theconsultant_)
 
 = 1.1 =
 

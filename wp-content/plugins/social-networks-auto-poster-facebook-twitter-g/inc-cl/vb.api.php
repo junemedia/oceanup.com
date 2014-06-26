@@ -7,8 +7,8 @@ if (!class_exists("nxs_class_SNAP_VB")) { class nxs_class_SNAP_VB {
     var $ntCode = 'VB';
     var $ntLCode = 'vb';     
     
-    function doPost($options, $message){ if (!is_array($options)) return false; 
-      foreach ($options as $ntOpts) $out[] = $this->doPostToNT($ntOpts, $message);
+    function doPost($options, $message){ if (!is_array($options)) return false; $out = array();
+      foreach ($options as $ii=>$ntOpts) $out[$ii] = $this->doPostToNT($ntOpts, $message);
       return $out;
     }    
     function nxs_getVBHeaders($ref, $post=false){ $hdrsArr = array(); 
@@ -89,7 +89,8 @@ if (!class_exists("nxs_class_SNAP_VB")) { class nxs_class_SNAP_VB {
       if (!isset($options['vbUName']) || trim($options['vbPass'])=='') { $badOut['Error'] = 'Not Configured'; return $badOut; }            
       $pass = (substr($options['vbPass'], 0, 5)=='n5g9a'?nsx_doDecode(substr($options['vbPass'], 5)):$options['vbPass']);      
       //## Format
-      $msg = nxs_doFormatMsg($options['vbMsgFormat'], $message); $msgT = nxs_doFormatMsg($options['vbMsgTFormat'], $message);
+      if (!empty($message['pText'])) $msg = $message['pText']; else $msg = nxs_doFormatMsg($options['vbMsgFormat'], $message); 
+      if (!empty($message['pTitle'])) $msgT = $message['pTitle']; else $msgT = nxs_doFormatMsg($options['vbMsgTFormat'], $message);
       $urlToGo = (!empty($message['url']))?$message['url']:''; 
       //## Post
       if (isset($options['vbSvC'])) $nxs_vbCkArray = maybe_unserialize( $options['vbSvC']); $loginError = true;

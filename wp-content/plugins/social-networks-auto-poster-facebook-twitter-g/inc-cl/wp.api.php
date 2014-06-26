@@ -7,8 +7,8 @@ if (!class_exists("nxs_class_SNAP_WP")) { class nxs_class_SNAP_WP {
     var $ntCode = 'WP';
     var $ntLCode = 'wp';     
     
-    function doPost($options, $message){ if (!is_array($options)) return false; 
-      foreach ($options as $ntOpts) $out[] = $this->doPostToNT($ntOpts, $message);
+    function doPost($options, $message){ if (!is_array($options)) return false; $out = array();
+      foreach ($options as $ii=>$ntOpts) $out[$ii] = $this->doPostToNT($ntOpts, $message);
       return $out;
     }    
     function nxs_getLJHeaders($up){ $hdrsArr = array(); 
@@ -23,8 +23,10 @@ if (!class_exists("nxs_class_SNAP_WP")) { class nxs_class_SNAP_WP {
       if (!is_array($options)) { $badOut['Error'] = 'No Options'; return $badOut; }      
       if (!isset($options['wpUName']) || trim($options['wpPass'])=='') { $badOut['Error'] = 'Not Configured'; return $badOut; }            
       $pass = substr($options['wpPass'], 0, 5)=='n5g9a'?nsx_doDecode(substr($options['wpPass'], 5)):$options['wpPass'];      
+      if (empty($options['imgSize'])) $options['imgSize'] = '';
       //## Format
-      $msg = nxs_doFormatMsg($options['wpMsgFormat'], $message); $msgT = nxs_doFormatMsg($options['wpMsgTFormat'], $message);      
+      if (!empty($message['pText'])) $msg = $message['pText']; else $msg = nxs_doFormatMsg($options['wpMsgFormat'], $message); 
+      if (!empty($message['pTitle'])) $msgT = $message['pTitle']; else $msgT = nxs_doFormatMsg($options['wpMsgTFormat'], $message);      
       if (isset($message['imageURL'])) $imgURL = trim(nxs_getImgfrOpt($message['imageURL'], $options['imgSize'])); else $imgURL = '';
       $link = urlencode($message['url']); $ext = substr($msg, 0, 1000);      
       //## Fix missing xmlrpc.php
@@ -40,7 +42,7 @@ if (!class_exists("nxs_class_SNAP_WP")) { class nxs_class_SNAP_WP {
       
       $params = array(0, $options['wpUName'], $pass, array('software_version')); 
       if (!$nxsToWPclient->query('wp.getOptions', $params)) { $ret = 'Something went wrong - '.$nxsToWPclient->getErrorCode().' : '.$nxsToWPclient->getErrorMessage();} else $ret = 'OK';      
-      $rwpOpt = $nxsToWPclient->getResponse();  $rwpOpt = $rwpOpt['software_version']['value']; $rwpOpt = floatval($rwpOpt); //prr($rwpOpt);prr($nxsToWPclient);
+      $rwpOpt = $nxsToWPclient->getResponse(); if (!empty($rwpOpt['software_version'])) { $rwpOpt = $rwpOpt['software_version']['value']; $rwpOpt = floatval($rwpOpt); } else $rwpOpt = 0; //prr($rwpOpt);prr($nxsToWPclient);
       //## MAIN Post
       if ($rwpOpt==0) { 
         $errMsg = $nxsToWPclient->getErrorMessage(); if ($errMsg!='') $ret = $errMsg; else  $ret = 'XMLRPC is not found or not active. WP admin - Settings - Writing - Enable XML-RPC'; 
@@ -65,8 +67,9 @@ if (!class_exists("nxs_class_SNAP_WP")) { class nxs_class_SNAP_WP {
           $pid = $nxsToWPclient->getResponse();  
         }
       }       
-      if ($ret!='OK') $badOut['Error'] .= '-=ERROR=- '.print_r($ret, true); else return array('postID'=>$pid, 'isPosted'=>1, 'postURL'=>$pid, 'pDate'=>date('Y-m-d H:i:s'));
-      return $badOut;      
+      if ($ret!='OK') $badOut['Error'] .= '-=ERROR=- '.print_r($ret, true); else { 
+        $wpURL = str_ireplace('/xmlrpc.php','',$options['wpURL']); if(substr($wpURL, -1)=='/') $wpURL=substr($wpURL, 0, -1); $wpURL .= '/?p='.$pid; return array('postID'=>$pid, 'isPosted'=>1, 'postURL'=>$wpURL, 'pDate'=>date('Y-m-d H:i:s'));
+      } return $badOut;      
    }    
 }}
 ?>

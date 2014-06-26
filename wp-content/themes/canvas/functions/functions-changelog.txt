@@ -1,5 +1,11 @@
 *** WooThemes Framework Changelog **
 
+2014.04.17 - version 5.5.6
+ * Fix - Adds support for TinyMCE 4.0 in WordPress 3.9, on the shortcode generator.
+   admin-shortcode-generator.php
+   /js/shortcode-generator/editor_plugin_39.js
+   /js/shortcode-generator/js/dialog-js.php
+
 2013.03.05 - version 5.5.5
  * admin-functions.php - Improved function to process all used Google fonts and output single link tag for all of them
 

@@ -7,8 +7,8 @@ if (!class_exists("nxs_class_SNAP_YT")) { class nxs_class_SNAP_YT {
     var $ntCode = 'YT';
     var $ntLCode = 'yt';     
     
-    function doPost($options, $message){ if (!is_array($options)) return false; 
-      foreach ($options as $ntOpts) $out[] = $this->doPostToNT($ntOpts, $message);
+    function doPost($options, $message){ if (!is_array($options)) return false; $out = array();
+      foreach ($options as $ii=>$ntOpts) $out[$ii] = $this->doPostToNT($ntOpts, $message);
       return $out;
     }    
     function doPostToNT($options, $message){ $badOut = array('pgID'=>'', 'isPosted'=>0, 'pDate'=>date('Y-m-d H:i:s'), 'Error'=>'');
@@ -17,10 +17,9 @@ if (!class_exists("nxs_class_SNAP_YT")) { class nxs_class_SNAP_YT {
       if (!isset($options['ytUName']) || trim($options['ytPass'])=='') { $badOut['Error'] = 'Not Configured'; return $badOut; }            
       $pass = substr($options['ytPass'], 0, 5)=='n5g9a'?nsx_doDecode(substr($options['ytPass'], 5)):$options['ytPass'];                   
       //## Format
-      $msg = nxs_doFormatMsg($options['ytMsgFormat'], $message); 
+      if (!empty($message['pText'])) $msg = $message['pText']; else $msg = nxs_doFormatMsg($options['ytMsgFormat'], $message); 
       
-      $loginError = doConnectToGooglePlus2($options['ytUName'], $pass, 'YT');  
-      if ($loginError!==false) {if ($postID=='0') echo $loginError; nxs_addToLogN('E', 'Error', $logNT, '-=ERROR=- '.print_r($loginError, true)." - BAD USER/PASS", $extInfo); return "BAD USER/PASS";} 
+      $loginError = doConnectToGooglePlus2($options['ytUName'], $pass, 'YT'); if ($loginError!==false) return "BAD USER/PASS - ".$loginError; 
       
       $ret = doPostToYouTube($msg, $options['ytPageID'], $message['videoURL'], $options['ytGPPageID']); //prr($ret);
       if ($ret=='OK') $ret = array("code"=>"OK", "post_id"=>'');

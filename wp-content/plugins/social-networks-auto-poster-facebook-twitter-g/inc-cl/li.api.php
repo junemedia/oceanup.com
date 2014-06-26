@@ -7,8 +7,8 @@ if (!class_exists("nxs_class_SNAP_LI")) { class nxs_class_SNAP_LI {
     var $ntCode = 'LI';
     var $ntLCode = 'li';     
     
-    function doPost($options, $message){ if (!is_array($options)) return false; 
-      foreach ($options as $ntOpts) $out[] = $this->doPostToNT($ntOpts, $message);
+    function doPost($options, $message){ if (!is_array($options)) return false; $out = array();
+      foreach ($options as $ii=>$ntOpts) $out[$ii] = $this->doPostToNT($ntOpts, $message);
       return $out;
     }        
     function doPostToNT($options, $message){ $badOut = array('postID'=>'', 'isPosted'=>0, 'pDate'=>date('Y-m-d H:i:s'), 'Error'=>''); $liPostID = '';
@@ -16,19 +16,20 @@ if (!class_exists("nxs_class_SNAP_LI")) { class nxs_class_SNAP_LI {
       //## Check settings
       if (!is_array($options)) { $badOut['Error'] = 'No Options'; return $badOut; }      
       if ((!isset($options['ulName']) || trim($options['uPass'])=='') && (empty($options['liOAuthVerifier'])))  { $badOut['Error'] = 'Not Configured'; return $badOut; }                  
+      if (empty($options['imgSize'])) $options['imgSize'] = ''; if (empty($options['liMsgFormatT'])) $options['liMsgFormatT'] = '%TITLE%'; 
       //## Format
-      $msg = nxs_doFormatMsg($options['liMsgFormat'], $message); $msgT = nxs_doFormatMsg($options['liMsgFormatT'], $message);   
-      
+      if (!empty($message['pText'])) $msg = $message['pText']; else $msg = nxs_doFormatMsg($options['liMsgFormat'], $message); 
+      if (!empty($message['pTitle'])) $msgT = $message['pTitle']; else $msgT = nxs_doFormatMsg($options['liMsgFormatT'], $message);         
       if ($options['liAttch']=='1') { 
         if (isset($message['imageURL'])) $imgURL = trim(nxs_getImgfrOpt($message['imageURL'], $options['imgSize'])); else $imgURL = '';  if (preg_match("/noImg.\.png/i", $imgURL)) $imgURL = '';           
-        if (trim($message['urlDescr'])!='') $dsc = $message['urlDescr']; else $dsc = $msg;          
+        if (!empty($message['urlDescr'])) $dsc = $message['urlDescr']; else $dsc = $msg;          
         $dsc = strip_tags($dsc); $dsc = nxs_decodeEntitiesFull($dsc); $dsc = nxs_html_to_utf8($dsc);  $dsc = nsTrnc($dsc, 300);        
       }        
       $msg  = strip_tags($msg); $msg = nxs_html_to_utf8($msg);  $msgT = nxs_html_to_utf8($msgT); $urlToGo = $message['url'];
     
       if (function_exists("doConnectToLinkedIn") && $options['ulName']!='' && $options['uPass']!='') {
         $dusername = $options['ulName']; $pass = (substr($options['uPass'], 0, 5)=='n5g9a'?nsx_doDecode(substr($options['uPass'], 5)):$options['uPass']); // ??? Do we need that??????
-        $auth = doConnectToLinkedIn($options['ulName'], $options['uPass'], $options['ii']); if ($auth!==false) die($auth);
+        $auth = doConnectToLinkedIn($options['ulName'], $options['uPass'], $options['ii']); if ($auth!=false) { $badOut['Error'] .= "|Auth Error - ".$auth;  return $badOut; }
         $to = $options['uPage']!=''?$options['uPage']:'http://www.linkedin.com/home'; $lnk = array(); $msg = str_ireplace('&nbsp;',' ',$msg);  $msg = nsTrnc(strip_tags($msg), 700);
         if ($options['liAttch']=='1') { $lnk['title'] = $message['urlTitle']; $lnk['postTitle'] = $msgT; $lnk['desc'] =  $message['urlDescr']; $lnk['url'] = $urlToGo; $lnk['img'] = $imgURL; }      
         $ret = doPostToLinkedIn($msg, $lnk, $to); $liPostID = $options['uPage'];
