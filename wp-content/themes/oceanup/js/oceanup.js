@@ -42,3 +42,10 @@ jQuery(function(){
 	
 	jQuery("a[rel^='lightbox']").prettyPhoto();
 });
+
+
+(function($) {
+	$(document).on('click', '[rel="view-large"]', function(e) {
+		e.preventDefault();
+	});
+})(jQuery);

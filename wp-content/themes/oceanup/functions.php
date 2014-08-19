@@ -300,7 +300,7 @@ if (!function_exists('oceanup_enqueue_scripts')){
 		wp_register_script(
 			'oceanup-js',
 			get_stylesheet_directory_uri() . '/js/oceanup.js',
-			'jquery',
+			array('jquery', 'prettyPhoto'),
 			'1.0.6',
 			true
 		);

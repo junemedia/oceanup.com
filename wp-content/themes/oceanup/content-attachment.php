@@ -60,12 +60,14 @@ $attribution = isset($image_meta['image_meta'], $image_meta['image_meta']['credi
 			<div class="current-image-outer"><div class="current-image-inner"><div class="current-image-wrap"><a
 				href="<?php echo esc_attr(apply_filters('qsou-gallery-image-link', get_permalink(), wp_get_post_parent_id(get_the_ID()), get_the_ID(), 'next')) ?>" class="current-image-link"><?php
 //echo 'id: ' . get_the_ID();
-					echo wp_get_attachment_image(get_the_ID(), array(407, 9999), false, array('class' => 'current-image'))
+					@list($full) = wp_get_attachment_image_src(get_the_ID(), 'full');
+					echo wp_get_attachment_image(get_the_ID(), array(407, 9999), false, array('class' => 'current-image'));
 			?></a></div></div></div>
 
 			<a href="<?php echo esc_attr(apply_filters('qsou-gallery-image-link', get_permalink(), wp_get_post_parent_id(get_the_ID()), get_the_ID(), 'next')) ?>" class="next image-nav">&gt;</a>
 			<a href="<?php echo esc_attr(apply_filters('qsou-gallery-image-link', get_permalink(), wp_get_post_parent_id(get_the_ID()), get_the_ID(), 'prev')) ?>" class="prev image-nav">&lt;</a>
 
+			<a rel="prettyPhoto" href="<?php echo esc_attr($full) ?>" class="view-large-btn">View Large</a>
 		</div>
 
 		<?php do_action('qsou-gallery-from-gallery-id', wp_get_post_parent_id(get_the_ID()), get_the_ID()); ?>

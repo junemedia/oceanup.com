@@ -231,7 +231,8 @@ background: #5E828C url(basebarcaps_verticalbarbody.png) -45px -15px;
  
 /* Gallery styling */
 .current-image-wrapper { width:100%; background-color:#EEEEEE; position:relative; }
-.current-image-wrapper .current-image-outer { padding:25px 0; }
+.current-image-wrapper .view-large-btn { position:absolute; top:2px; right:8px; font-size:11px; }
+.current-image-wrapper .current-image-outer { padding:26px 0 25px; }
 .current-image-wrapper .current-image-inner { margin:0 25px; }
 .current-image-wrapper .current-image-wrap { overflow:hidden; }
 .current-image-wrapper a { display:block; }
@@ -241,6 +242,9 @@ background: #5E828C url(basebarcaps_verticalbarbody.png) -45px -15px;
 .current-image-wrapper .image-nav.prev { left:5px; }
 .current-image-wrapper .image-nav.next { right:3px; }
 .current-image-wrapper .attribution { line-height:10px; font-size:10px; position:absolute; text-align:right; right:25px; bottom:13px; color:#b2b2b2; }
+
+div.pp_overlay { z-index:20000002 !important; }
+div.pp_pic_holder { z-index:20000003 !important; }
 
 .attribution { color: #a8a8a8; font-weight: bold; margin-bottom: 10px; }
 
@@ -277,6 +281,8 @@ background: #5E828C url(basebarcaps_verticalbarbody.png) -45px -15px;
 	.gallery-list .gallery-item .gallery header img.too-wide { height:90px; }
 
 .post-river-tags, .post-river-tags a { color: #888; font-weight: bold; };
+
+
 @media only screen and (max-width: 768px) and (min-width: 481px) {
 	.qsou-gallery .gallery-image-outer { width:20%; }
 }
