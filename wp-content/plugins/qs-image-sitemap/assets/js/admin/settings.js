@@ -52,7 +52,7 @@
 		} else {
 			$('<div class="'+type+'">'+msgs+'</div>').appendTo(log);
 		}
-		log.animate({ scrollTop: log.prop('scrollHeight') }, 1000);
+		log.finish().animate({ scrollTop: log.prop('scrollHeight') }, 700);
 		$('html, body').animate({ scrollTop:log.offset().top }, 500);
 	}
 

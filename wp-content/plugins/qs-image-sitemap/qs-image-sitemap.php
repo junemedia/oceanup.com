@@ -256,9 +256,13 @@ class QS_image_sitemap {
 		$out .= '<image:image>';
 		$out .= '<image:loc>'.apply_filters('the_title', $img_url).'</image:loc>';
 		$caption = '';
-		if (isset($img->meta['image_meta'], $img->meta['image_meta']['caption']) && !empty($img->meta['image_meta']['caption']))
-			$out .= ($caption = '<image:caption><![CDATA['.strip_tags(apply_filters('the_content',
-				str_replace(array(' ', "\n", "\r", "\t", "\0", "\x0B"), ' ', $img->meta['image_meta']['caption']))).']]></image:caption>');
+		if (isset($img->meta['image_meta'], $img->meta['image_meta']['caption']) && !empty($img->meta['image_meta']['caption'])) {
+			$caption = trim(str_replace(']]>', ']]&gt;', preg_replace("#[^\x0a\x0d\x20-\x7F]#", '', strip_tags(
+				apply_filters('the_content', str_replace(array(' ', "\n", "\r", "\t", "\0", "\x0B"), ' ', $img->meta['image_meta']['caption']))
+			))));
+			$caption = '<image:caption><![CDATA['.$caption.']]></image:caption>';
+			$out .= $caption;
+		}
 		$out .= '<image:title>'.apply_filters('the_title', $img->post_title).'</image:title>';
 		$out .= '</image:image>';
 
