@@ -784,7 +784,7 @@ function qsou_after_post() {
 		<?php
 	endif;
 }
-add_action('woo_after_post', 'qsou_after_post');
+add_action('woo_post_after', 'qsou_after_post', 1);
 
 function qsou_loop_after() {
 	?>
