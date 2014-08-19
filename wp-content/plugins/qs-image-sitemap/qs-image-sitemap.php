@@ -233,6 +233,7 @@ class QS_image_sitemap {
 			$att->meta = $meta;
 			self::_image_xml($att, true);
 		}
+		return $meta;
 	}
 
 	protected static function _image_xml($img, $force=false) {
