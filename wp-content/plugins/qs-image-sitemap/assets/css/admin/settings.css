@@ -1,0 +1,28 @@
+.qsism-form { padding:1em 0; }
+.qsism-form .section { margin:0 0 1em; }
+.qsism-form .section h3.section-heading { margin:0 0 0.5em; }
+.qsism-form .section label { font-weight:bold; display:block; padding-bottom:0.3em; }
+.qsism-form .section table { width:100%; }
+.qsism-form .section .helper { font-size:10px; line-height:1.2; color:#999999; font-style:italic; padding:0.3em 0; }
+.qsism-form .section .helper code { font-size:10px; line-height:1.2; }
+.qsism-form .section .fields { padding:0.5em; border:1px solid #e0e0e0; }
+.qsism-form .section .fields .field { padding-top:0.75em; padding-bottom:0.75em; border-top:1px solid #e0e0e0; }
+.qsism-form .section .fields .field:first-child { padding-top:0; border-top:0; }
+.qsism-form .side-wrap-cb { white-space:nowrap; margin-left:1em; display:inline-block; border:1px solid #d6d6d6; padding:0.5em; }
+
+.qsism-form .warning { border:1px solid #990000; padding:0.5em; margin-bottom:0.5em; font-size:11px; border-radius:6px; background-color:#DBCBCB; }
+.qsism-form .confirmation { padding:0.5em; margin-bottom:0.5em; font-size:11px; border-radius:6px; font-style:italic; }
+.qsism-form .warning code,
+.qsism-form .confirmation code { font-size:10px; }
+
+.qsism-form .hidden { display:none; }
+.qsism-form .progress-ui { background-color:#dddddd; height:25px; width:100%; position:relative; z-index:5; }
+.qsism-form .progress-bar { background-color:#00ff00; height:25px; width:0; position:relative; left:0; z-index:10; }
+.qsism-form .progress-text { background-color:transparent; color:#000000; height:25px; width:100%; position:absolute; text-align:center; z-index:20; line-height:25px; font-weight:bold; }
+.qsism-form .gen-log { width:auto; max-height:400px; overflow:scroll; font-size:10px; font-color:#000000; background-color:#eeeeee; border:1px solid #888888; padding:0.5em; line-height:1.1em; }
+.qsism-form .gen-log .err { color:#880000; font-style:italic; }
+.qsism-form .gen-log .msg { color:#000088; font-style:normal; }
+.qsism-form .gen-log .resp { color:#000088; font-style:italic; }
+
+.sm-actions { margin-left:2em; }
+.sm-actions .action { margin-left:0.75em; }

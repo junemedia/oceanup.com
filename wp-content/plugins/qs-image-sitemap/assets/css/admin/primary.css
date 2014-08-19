@@ -1,0 +1,3 @@
+.qs-brand { font-weight:bold; color:#E8A66D; }
+li.current > a > .qs-brand,
+li:hover > a > .qs-brand { color:#E98326; }
