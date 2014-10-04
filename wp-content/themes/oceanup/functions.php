@@ -803,3 +803,14 @@ function qs_add_image_size() {
 add_action( 'init', 'qs_add_image_size' );
 add_action( 'admin_init', 'qs_add_image_size' );
 
+function crowd_ignite_single_post( $content ) {
+	ob_start();
+	?>
+<span style="color:#000;font-family:Arial, Helvetica, sans-serif;font-size:15px;font-weight:700;line-height:18px;padding-bottom:6px;text-transform:capitalize;">Around the web</span> <!--POSTARTICLE ALV--> <script type='text/javascript'> var _CI = _CI || {}; (function() { var script = document.createElement('script'); ref = document.getElementsByTagName('script')[0]; _CI.counter = (_CI.counter) ? _CI.counter + 1 : 1; document.write('<div id="_CI_widget_'); document.write(_CI.counter+'"></div>'); script.type = 'text/javascript'; script.src = 'http://widget.crowdignite.com/widgets/28053?v=2&_ci_wid=_CI_widget_'+_CI.counter; script.async = true; ref.parentNode.insertBefore(script, ref); })(); </script> <style> #_ci_widget_div_28053{display:inline;height:auto;width:457px;} #_ci_widget_div_28053 ul{-webkit-margin-after:1em;-webkit-margin-before:1em;-webkit-padding-start:0;display:inline-block;list-style-type:none;margin-left:0;min-height:150px;padding-left:0;width:457px;} #_ci_widget_div_28053 ul li{float:left;list-style-type:none;margin-left:8px;min-height:149px;vertical-align:top;width:147px;} #_ci_widget_div_28053 ul li:first-child{margin-left:0;} #_ci_widget_div_28053 .ci_text{display:block;} #_ci_widget_div_28053 .ci_text > a{color:#428bca;font-family:'Droid Sans', arial, sans-serif;font-size:13px;font-weight:none;line-height:19.5px;} #_ci_widget_div_28053 .ci_text > a:hover{color:#ff4800;} </style>
+	<?php
+	$out = ob_get_contents();
+	ob_end_clean();
+
+	return $content.$out;
+}
+add_filter( 'the_content', 'crowd_ignite_single_post', 1199, 1 );
