@@ -57,7 +57,7 @@ $id = is_object($row) && isset($row->id) ? $row->id : 0;
 $check = $ts + 120;
 $time = time();
 
-if ($check < $time) {
+if (true || $check < $time) {
 	if ($id) $wpdb->query($wpdb->prepare('update '.$wpdb->prefix.'qssa_spawn_cron set ts = %d where id = %d', $time, $id));
 	else $wpdb->query($wpdb->prepare('insert into '.$wpdb->prefix.'qssa_spawn_cron (ip, ts) values (inet_aton(%s), %d)', $ip, $time));
 	

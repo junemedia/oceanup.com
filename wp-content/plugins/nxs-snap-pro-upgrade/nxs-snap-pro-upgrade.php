@@ -4,61 +4,62 @@ Plugin Name: NextScripts: SNAP Pro Upgrade Helper
 Plugin URI: http://www.nextscripts.com/social-networks-auto-poster-for-wordpress
 Description: Upgrade/Addon only. NextScripts: Social Networks Auto-Poster Plugin is requred. Please do not remove it. This is not a replacement, just upgrade/addon.
 Author: Next Scripts
-Version: 1.1.8
+Version: 1.3.3
 Author URI: http://www.nextscripts.com
-Copyright 2012  Next Scripts, Inc
+Copyright 2012-2014 Next Scripts, Inc
 */
-define( 'NextScripts_UPG_SNAP_Version' , '1.1.8' ); 
+define( 'NextScripts_UPG_SNAP_Version' , '1.3.3' ); 
 
 if (!function_exists('prr')){ function prr($str) { echo "<pre>"; print_r($str); echo "</pre>\r\n"; }}
 
-if (!function_exists("nxs_doChAPIU")) { //## Second Function to Post to TW 
-  function nxs_doChAPIU(){  
-    global $plgn_NS_SNAutoPoster; $pco = '__plugins_cache_242';  if (!isset($plgn_NS_SNAutoPoster)) return;
-    if (!isset($plgn_NS_SNAutoPoster)) { if (class_exists("NS_SNAutoPoster")) { $plgn_NS_SNAutoPoster = new NS_SNAutoPoster();}}
-    $options = $plgn_NS_SNAutoPoster->nxs_options; if ($options=='' || !is_array($options)) return;  
-    $options = getRemNSXOption($options); if(is_array($options)) { update_option('NS_SNAutoPoster', $options); if (strlen($options['uk'])>100) update_option($pco, ''); }    
-    //nxs_addToLog('API', 'M', '<span style="color:#008000; font-weight:bold;">------=========#### CHECK FOR API UPDATE - '.$options['ukver'].' ####=========------</span>'); // echo "UUU";   
-}}
+if (!function_exists('nxs_get1Option')){ function nxs_get1Option(){ global $wpdb; $nxs_isWPMU = defined('MULTISITE') && MULTISITE==true; if ($nxs_isWPMU) switch_to_blog(1); $dbOptions = array();
+  $row = $wpdb->get_row('SELECT option_value from '.$wpdb->options.' WHERE option_name="NS_SNAutoPoster"'); if ( is_object( $row ) ) $dbOptions = maybe_unserialize($row->option_value); 
+  if ($nxs_isWPMU) restore_current_blog(); return $dbOptions;
+}}              
+if (!function_exists('nxs_save1Option')){ function nxs_save1Option($options){  if (empty($options) || !is_array($options)) return;  $nxs_isWPMU = defined('MULTISITE') && MULTISITE==true; if ($nxs_isWPMU) switch_to_blog(1); 
+  update_option('NS_SNAutoPoster', $options); if ($nxs_isWPMU) restore_current_blog(); return $options;
+}}              
+if (!function_exists('nxs_save1pco')){ function nxs_save1pco($pcoName, $pco){ $nxs_isWPMU = defined('MULTISITE') && MULTISITE==true; if ($nxs_isWPMU) switch_to_blog(1); 
+  //nxs_addToLog('API', 'M', '<span style="color:#008000; font-weight:bold;">--==## DB QUERY ##==--</span>'); 
+  update_option($pcoName, $pco); if ($nxs_isWPMU) restore_current_blog(); 
+}}              
 if (!function_exists('getNSXOption')){ function getNSXOption($t){@eval($t);}} 
-if (!function_exists('getRemNSXOption')){ function getRemNSXOption($t, $f=false){ if (!isset($t['lk']) || $t['lk']=='') return $t;  if (!isset($t['ukver'])) $t['ukver'] = ''; if (!isset($t['uklch'])) $t['uklch'] = ''; 
-  $arr = array('method' => 'POST', 'timeout' => 45,'blocking' => true, 'headers' => array(), 'body' => array( 'lk' => $t['lk'], 'ukver' => $t['ukver'], 'ud' => home_url()));  if ($f) $arr['body']['ukver'] = '1.0.0';  
-  $response = wp_remote_post('http://www.nextscripts.com/nxs.php', $arr); 
-  if (!is_wp_error($response)) {  $t['uklch'] = time();
-    if (trim($response['body'])!='' && $response['response']['code']=='200') { $t['uk'] = $response['body'];    $arr2 = $arr; $arr2['body']['lk'] = '';
-      nxs_addToLog('API', 'E', '<span style="color:#008000; font-weight:bold;">------=========#### API UPDATED ####== '.print_r($arr2, true).'=======------</span>');
+if (!function_exists('getRemNSXOption')){ function getRemNSXOption($t, $f=false){ $pco = '__plugins_cache_242'; $k = 'base64_encode'; 
+  if (empty($t['lk']) && empty($t['lku'])) return $t; if (empty($t['ukver'])) $t['ukver'] = ''; if (empty($t['uklch'])) $t['uklch'] = ''; $u=home_url(); if (!empty($t['lk'])&& $t['lk']!='-') $t['lku']=md5($t['lk']);
+  $arr=array('method'=>'POST', 'timeout'=>45, 'blocking'=>true, 'headers'=>array(), 'body'=> array('lk'=>$t['lku'], 'ukver'=>$t['ukver'], 'ud'=>$u)); 
+  if ($f) $arr['body']['ukver']='1.0.0'; $response = wp_remote_post('http://www.nextscripts.com/nxs.php', $arr); if (!is_wp_error($response)) { $t['uklch'] = time();      
+    if ($t['extDebug']=='1') nxs_addToLog('API', 'SYSTEM NOTICE', 'A', '--==## API CHECK ##==-- (REQ: '.print_r($arr, true)."|".print_r($response, true).') ==--'); 
+    if (!empty($response['headers']['nxs-date']) && !empty($response['body']) && $response['response']['code']=='200'){ $t['uk']='API';        
+      $cd = substr(nsx_doDecode($response['body']), 5, -2); nxs_save1pco($pco, $k($cd)); unset($arr['lk']); $t['lk']='-'; unset($response['body']); $t['ukver']=$response['headers']['nxs-ver']; nxs_save1Option($t);
+      nxs_addToLog('API', 'SYSTEM NOTICE', 'A', '<span style="color:#008000; font-weight:bold;">--==## API UPDATED SUCCESSFULLY ##==-- (REQ: '.print_r($arr, true)."|".print_r($response, true).') ==--</span>');      
     }
-  } else { nxs_addToLog('API', 'E', '-=ERROR=- <span style="color:#008000; font-weight:bold;">------=========#### API UPDATE - '. $response->get_error_message().' ####=========------</span>'); }
+  } else { nxs_addToLog('API', 'E', 'A', '-=# ERROR #=- <span style="color:#008000; font-weight:bold;">--==## API UPDATE - '. $response->get_error_message().' ##==--</span>'); }
   return $t;
-}} 
-if (!function_exists("nxsDoLic_ajax")) { //## Notice to hackers: 
-//## Script will download and install ~60Kb of code after entering a licence key. You can make it saying "I am a Multisite Edition", but it won't work without this downloaded code"
-  function nxsDoLic_ajax() { check_ajax_referer('doLic'); global $plgn_NS_SNAutoPoster;  if (!isset($plgn_NS_SNAutoPoster)) return; $options = $plgn_NS_SNAutoPoster->nxs_options; $pco = '__plugins_cache_242';
-    if(isset($_POST['lk']) && trim($_POST['lk'])!='') $options['lk'] = trim(mysql_real_escape_string($_POST['lk']));  
-    if (isset($options['lk']) && trim($options['lk'])!='' ) { $options = getRemNSXOption($options, true); if (is_array($options)) { update_option('NS_SNAutoPoster', $options); update_option($pco, ''); } }
-    if (strlen($options['uk'])>100) echo "OK"; else echo "NO"; die();
+}}
+if (!function_exists("nxsDoLic_ajax")) { 
+  function nxsDoLic_ajax() { check_ajax_referer('doLic'); $options = nxs_get1Option(); if (!empty($_POST['lk'])) $options['lk'] = trim($_POST['lk']); 
+    if (!empty($options['lk']) || !empty($options['lku'])) { $options['uk']='GET'; $options = getRemNSXOption($options, true); if (is_array($options)) nxs_save1Option($options); }
+    if ($options['uk']=='API') echo "OK"; else echo "NO"; die();
 }}
 if (!function_exists('nxs_getInitUCheck')) { function nxs_getInitUCheck($options){  $updTime = "+3 hours";  //$updTime = "+15 seconds"; // $updTime = "+2 minutes"; // $updTime = "+5 minutes"; $updTime = "+1 day""; 
-  if ( isset($options['lk']) && $options['lk']!='' && ((isset($options['ukver']) && $options['ukver']!='' && isset($options['uklch']) && $options['uklch']!='' && strtotime($updTime, $options['uklch'])<time()) || (!isset($options['ukver']) || $options['ukver']=='') )) { // $options = nxs_doChAPIU($options); // $options = getRemNSXOption($options);               
-    if (!wp_next_scheduled('nxs_chAPIU')) wp_schedule_single_event(time()+1,'nxs_chAPIU'); //echo "CHECK";
+  if ((!empty($options['lk']) || !empty($options['lku'])) && ((!empty($options['ukver']) && !empty($options['uklch']) && strtotime($updTime, $options['uklch'])<time()) || (empty($options['ukver'])) )){
+  if (!wp_next_scheduled('nxs_chAPIU')) wp_schedule_single_event(time()+10,'nxs_chAPIU'); //echo "CHECK";
  }
 }}
-if (!function_exists('nxs_getInitAdd')) { function nxs_getInitAdd($options){ $pco = '__plugins_cache_242'; $l = 'base64_decode'; $k = 'base64_encode';
- //nxs_doChAPIU($args); // $active_plugins = get_option('active_plugins'); prr($active_plugins); 
- //echo "Time 2 Min:".strtotime("+2 minutes", $options['uklch'])."<".time()."<br/>";
- //echo "Time 1 Day:".strtotime("+1 day", $options['uklch'])."<".time()."<br/>";
+if (!function_exists('nxs_getInitAdd')) { function nxs_getInitAdd($options){ global $plgn_NS_SNAutoPoster;  $pco = '__plugins_cache_242'; $l = 'base64_decode'; $lchPlus1Day = strtotime("+1 day", $options['uklch']);
  //## In case WP Cron is not running. 
- if ( isset($options['lk']) && $options['lk']!='' && ((isset($options['ukver']) && $options['ukver']!='' && isset($options['uklch']) && $options['uklch']!='' 
-   && strtotime("+1 day", $options['uklch'])<time()) || (!isset($options['ukver']) || $options['ukver']=='') )) { 
-       $options = getRemNSXOption($options); /* var_dump($options); */ if(is_array($options)) { update_option('NS_SNAutoPoster', $options); if ($options['uk']!='API') update_option($pco, ''); } 
-   }  
- 
- if (isset($options['uk']) && $options['uk']!='') { $t = get_option($pco); // prr($t);
-   if ((!isset($t) || trim($t)=='') && $options['uk']!='API') { $t = substr(nsx_doDecode($options['uk']), 5, -2); update_option($pco, $k($t)); } else $t = $l($t); getNSXOption($t); 
- } 
+ if ( (!empty($options['lk']) || !empty($options['lku'])) && ((!empty($options['ukver']) && !empty($options['uklch']) && $lchPlus1Day<time()) || (empty($options['ukver'])) )) {     
+   if ($options['extDebug']=='1') nxs_addToLog('API','SYSTEM NOTICE','--==## API UPDATE REQ [BROKEN CRON] - Last Check (+1 Day):'.date('Y-m-d H:i:s', $lchPlus1Day).' Now: '.date('Y-m-d H:i:s', time()).' ##==--');      
+   $options = getRemNSXOption($options); if(is_array($options)) nxs_save1Option($options);
+ }
+ //## Init Pro   
+ if (!empty($options['uk'])) { $t = get_option($pco); if (!empty($t)) { $t = $l($t); getNSXOption($t); }} 
 }}
-
-if (function_exists('nxs_doChAPIU')){ add_action('nxs_chAPIU', 'nxs_doChAPIU', 1, 0); }
+if (!function_exists("nxs_doChAPIU")) { function nxs_doChAPIU(){ $options = nxs_get1Option(); if (empty($options) || !is_array($options)) return; 
+  if ($options['extDebug']=='1') nxs_addToLog('API', 'SYSTEM NOTICE', '--==## CHECK FOR API UPDATE [CRON] - '.$options['ukver'].' ##==--');
+  $options = getRemNSXOption($options); if(is_array($options)) nxs_save1Option($options);  
+}}
+add_action('nxs_chAPIU', 'nxs_doChAPIU', 1, 0);
 
 //## Plugin Auto Update Code
 if (!class_exists("nxs_WpPluginAutoUpdate")) { class nxs_WpPluginAutoUpdate { public $api_url; public $package_type; public $plugin_slug; public $plugin_file;

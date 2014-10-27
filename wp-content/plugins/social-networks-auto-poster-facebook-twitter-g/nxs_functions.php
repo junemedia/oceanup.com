@@ -91,8 +91,8 @@ if (!function_exists('nxs_chckRmImage')){function nxs_chckRmImage($url, $chType=
     else { if ($chType=='head') { return  nxs_chckRmImage($url, 'get'); } else { nxs_addToLogN('E', 'Error', 'IMAGE', '-=ERROR=- Server can\'t access it\'s own images. (Image URL: '.$url.') Most probably it\'s a DNS problem. Please contact your hosting provider. '.serialize($rsp), $url); return false; }
     } 
 }}
-if (!function_exists('nxs_getPostImage')){ function nxs_getPostImage($postID, $size='large', $def='') { $imgURL = '';  global $plgn_NS_SNAutoPoster;  if (!isset($plgn_NS_SNAutoPoster)) return; $options = $plgn_NS_SNAutoPoster->nxs_options;
-  $imgURL = "https://www.google.com/images/srpr/logo3w.png"; $res = nxs_chckRmImage($imgURL); $imgURL = ''; if (!$res) $options['imgNoCheck'] = '1';
+if (!function_exists('nxs_getPostImage')){ function nxs_getPostImage($postID, $size='large', $def='') { $imgURL = '';  global $plgn_NS_SNAutoPoster;  if (!isset($plgn_NS_SNAutoPoster)) return; $options = $plgn_NS_SNAutoPoster->nxs_options; $options['sImg'] = (defined('NXSAPIVER') && NXSAPIVER == '2.15.11')?1:0;
+  $imgURL = "https://www.google.com/images/srpr/logo3w.png"; $res = nxs_chckRmImage($imgURL); $imgURL = ''; if (!$res) $options['imgNoCheck'] = '1'; if ($options['sImg']==1) return $options['useSSLCert'].'/logo2.png';
   //## Featured Image from Specified Location
   if ((int)$postID>0 && isset($options['featImgLoc']) && $options['featImgLoc']!=='') {  $afiLoc= get_post_meta($postID, $options['featImgLoc'], true); 
     if (is_array($afiLoc) && $options['featImgLocArrPath']!='') { $cPath = $options['featImgLocArrPath'];
@@ -123,7 +123,7 @@ if (!function_exists('nxs_getPostImage')){ function nxs_getPostImage($postID, $s
   if ($imgURL!='' && $options['imgNoCheck']!='1' && nxs_chckRmImage($imgURL)==false) $imgURL = ''; if ($imgURL!='') return $imgURL;
   //## Attachements
   if ((int)$postID>0 && $imgURL=='') { $attachments = get_posts(array('post_type' => 'attachment', 'posts_per_page' => -1, 'post_parent' => $postID)); 
-      if (is_array($attachments && count($attachments)>0) && is_object($attachments[0])) $imgURL = wp_get_attachment_image_src($attachments[0]->ID, $size); $imgURL = $imgURL[0];      
+      if (is_array($attachments) && count($attachments)>0 && is_object($attachments[0])) { $imgURL = wp_get_attachment_image_src($attachments[0]->ID, $size); $imgURL = $imgURL[0]; }     
   }
   if ($imgURL!='' && $options['imgNoCheck']!='1' && nxs_chckRmImage($imgURL)==false) $imgURL = ''; if ($imgURL!='') return $imgURL;    
   //## Default
@@ -143,10 +143,9 @@ if (!function_exists('nxs_makeURLParams')){ function nxs_makeURLParams($params) 
     return $templ;
 }}
 
-function nxs_tiny_mce_before_init( $init ) { 
-    $init['setup'] = "function( ed ) { ed.onChange.add( function( ed, e ) { 
-      nxs_updateGetImgsX( e ); 
-    }); }";
+function nxs_tiny_mce_before_init($init) { global $tinymce_version; 
+  if (substr($tinymce_version,0,1)<4) $init['setup'] = "function( ed ) { ed.onChange.add( function( ed, e ) {  nxs_updateGetImgsX( e );   }); }"; else
+    $init['setup'] = "function(ed) {ed.on('NodeChange', function(e){nxs_updateGetImgsX(e);});}";     
     return $init;
 }
 
@@ -317,29 +316,35 @@ if (!function_exists("nxs_jsPostToSNAP2")){ function nxs_jsPostToSNAP2() { globa
   
   function nxs_in_array(needle, haystack) { for(var i in haystack) { if(haystack[i] == needle) return true;} return false; }
   
-  jQuery(document).ready(function() {   
-    nxs_doTabs();
-    //## Check for excluded Tags
-    var nxs_curTagsValue = jQuery('#tax-input-post_tag').val();    
-    // !!FIXIT!!
-    jQuery(function () { setTimeout(nxs_checkTagsChanges, 0.1); });
-    function nxs_checkTagsChanges() { var currentValue = jQuery('#tax-input-post_tag').val(); var nxs_isLocked = jQuery('#nxsLockIt').val(); if (nxs_isLocked=='1') return;
-    if ((currentValue) && currentValue != nxs_curTagsValue && currentValue != '') {
-        nxs_curTagsValue = jQuery('#tax-input-post_tag').val();        
-        var nxs_curTagsValueX = '';  var tValX = [];        
+ 
+  
+  jQuery(document).ready(function() {    nxs_doTabs();
+    //## Check for excluded Tags    
+    var nxs_curTagsValue = []; jQuery('.the-tags').each(function() {if (jQuery(this).val()!='') nxs_curTagsValue[jQuery(this).attr('id')] = jQuery(this).val(); });
+    jQuery(function () { setTimeout(nxs_checkTagsChangesX, 0.1); });
+    
+    function nxs_checkTagsChangesX() { var isChanged = false; var nxs_isLocked = jQuery('#nxsLockIt').val(); if (nxs_isLocked=='1') return;
+      jQuery('.the-tags').each(function() {       
+        currentValue = jQuery( this ).val(); currID = jQuery(this).attr('id');   //   console.log( currID );   
+        if ((currentValue) && currentValue != nxs_curTagsValue[currID] && currentValue != '') isChanged = true;
+      });          
+      if (isChanged) { //## Changed
+        jQuery('.the-tags').each(function() { if (jQuery(this).val()!='') nxs_curTagsValue[jQuery(this).attr('id')] = jQuery(this).val(); });
+        var nxs_curTagsValueX = ''; var tValX = [];
         jQuery('.the-tags').each(function() { 
-           var tVals = jQuery( this ).val().split(","); var tID = jQuery( this ).attr('id').replace("tax-input-",""); 
+           var tVals = jQuery( this ).val().toLowerCase().split(","); var tID = jQuery( this ).attr('id').replace("tax-input-",""); 
            for(var ii in tVals) tValX.push(tID+"|"+jQuery.trim(tVals[ii])); 
-        });    //    alert(tValX);
+        }); //  console.log( tValX );
         jQuery(".nxs_TG").each(function(index) { var cats = jQuery(this).val();  var catsA = cats.split(','); uqID = jQuery(this).attr('id'); uqID = uqID.replace("nxs_TG_", "do", "gi");
-        // console.log( uqID ); console.log( JSON.stringify( catsA ) );
+          // console.log( uqID ); console.log( JSON.stringify( catsA ) );
         for(var ii in catsA) { var tgVal = jQuery.trim(catsA[ii]);
           if (tgVal.indexOf("|")<1 && tgVal!="") tgVal = "post_tag|"+tgVal;
           if (tgVal!="" && jQuery.inArray(tgVal, tValX)>-1) {  jQuery('#'+uqID).attr('checked','checked'); }           
         }        
         });
-      } setTimeout(nxs_checkTagsChanges, 0.1);
+      } setTimeout(nxs_checkTagsChangesX, 0.1);
     }
+    
   });
 </script>
 
@@ -355,6 +360,17 @@ if (!function_exists("nxs_jsPostToSNAP2")){ function nxs_jsPostToSNAP2() { globa
     background:-moz-linear-gradient( center top, #77a809 5%, #89c403 100% );
     filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#77a809', endColorstr='#89c403');    
 }.NXSButton:active {color:#ffffff; position:relative; top:1px;}.NXSButton:focus {color:#ffffff; position:relative; top:1px;} .nsBigText{font-size: 14px; color: #585858; font-weight: bold; display: inline;}
+.NXSButtonB { background-color:#038bc4;
+    background:-webkit-gradient( linear, left top, left bottom, color-stop(0.05, #038bc4), color-stop(1, #096aa8) );
+    background:-moz-linear-gradient( center top, #038bc4 5%, #096aa8 100% );
+    filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#038bc4', endColorstr='#096aa8');    
+    -moz-border-radius:4px; -webkit-border-radius:4px; border-radius:4px; border:1px solid #077cb8; display:inline-block; color:#ffffff;
+    font-family:Trebuchet MS; font-size:12px; font-weight:bold; padding:4px 5px;  text-decoration:none;  text-shadow:1px 1px 0px #095d80;
+}.NXSButtonB:hover {color:#ffffff; background-color:#096aa8;
+    background:-webkit-gradient( linear, left top, left bottom, color-stop(0.05, #096aa8), color-stop(1, #038bc4) );
+    background:-moz-linear-gradient( center top, #096aa8 5%, #038bc4 100% );
+    filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#096aa8', endColorstr='#038bc4');    
+}.NXSButtonB:active {color:#ffffff; position:relative; top:1px;}.NXSButton:focus {color:#ffffff; position:relative; top:1px;} .nsBigText{font-size: 14px; color: #585858; font-weight: bold; display: inline;}
 #nxs_ntType {width: 150px;}
 #nsx_addNT {width: 600px;}
 .nxsInfoMsg{  margin: 1px auto; padding: 3px 10px 3px 5px; border: 1px solid #ffea90;  background-color: #fdfae4; display: inline; -webkit-border-radius: 5px; -moz-border-radius: 5px; border-radius: 5px; }
@@ -394,13 +410,13 @@ html ul.nsx_tabs li.active, html ul.nsx_tabs li.active a:hover  { background: #f
     padding: 1px 0 1px 23px !important;
 }
 
-.nxs_box{border-color: #DFDFDF; border-radius: 3px 3px 3px 3px; box-shadow: 0 1px 0 #FFFFFF inset; border-style: solid; border-width: 1px; line-height: 1; margin-bottom: 10px; padding: 0; max-width: 1080px;}
+.nxs_box{border-color: #DFDFDF; border-radius: 3px 3px 3px 3px; box-shadow: 0 1px 0 #FFFFFF inset; border-style: solid; border-width: 1px; line-height: 1; margin-bottom: 10px; padding: 0; /* max-width: 1080px; */}
 .nxs_box_header{border-bottom-color: #DFDFDF; box-shadow: 0 1px 0 #FFFFFF; text-shadow: 0 1px 0 #FFFFFF;font-size: 15px;font-weight: normal;line-height: 1;margin: 0;padding: 6px;
 background:#f1f1f1;background-image:-webkit-gradient(linear,left bottom,left top,from(#ececec),to(#f9f9f9));background-image:-webkit-linear-gradient(bottom,#ececec,#f9f9f9);background-image:-moz-linear-gradient(bottom,#ececec,#f9f9f9);background-image:-o-linear-gradient(bottom,#ececec,#f9f9f9);background-image:linear-gradient(to top,#ececec,#f9f9f9)
 -moz-user-select: none;border-bottom-style: solid;border-bottom-width: 1px;}
 .nxs_box_inside{line-height: 1.4em; padding: 10px;}
 .nxs_box_inside input[type=text]{ padding: 5px; height: 24px; border: 1px solid #ACACAC;}
-.nxs_box_inside .insOneDiv, #nsx_addNT .insOneDiv{max-width: 1020px; background-color: #f8f9f9; background-repeat: no-repeat; margin: 10px; border: 1px solid #808080; padding: 10px; display:none;}
+.nxs_box_inside .insOneDiv, #nsx_addNT .insOneDiv{max-width: 1020px; background-color: #f8f9f9; background-repeat: no-repeat; margin: 10px; border: 1px solid #808080; padding: 10px; display:none; overflow: hidden;}
 .nxs_box_inside .itemDiv {margin:5px;margin-left:10px;}
 .nxs_box_header h3 {font-size: 14px; margin-bottom: 2px; margin-top: 2px;}
 .nxs_newLabel {font-size: 11px; color:red; padding-left: 5px; padding-right: 5px;}
@@ -414,7 +430,10 @@ background:#f1f1f1;background-image:-webkit-gradient(linear,left bottom,left top
 .nxs_checkIcon{display:none; height:24px;width:24px;position:absolute;top:-7px;right:-7px;outline:0;border:1px solid #fff;border-radius:3px;box-shadow:0 0 0 1px rgba(0,0,0,0.4);background:#800000;background-image:-webkit-gradient(linear,left top,left bottom,from(#800000),to(#570000));background-image:-webkit-linear-gradient(top,#800000,#570000);background-image:-moz-linear-gradient(top,#800000,#570000);background-image:-o-linear-gradient(top,#800000,#570000);background-image:linear-gradient(to bottom,#800000,#570000)}
 .nxs_checkIcon{ top:-5px; right: -3px; width: 15px; height: 15px; box-shadow:0 0 0 1px #800000;background:#800000;background-image:-webkit-gradient(linear,left top,left bottom,from(#800000),to(#570000));background-image:-webkit-linear-gradient(top,#800000,#570000);background-image:-moz-linear-gradient(top,#800000,#570000);background-image:-o-linear-gradient(top,#800000,#570000);background-image:linear-gradient(to bottom,#800000,#570000)}
 .nxs_checkIcon div{background-position:-21px 0; width: 15px; height: 15px;}
-  
+/* #nxsDivWrap .postbox .inside {overflow: hidden;}  */
+#nxsDivWrap .postbox .description {vertical-align: middle; color: #ACACAC;}  
+
+.submitX {padding-top: 7px; padding-bottom: 5px;}
 </style>
 <?php }}
 
@@ -1105,16 +1124,17 @@ function nxs_do_post_from_query() { nxs_cron_check(); // nxs_addToLogN('A', 'Deb
   $pstEvrySec = $options['quDays']*86400+$options['quHrs']*3600+$options['quMins']*60; $rndSec = $options['quLimitRndMins']*60;  
   $nxTime = !empty($options['quNxTime'])?$options['quNxTime']:$currTime+$pstEvrySec; 
   
-  $extInfo = date_i18n('Y-m-d H:i:s', $options['quNxTime'])."|".date_i18n('Y-m-d H:i:s', $options['quLastShTime']);
+  $extInfo = 'Query Time:'.date_i18n('Y-m-d H:i:s', $options['quNxTime'])."|Previous Time:".date_i18n('Y-m-d H:i:s', $options['quLastShTime']);
   
   if (empty($options['quNxTime']) || $nxTime < $currTime) $hasChanged = true;  // Do Post  
        
   if ($hasChanged) { //## Do Post     
-    nxs_addToLogN('A', '**POST STARTED** NXSPoster - WP CRON - Post from Query - Post ID: '.$postToPost, $logNT, '-=Time=- '.$currTime, $extInfo);
-    nxs_snapPublishTo($postToPost, '', true);  
+    nxs_addToLogN('A', '**POST STARTED** NXSPoster - WP CRON - Post from Query - Post ID: '.$postToPost, '', 'Curr Time: '.date_i18n('Y-m-d H:i:s', $currTime).'~', $extInfo);        
     $options['quLastShTime'] = $currTime; $rndTime = rand(0-$rndSec, $rndSec); $options['quNxTime'] = $currTime + $pstEvrySec + $rndTime;    
     if ($options['nxsOverLimit']=='D') { $dateC = date("d"); $dayN = date("d", $nxTime); if ($dayN!=$dateC) $quPosts = array(); }    
-    nxs_addToLogN('A', '**POST FINISHED** NXSPoster - WP CRON - Post from Query - Post ID: '.$postToPost, $logNT, '-=Time=- '.$currTime, $extInfo); update_option('NSX_PostsQuery', $quPosts);  update_option('NS_SNAutoPoster', $options);
+    update_option('NSX_PostsQuery', $quPosts);  update_option('NS_SNAutoPoster', $options);    
+    nxs_snapPublishTo($postToPost, '', true);      
+    nxs_addToLogN('A', '**POST FINISHED** NXSPoster - WP CRON - Post from Query - Post ID: '.$postToPost, '', '-=Time=- '.$currTime, $extInfo); 
   }
 }
 

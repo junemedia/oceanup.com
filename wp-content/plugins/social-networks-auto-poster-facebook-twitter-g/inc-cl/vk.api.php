@@ -14,17 +14,22 @@ if (!class_exists("nxs_class_SNAP_VK")) { class nxs_class_SNAP_VK {
     function nxs_uplImgtoVK($imgURL, $options){
       $postUrl = 'https://api.vkontakte.ru/method/photos.getWallUploadServer?gid='.(str_replace('-','',$options['pgIntID'])).'&access_token='.$options['vkAppAuthToken'];
       $response = wp_remote_get($postUrl); $thumbUploadUrl = $response['body'];    
-      if (!empty($thumbUploadUrl)) { $thumbUploadUrlObj = json_decode($thumbUploadUrl); $VKuploadUrl = $thumbUploadUrlObj->response->upload_url; }    
-      if (!empty($VKuploadUrl)) {                               
+      if (!empty($thumbUploadUrl)) { $thumbUploadUrlObj = json_decode($thumbUploadUrl); $VKuploadUrl = $thumbUploadUrlObj->response->upload_url; }   // prr($thumbUploadUrlObj); echo "UURL=====-----";
+      if (!empty($VKuploadUrl)) {    
+        // if (stripos($VKuploadUrl, '//pu.vkontakte.ru/c')!==false) { $c = 'c'.CutFromTo($VKuploadUrl, '.ru/c', '/'); $VKuploadUrl = str_ireplace('/pu.','/'.$c.'.',str_ireplace($c.'/','',$VKuploadUrl)); }
         $remImgURL = urldecode($imgURL); $urlParced = pathinfo($remImgURL); $remImgURLFilename = $urlParced['basename']; $imgData = wp_remote_get($remImgURL); $imgData = $imgData['body'];        
         $tmp=array_search('uri', @array_flip(stream_get_meta_data($GLOBALS[mt_rand()]=tmpfile())));  
-        if (!is_writable($tmp)) return "Your temporary folder or file (file - ".$tmp.") is not witable. Can't upload image to VK";
+        if (!is_writable($tmp)) return "Your temporary folder or file (file - ".$tmp.") is not writable. Can't upload image to VK";
         rename($tmp, $tmp.='.png'); register_shutdown_function(create_function('', "unlink('{$tmp}');"));       
         file_put_contents($tmp, $imgData); 
       
         $ch = curl_init(); curl_setopt($ch, CURLOPT_URL, $VKuploadUrl); curl_setopt($ch, CURLOPT_POST, 1); curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
         global $nxs_skipSSLCheck; if ($nxs_skipSSLCheck===true) curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-        curl_setopt($ch, CURLOPT_POSTFIELDS, array('photo' => '@' . $tmp)); $response = curl_exec($ch); $errmsg = curl_error($ch); curl_close($ch); //prr($response);
+        
+        if (function_exists('curl_file_create')) { $file  = curl_file_create($tmp); curl_setopt($ch, CURLOPT_POSTFIELDS, array('photo' => $file)); } 
+          else curl_setopt($ch, CURLOPT_POSTFIELDS, array('photo' => '@' . $tmp));
+
+        $response = curl_exec($ch); $errmsg = curl_error($ch); curl_close($ch); //prr($response);
         
         $uploadResultObj = json_decode($response); // prr($response); //prr($uploadResultObj);
       
@@ -55,7 +60,10 @@ if (!class_exists("nxs_class_SNAP_VK")) { class nxs_class_SNAP_VK {
         //## Login
         if (isset($options['vkSvC'])) $nxs_vkCkArray = maybe_unserialize( $options['vkSvC']); $loginError = true; 
         if (is_array($nxs_vkCkArray)) $loginError = nxs_doCheckVK(); if ($loginError!=false)  { 
-           if (!empty($options['vkPh'])) { $ph = str_replace('+','',$options['vkPh']); $ph = substr($ph,2,-2);} else $ph = '';  $loginError = nxs_doConnectToVK($options['uName'], $pass, $ph); 
+           if (!empty($options['vkPh'])) { $replArr = explode(' ... ', $options['vkPhReq']); $ph = $options['vkPh'];           
+             $ln = strlen($replArr[0]); if (substr($ph,0,$ln)==$replArr[0]) $ph = substr($ph,$ln);           
+             $ln = strlen($replArr[1]); $mln = -$ln;  if (substr($ph,$mln)==$replArr[1]) $ph = substr($ph,$ln,$mln);
+           } else $ph = '';  $loginError = nxs_doConnectToVK($options['uName'], $pass, $ph); 
         }  //       prr($loginError);
         if ($loginError!==false) { if (stripos($loginError, 'Phone verification required:')!==false) return $loginError; else return "ERROR - BAD USER/PASS - ".print_r($loginError, true); }
         //## Post        
@@ -77,7 +85,7 @@ if (!class_exists("nxs_class_SNAP_VK")) { class nxs_class_SNAP_VK {
         } else { $respJ = json_decode($response['body'], true);  $ret = $options['pgIntID'].'_'.$respJ['response']['post_id'];   }
           
       }                                
-      if (isset($ret) && $ret!='') return array('postID'=>$ret, 'isPosted'=>1, 'postURL'=>'http://vk.com/wall'.$ret, 'pDate'=>date('Y-m-d H:i:s'));       
+      if (isset($ret) && $ret!='') return array('postID'=>$ret, 'isPosted'=>1, 'postURL'=>'http://vk.com/wall'.$ret, 'pDate'=>date('Y-m-d H:i:s'), 'err'=>$badOut['Error']);       
       return $badOut;      
    }    
 }}

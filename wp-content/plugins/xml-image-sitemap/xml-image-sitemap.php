@@ -56,60 +56,144 @@ function xml_image_sitemap_page() {
 	<?php
 } // ends function xml_image_sitemap_page()
 
-function xml_image_sitemap() {
+function get_imgs( $limit_offset = 0, $limit_limit = 1000 ) {
 
-	if (!preg_match("/sm\-image\.xml$/", $_SERVER['REQUEST_URI'])) {
-		return;
-	} // ends
+ 	global $wpdb;
 
-	global $wpdb;
-	$posts = $wpdb->get_results("SELECT p1.* FROM $wpdb->posts p1
+	/* // original way of getting posts
+	$posts = $wpdb->get_results("SELECT p1.ID, p1.post_parent, p1.post_excerpt, p1.post_title, p1.guid FROM $wpdb->posts p1
+							LEFT JOIN $wpdb->posts p2 on p2.ID=p1.post_parent
+							WHERE p1.post_type = 'attachment' and p2.post_status = 'publish'
+							AND p1.post_mime_type like 'image%'
+							ORDER BY p1.post_date desc limit $limit_offset, $limit_limit ");
+	*/
+	$posts = $wpdb->get_results("SELECT p1.ID FROM $wpdb->posts p1 where post_status = 'publish' and post_type = 'post'");
+	return $posts;	
+}
+
+function get_img_count() {
+
+ 	global $wpdb;
+	$posts = $wpdb->get_var("SELECT count(*) FROM $wpdb->posts p1
 							LEFT JOIN $wpdb->posts p2 on p2.ID=p1.post_parent
 							WHERE p1.post_type = 'attachment' and p2.post_status = 'publish'
 							AND p1.post_mime_type like 'image%'
 							ORDER BY p1.post_date desc");
+	return $posts;	
+}
 
-	header("HTTP/1.1 200 OK");
-	header("Content-Type: text/xml");
+function write_line( $post_id ) {
+	$post = get_post( $post_id->ID );
+
+
+	/*
+	Get the post, find if it has images in it. It should.
+	list permalink
+	list image url
+	write line and close file
+	*/
+	$hndl = fopen( $_SERVER['DOCUMENT_ROOT'] . '/sm-image.xml', "a" );
+
+	$msg = print_r( $post, true );
+	fputs( $hndl, $msg );
+
+	$permalink = get_permalink($post_id);
+
+
+	$xml .= "<url>\n";
+	$xml .= "\t<loc>$permalink</loc>\n";
+
+
+	$xml .= "\t<image:image>\n";
+	$xml .= " \t\t<image:loc>" . $post->guid . "</image:loc>\n";
+	if (!empty($post->post_excerpt)) {
+		$xml .= " \t\t<image:caption>" . htmlspecialchars($post->post_excerpt, ENT_COMPAT, 'UTF-8') . "</image:caption>\n";
+	} // ends if (!empty($post->post_excerpt))
+	elseif (!empty($post->post_title)) {
+		$xml .= " \t\t<image:caption>" . htmlspecialchars($post->post_title, ENT_COMPAT, 'UTF-8') . "</image:caption>\n";
+	} // ends if (!empty($post->post_title))
+	$xml .= "\t</image:image>\n";
+	$xml .= "<url>\n";
+	fputs( $hndl, $xml );
+
+}
+
+function get_parents() {
+	global $wpdb;
+	$parents = $wpdb->get_results("SELECT distinct p1.post_parent FROM $wpdb->posts p1");
+	$posts = $wpdb->get_results("SELECT p1.ID FROM $wpdb->posts p1 where p1.ID in (" . implode( ',', $parents) .  ")" );
+	return $posts;
+}
+
+function qs_check_file_date() {
+	$filename = $_SERVER['DOCUMENT_ROOT'] . '/sm-image.xml';
+	//var_dump( $filename );
+
+	$now = time();
+
+	$stats = stat($filename);
+	$msg = print_r( $stats, true );
+	error_log( $msg . "\n", 3, "/home/oceanup/dev/error_log" );
+
+	if( $stats && $stats['mtime'] > ($now - DAY_IN_SECONDS ) && $stats['size'] > 0 ) {
+		passthru( $filename );
+	} else {
+		qs_build_file();
+	}
+
+}
+
+function qs_build_file() {
+	// open, truncate write xml header
+	$hndl = fopen( $_SERVER['DOCUMENT_ROOT'] . '/sm-image.xml', "w" );
+
+	//header("HTTP/1.1 200 OK");
+	//header("Content-Type: text/xml");
 	$xml   = '<'.'?xml version="1.0" encoding="UTF-8"?'.'>' . "\n";
 	$xml  .= '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">' . "\n";
 	$xml  .= '<!-- XML Image Sitemap Version 1.04 http://www.ericnagel.com/2010/10/image-sitemap-for-wordpress.html -->' . "\n";
+	$xml  .= '<!-- XML Image Sitemap Version 1.04 http://www.ericnagel.com/2010/10/image-sitemap-for-wordpress.html -->' . "\n";
+	$xml  .= '<!-- XML Image Sitemap Version 1.04 http://www.ericnagel.com/2010/10/image-sitemap-for-wordpress.html -->' . "\n";
+	$xml  .= '<!-- XML Image Sitemap Version 1.04 http://www.ericnagel.com/2010/10/image-sitemap-for-wordpress.html -->' . "\n";
 
-	$thisPostID = 0;
+	fwrite( $hndl, $xml );
+	// close, then re-open to append
+	fclose( $hndl );
 
-	foreach ($posts as $post) {
-		if ($post->post_parent != 0) {
-			$permalink = get_permalink($post->post_parent);
-			if (strstr($permalink, '/?attachment_id=') === false) {
-				if ($thisPostID != $post->post_parent) {
+	$hndl = fopen( $_SERVER['DOCUMENT_ROOT'] . '/sm-image.xml', "a" );
 
-					if ($thisPostID != 0) {
-						// Close the previous one
-						$xml .= "</url>\n";
-					} // ends if ($thisPostID != 0)
+	/*
+	$count = ceil( get_img_count() / 1000);
+	for( $i = 0; $i < $count; $i++ ) {
+		if( $i == 0) { 
+			$j = 0;
+		} else {
+			$j = $i * 1000 + 1;
+		}
+		//echo "i: $i, j: $j, k: $k<br>\n";
+		//$posts =  get_imgs( $j );
+		$posts =  get_parents();
+		var_dump( count($posts) );
 
-					$xml .= "<url>\n";
-					$xml .= "\t<loc>$permalink</loc>\n";
+		foreach ($posts as $post) {
+			write_line( $post );
+		} // ends foreach ($posts as $post)
 
-					$thisPostID = $post->post_parent;
-				} // ends if ($thisPostID != $post->post_parent)
+	} // end for $i
+		*/
 
-				$xml .= "\t<image:image>\n";
-				$xml .= " \t\t<image:loc>" . $post->guid . "</image:loc>\n";
-				if (!empty($post->post_excerpt)) {
-					$xml .= " \t\t<image:caption>" . htmlspecialchars($post->post_excerpt, ENT_COMPAT, 'UTF-8') . "</image:caption>\n";
-				} // ends if (!empty($post->post_excerpt))
-				elseif (!empty($post->post_title)) {
-					$xml .= " \t\t<image:caption>" . htmlspecialchars($post->post_title, ENT_COMPAT, 'UTF-8') . "</image:caption>\n";
-				} // ends if (!empty($post->post_title))
-				$xml .= "\t</image:image>\n";
-			} // ends if (!$permalink)
-		} // ends if ($post->post_parent != 0)
-	} // ends foreach ($posts as $post)
 
 	$xml .= "</url>\n";
 	$xml .= "\n</urlset>";
 	echo("$xml");
 	exit();
+
+} // end function
+
+function xml_image_sitemap() {
+	if (!preg_match("/sm\-image\.xml$/", $_SERVER['REQUEST_URI'])) {
+		return;
+	} // ends
+	qs_check_file_date();
 } // ends function xml_image_sitemap()
-?>
+

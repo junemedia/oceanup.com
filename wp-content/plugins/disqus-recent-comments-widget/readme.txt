@@ -2,7 +2,7 @@
 Contributors: DeusMachineLLC,aaron.white,Andrew Bartel,RenettaRenula,spacedmonkey
 Tags: disqus, comments, widget, sidebar
 Requires at least: 3.4.1
-Tested up to: 3.8.1
+Tested up to: 4.0
 Stable tag: trunk
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -30,7 +30,9 @@ You can follow development here: https://github.com/andrewbartel/Disqus_Recent_C
 
 = Why did the comments stop appearing? =
 
-Disqus caps the number of requests you can make to their api at 1000 an hour for free accounts. Comments will start appearing again next hour.
+Disqus caps the number of requests you can make to their api at 1000 an hour for free accounts.  If you have caching enabled (the checkbox in the admin section is unchecked),
+the plugin will only retrieve new comments once a minute.  If you're hitting the request limit, make sure you haven't disabled caching.  Developers, the time in between requests
+is filterable through the disqus_rcw_cache_time filter.  If you need help changing this filter, please post in the support forums.
 
 = I blocked a user, but their comments are still appearing =
 
@@ -55,6 +57,12 @@ Or, you can check out the script on github: https://github.com/AaronJWhite/Disqu
 Not currently, but if you'd like to put together a translation for us, please do!  We'll happily give you credit in the release notes.
 
 == Changelog ==
+
+= 1.2 =
+
+* Added a relative time option in each individual widget's settings
+* Added caching, the plugin will now retrieve comments once a minute instead of every page load (props to everyone who helped out on this)
+* Tested on WordPress 4.0
 
 = 1.1.2 =
 

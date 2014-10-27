@@ -59,13 +59,113 @@ abstract class qssa__base_module {
 		remove_action('qs-sa/settings/save', array(&$this, 'save'), 10);
 	}
 
+	public function check_already_autoposting($post) { return get_post_meta($post->ID, '_qssa_lock_'.$this->slug, true); }
+
+	// try our best to prevent multiple ppl's sessions from autoposting this post
+	public function already_autoposting($post, $force=false) {
+		if ($force) {
+			update_post_meta($post->ID, '_qssa_lock_'.$this->slug, $post->ID);
+			return false;
+		}
+		$lock = add_post_meta($post->ID, '_qssa_lock_'.$this->slug, $post->ID, true);
+		return !$lock;
+	}
+
 	// functions that need defining in the specific module
 	abstract public function settings_basic();
 	abstract public function settings_advanced();
-	abstract public function short_settings();
-	abstract public function autopost($post);
+	abstract public function autopost($post, $use_settings='', $force=false);
 	abstract public function posted_url($post);
+	abstract public function allows_image();
 	abstract protected function _maybe_needs_verify($settings);
+
+	public function post_submit_form($post, $pas='', $field_slug=false) {
+		$pas = wp_parse_args($pas, $this->settings);
+		?>
+			<?php if (!$this->is_autopost_blocked($post)): ?>
+				<?php $this->_draw_post_submit_form($post, $pas, $field_slug); ?>
+			<?php else: ?>
+				<div class="autopost-blocked-reason"><?php echo force_balance_tags($this->why_is_autopost_blocked($post)) ?></div>
+				<?php if ($this->why_is_autopost_blocked($post, 'code') == 1): /* already posted, allow repost */ ?>
+					<div class="repost-form"><?php $this->_draw_post_submit_form($post, $pas, $field_slug, true); ?></div>
+				<?php endif; ?>
+			<?php endif ?>
+		<?php
+	}
+
+	protected function _draw_post_submit_form($post, $pas, $field_slug, $repost=false) {
+		$r = $repost ? ' disabled="disabled" ' : '';
+		?>
+			<div class="field-wrap">
+				<?php $field = $this->field_name('active', $post, $field_slug); ?>
+				<input type="hidden" name="<?php echo $field ?>" value="0" <?php echo $r ?>/>
+				<input type="checkbox" name="<?php echo $field ?>" value="1" <?php echo $r ?><?php
+					checked(true, (bool)$pas['active'] && $post->post_status != 'publish')
+				?> />
+				<span>Submit to this account?</span>
+			</div>
+
+			<?php if ($this->allows_image()): ?>
+				<div class="field-wrap">
+					<?php $this->image_selector($post, $pas, $field_slug) ?>
+				</div>
+			<?php endif; ?>
+
+			<?php if ($repost): ?>
+				<div class="field-wrap">
+					<a href="#" class="repost-submit button">Repost</a>
+				</div>
+			<?php endif; ?>
+		<?php
+	}
+
+	public function image_selector($post, $pas='', $field_slug=false) {
+		$def_pas = wp_parse_args(array('use_image' => -1), $this->settings);
+		$pas = wp_parse_args($pas, $def_pas);
+		$field = $this->field_name('use_image', $post, $field_slug);
+		$iid = has_post_thumbnail($post->ID) ? get_post_thumbnail_id($post->ID) : 0;
+
+		$upload_iframe_src = esc_url(get_upload_iframe_src('image', $post->ID));
+		?>
+			<div class="qssa-image-selection">
+				<div class="field-label">Image to use:</div>
+				<input type="hidden" class="use_image" name="<?php echo $field ?>" value="<?php echo esc_attr($pas['use_image']) ?>" />
+
+				<div class="image-type none <?php echo $pas['use_image'] == 0 ? 'selected' : '' ?>">
+					<div class="image-type-inside">
+						<div class="image-type-title">No Image</div>
+						<div class="preview-image-wrap no-image"><div class="fake-image">-None-</div></div>
+					</div>
+				</div>
+
+				<div class="image-type featured <?php echo ($pas['use_image'] < 0 || $iid) && ($pas['use_image'] < 0 || $pas['use_image'] == $iid) ? 'selected' : '' ?>">
+					<div class="image-type-inside">
+						<div class="image-type-title">Featured Image</div>
+						<div class="preview-image-wrap featured-image">
+							<?php if ($iid): ?>
+								<?php echo get_the_post_thumbnail($post->ID, array(90, 90), array('class' => 'preview-select-image')) ?>
+							<?php else: ?>
+								<div class="fake-image">No feature image selected</div>
+							<?php endif; ?>
+						</div>
+					</div>
+				</div>
+
+				<div class="image-type select <?php echo $pas['use_image'] > 0 && $pas['use_image'] != $iid ? 'selected' : '' ?>">
+					<div class="image-type-inside">
+						<div class="image-type-title">Select Image</div>
+						<div class="select-image-button preview-image-wrap select-image">
+							<?php if ($pas['use_image'] > 0 && $pas['use_image'] != $iid): ?>
+								<?php echo wp_get_attachment_image($pas['use_image'], array(90, 90), false, array('class' => 'preview-select-image')); ?>
+							<?php else: ?>
+								<div class="fake-image">-Select-</div>
+							<?php endif; ?>
+						</div>
+					</div>
+				</div>
+			</div>
+		<?php
+	}
 
 	// generic function to return the instance information
 	public function instance_info() { return array('type' => $this->slug, 'instance_id' => $this->instance_id); }
@@ -102,13 +202,23 @@ abstract class qssa__base_module {
 
 	// determind if this post has previously been posted by this module
 	public function is_autopost_blocked($post) {
-		if (!isset($this->why_blocked[''.$post->ID]) && ($id = get_post_meta($post->ID, $this->_settings_slug(), true)) !== '')
-			$this->why_blocked[''.$post->ID] = apply_filters(
-				'qs-sa/autopost/blocked',
-				array('msg' => sprintf('You previously submitted the post to this account, viewable at <a href="%s" target="_blank">this url</a>.', $this->posted_url($post)), 'code' => 1),
-				$post,
-				$this
-			);
+		if (!isset($this->why_blocked[''.$post->ID]) && $this->check_already_autoposting($post)) {
+			if (!isset($this->why_blocked[''.$post->ID]) && ($id = get_post_meta($post->ID, $this->_settings_slug(), true)) !== '')
+				$this->why_blocked[''.$post->ID] = apply_filters(
+					'qs-sa/autopost/blocked',
+					array('msg' => sprintf('You previously submitted the post to this account, viewable at <a href="%s" target="_blank">this url</a>.', $this->posted_url($post)), 'code' => 1),
+					$post,
+					$this
+				);
+			else
+				$this->why_blocked[''.$post->ID] = apply_filters(
+					'qs-sa/autopost/blocked',
+					array('msg' => sprintf('The autopost is happening at this very moment. Refresh this page to see the result.', $this->posted_url($post)), 'code' => 1),
+					$post,
+					$this
+				);
+		}
+
 		if (!isset($this->why_blocked[''.$post->ID]) && !empty($this->settings['notify']))
 			$this->why_blocked[''.$post->ID] = apply_filters(
 				'qs-sa/autopost/blocked',
@@ -116,6 +226,15 @@ abstract class qssa__base_module {
 				$post,
 				$this
 			);
+
+		if (!isset($this->why_blocked[''.$post->ID]) && apply_filters('qs-sa/autopost/has-schedule', false, $post, $this->instance_id))
+			$this->why_blocked[''.$post->ID] = apply_filters(
+				'qs-sa/autopost/blocked',
+				array('msg' => 'There is currently an autopost sceduled, for this post to be updated to the this account. You should see the result shortly.', 'code' => 3),
+				$post,
+				$this
+			);
+
 		return isset($this->why_blocked[''.$post->ID]) && !!$this->why_blocked[''.$post->ID]['code'];
 	}
 	public function why_is_autopost_blocked($post, $type='msg') {
@@ -165,8 +284,8 @@ abstract class qssa__base_module {
 	}
 
 	// public access methods to allow external sources to get the properly formated field names and ids (like the settings box wrapper)
-	public function field_name($base=array(), $post=false) { return $this->_name($base, $post); }
-	public function field_id($base=array(), $post=false) { return $this->_id($base, $post); }
+	public function field_name($base=array(), $post=false, $field_base=false) { return $this->_name($base, $post, $field_base); }
+	public function field_id($base=array(), $post=false, $field_base=false) { return $this->_id($base, $post, $field_base); }
 
 	// get any norifications that this module has thrown
 	public function get_notify() { return $this->settings['notify']; }
@@ -207,7 +326,7 @@ abstract class qssa__base_module {
 	protected function _draw_message_format($helper=false, $html=false) {
 		$helper = $helper !== false ? $helper : 'The message format for new auto posts to '.$this->display_name.'. This CAN be blank'
 			.($html ? ', but it CANNOT contain HTML, because '.$this->display_name.' will not allow it.' : ' and it CAN contain HTML.');
-		$helper = $helper ? '<span class="helper">'.$helper.'</span' : '';
+		$helper = $helper ? '<span class="helper">'.$helper.'</span>' : '';
 		?>
 			<div class="qs-sa-field">
 				<label for="<?php echo $this->_id('format') ?>">Message Format</label>
@@ -221,7 +340,9 @@ abstract class qssa__base_module {
 					%EXCERPT% - the excerpt of the post<br/>
 					%CONTENT% - the content of the post, up to the more tag<br/>
 					%FULLCONENT% - the FULL content of the post<br/>
-					%IMGURL% - the url of the Featured Image of the post
+					%IMGURL% - the url of the Featured Image of the post<br/>
+					%SITENAME% - the name of this site<br/>
+					%HOMEURL% - the url to the hompage of this site
 					<?php if ($html): ?>
 						<br/>%IMG% - image tag of the Featured Image<br/>
 						%POSTLINK% - a link pointing to the post, with the title of the post as the link text
@@ -293,9 +414,12 @@ abstract class qssa__base_module {
 		return html_entity_decode($res);
 	}
 
-	protected function _get_thumbnail_id($post) {
+	protected function _get_thumbnail_id($post, $use_settings='') {
+		$use_settings = wp_parse_args($use_settings, array('use_image' => 0));
 		$attachment_id = 0;
-		if (!has_post_thumbnail($post->ID)) {
+		if ((int)$use_settings['use_image'] > 0) {
+			$attachment_id = $use_settings['use_image'];
+		} else if (!has_post_thumbnail($post->ID)) {
 			$attachment = array_shift(get_children(array(
 				'numberposts' => 1, 'order' => 'ASC', 'post_mime_type' => 'image', 'post_parent' => $post->ID, 'post_status' => null, 'post_type' => 'attachment'
 			)));
@@ -307,7 +431,9 @@ abstract class qssa__base_module {
 		return $attachment_id;
 	}
 
-	protected function _get_image_filename($image_id) {
+	protected function _get_image_filename($image_id, $use_settings='') {
+		$use_settings = wp_parse_args($use_settings, array('use_image' => 0));
+		$image_id = $use_settings['use_image'] > 0 ? $use_settings['use_image'] : $image_id;
 		$meta = wp_get_attachment_metadata($image_id);
 		$file = $meta && isset($meta['file']) ? $meta['file'] : '';
 
@@ -319,8 +445,9 @@ abstract class qssa__base_module {
 		return $file;
 	}
 
-	protected function _get_thumbnail_url($post) {
-		$attachment_id = $this->_get_thumbnail_id($post);
+	protected function _get_thumbnail_url($post, $use_settings='') {
+		$use_settings = wp_parse_args($use_settings, array('use_image' => 0));
+		$attachment_id = $this->_get_thumbnail_id($post, $use_settings);
 		list($url) = wp_get_attachment_image_src($attachment_id, 'full');
 		return (string)$url;
 	}
@@ -330,6 +457,8 @@ abstract class qssa__base_module {
 
 		$replace = array(
 			'%URL%' => ($url = get_permalink($post->ID)),
+			'%SITENAME%' => get_bloginfo('name'),
+			'%HOMEURL%' => site_url(),
 			'%TITLE%' => ($title = html_entity_decode(apply_filters('the_title', $post->post_title))),
 			'%EXCERPT%' => $this->_get_excerpt($post),
 			'%CONTENT%' => $this->_get_content($post),
@@ -366,18 +495,20 @@ abstract class qssa__base_module {
 	}
 
 	// used to quickly create the 'name' property of the settings page fields
-	protected function _name($base=array(), $post=false) {
+	protected function _name($base=array(), $post=false, $field_base=false) {
 		$post_part = $post && is_object($post) ? '['.$post->ID.']' : '';
 		$base = is_array($base) ? $base : (array)$base;
-		return esc_attr($this->slug.$post_part.'['.$this->instance_id.']['.implode('][', $base).']');
+		$field_base = !$field_base ? $this->slug : $field_base;
+		return esc_attr($field_base.$post_part.'['.$this->instance_id.']['.implode('][', $base).']');
 	}
 
 	// used to quickly create the 'id' property of the settings page fields
-	protected function _id($base=array(),$post=false) {
+	protected function _id($base=array(), $post=false, $field_base=false) {
 		$post_part = $post && is_object($post) ? '-'.$post->ID : '';
 		$base = is_array($base) ? $base : (array)$base;
 		$base = array_filter($base);
-		return esc_attr($this->slug.$post_part.'-'.$this->instance_id.($base ? '-'.implode('-', $base) : ''));
+		$field_base = !$field_base ? $this->slug : $field_base;
+		return esc_attr($field_base.$post_part.'-'.$this->instance_id.($base ? '-'.implode('-', $base) : ''));
 	}
 
 	// generate the instance specific wp_options settings key

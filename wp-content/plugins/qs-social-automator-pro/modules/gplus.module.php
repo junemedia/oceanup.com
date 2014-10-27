@@ -113,8 +113,8 @@ class qssa_gplus extends qssa__base_module {
 		<?php
 	}
 
-	// draw short settings panel
-	public function short_settings() {
+	public function allows_image() {
+		return $this->settings['posting_type'] == 'image-post';
 	}
 
 	protected function _current_endpoint($endpoints) {
@@ -257,8 +257,10 @@ class qssa_gplus extends qssa__base_module {
 		return $settings;
 	}
 
-	public function autopost($post) {
+	public function autopost($post, $use_settings='', $force=false) {
 		$post = get_post($post);
+		if ($this->already_autoposting($post, $force)) return;
+
 		if (!$this->_load_sdk()) {
 			do_action('qs-sa/autopost/log', 'log', $post->ID, 'Did not autopost, because we could not find the Google Plus QS-SDK.', 'bad');
 			return false;
@@ -270,7 +272,7 @@ class qssa_gplus extends qssa__base_module {
 			default: break;
 
 			case 'image-post':
-				$img_id = $this->_get_thumbnail_id($post);
+				$img_id = $this->_get_thumbnail_id($post, $use_settings);
 				if ($img_id) $args['_img_path'] = $this->_get_image_filename($img_id);
 			break;
 

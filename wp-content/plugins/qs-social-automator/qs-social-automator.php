@@ -3,7 +3,7 @@
  * Plugin Name: Quadshot Social Automator Lite
  * Plugin URI:  http://quadshot.com/
  * Description: Easy to use, reliable, social network autoposting tool.
- * Version:     1.1.5
+ * Version:     1.2.2
  * Author:      Quadshot Software LLC
  * Author URI:  http://quadshot.com/
  * License: OpenTickets Software License Agreement
@@ -14,7 +14,7 @@
 if (!class_exists('qs_social_automator')):
 // loader class w/ admin pages
 class qs_social_automator {
-	protected static $version = '1.1.5'; // plugin version
+	protected static $version = '1.2.2'; // plugin version
 	protected static $plugin_url = ''; // holder for plugin url, for assets
 	protected static $plugin_path = ''; // holder for plugin path, for includes
 	protected static $def_ret_type = 'application/json'; // default ajax return type
@@ -30,7 +30,7 @@ class qs_social_automator {
 		'post_types' => array(),
 	);
 	protected static $default_post_overrides = array(
-		'enabled' => 1,
+		'active' => 1,
 	);
 
 	protected static $requires_scheduling = array();
@@ -101,6 +101,9 @@ class qs_social_automator {
 		add_action('qs-sa/autopost/schedule', array(__CLASS__, 'schedule_autopost'), 10, 4);
 		add_action('qs-sa/autopost/run', array(__CLASS__, 'run_autopost'), 1, 1);
 
+		add_filter('qs-sa/autopost/has-schedule', array(__CLASS__, 'has_scheduled_autopost'), 10, 3);
+		add_action('qs-sa/autopost/clear-schedule', array(__CLASS__, 'clear_scheduled_autoposts'), 10, 2);
+
 		// load core includes and available modules
 		self::_load_includes();
 		self::_load_modules();
@@ -119,6 +122,7 @@ class qs_social_automator {
 		self::_load_accounts();
 
 		add_action('admin_init', array(__CLASS__, 'maybe_reverify'), 1);
+		//add_action('wp_ajax_qs-sa/rp', array(__CLASS__, 'maybe_repost'), 1);
 		add_action('admin_init', array(__CLASS__, 'maybe_repost'), 1);
 
 		// notify other plugins that we are loaded
@@ -138,14 +142,28 @@ class qs_social_automator {
 	}
 
 	public static function maybe_repost() {
-		if (!isset($_GET, $_GET['rp'], $_GET['pi'])) return;
-		$acct = self::_get_acct_by_id($_GET['rp']);
-		$post = get_post($_GET['pi']);
+		if (!isset($_REQUEST, $_REQUEST['rp'], $_REQUEST['pi'])) return;
+		$doing_ajax = (defined('DOING_AJAX') && DOING_AJAX);
+		$nonce = isset($_REQUEST['nonce']) ? $_REQUEST['nonce'] : '';
+		$rp_verified = (isset($_REQUEST['qssa_rp']) && wp_verify_nonce($nonce, 'qs-sa/repost'));
+		if (!$doing_ajax && !$rp_verified) return;
+
+		$request = $rp_verified ? $_GET : $_POST;
+
+		$acct = self::_get_acct_by_id($request['rp']);
+		$post = get_post($request['pi']);
 		if (!is_object($acct) || !is_object($post)) return;
 
+		$settings = isset($request['_qssa_account_settings'], $request['_qssa_account_settings'][$request['pi']], $request['_qssa_account_settings'][$request['pi']][$request['rp']])
+			? self::_update_post_overrides($post, array($request['rp'] => $request['_qssa_account_settings'][$request['pi']][$request['rp']]))
+			: array();
+		$use_settings = isset($settings[$request['rp']]) ? $settings[$request['rp']] : array();
+
+		$success = false;
 		try {
-			$fb_post_id = $acct->autopost($post);
+			$success = $acct->autopost($post, $use_settings, true);
 		} catch(Exception $e) {
+			$success = false;
 			do_action('qs-sa/autopost/log', 'log', $post->ID,
 				'Failed autoposting post ['.$args['post_id'].':'.$post->post_title.'] to account ['.$args['name'].'].', 'bad');
 			do_action('qs-sa/autopost/log', 'details', $post->ID,
@@ -153,8 +171,12 @@ class qs_social_automator {
 						.$e->getMessage().' in ['.$e->getFile().'] @ '.$e->getLine(), 'bad');
 		}
 
-		$url = remove_query_arg(array('rp', 'pi'));
-		wp_safe_redirect($url);
+		if (defined('DOING_AJAX') && DOING_AJAX) {
+			echo @json_encode(array('s' => $success));
+		} else {
+			$url = remove_query_arg(array('rp', 'pi', '_qssa_account_settings', 'nonce', 'qssa_rp'));
+			wp_safe_redirect($url);
+		}
 		exit;
 	}
 
@@ -226,7 +248,9 @@ class qs_social_automator {
 		}
 
 		try {
-			if ($process) $success = $acct->autopost($post);
+			$overrides = self::_get_post_overrides($post);
+			$overrides = isset($overrides[$args['instance_id']]) ? $overrides[$args['instance_id']] : array();
+			if ($process) $success = $acct->autopost($post, $overrides);
 			do_action('qs-sa/autopost/log', 'log', $post->ID,
 				($success ? 'S' : 'Uns').'uccessfully finished autoposting post ['.$args['post_id'].':'.$post->post_title.'] to account ['.$acct->name().'].', 'good');
 		} catch (Exception $e) {
@@ -290,13 +314,61 @@ class qs_social_automator {
 			// if the account needs to auto-post this post, then
 			if ($acct->is_enabled() && $acct->can_autopost($post) && !$acct->is_autopost_blocked($post)) {
 				$post_sets = wp_parse_args(isset($post_acct_settings[$acct_info['instance_id']]) ? $post_acct_settings[$acct_info['instance_id']] : '', self::$default_post_overrides);
-				if ($post_sets['enabled']) {
+				if ($post_sets['active']) {
 					do_action('qs-sa/autopost/schedule', $acct, $post, $spacer, array('rand' => rand(0, PHP_INT_MAX)));
 					$spacer += $per;
 				}
 			}
 		}
 	}
+
+  public static function has_scheduled_autopost($found, $post, $instance_id) {
+		static $cron = false;
+    if ($cron === false) $cron = get_option('cron');
+		if (!is_object($post) || !is_string($instance_id) || !isset($post->ID)) return $found;
+
+    foreach ($cron as $ts => $hooks) {
+      if (!is_numeric($ts) || !is_array($hooks)) continue;
+			if (isset($hooks['qs-sa/autopost/run'])) {
+				foreach ($hooks['qs-sa/autopost/run'] as $task_id => $task) {
+					if (!is_array($task['args']) || empty($task['args'])) continue;
+					if (is_array($task['args'][0]) && $task['args'][0]['instance_id'] == $instance_id && $task['args'][0]['post_id'] == $post->ID) {
+						$found = true;
+						break 2;
+					}
+				}
+			}
+    }
+
+		return $found;
+  }
+
+  public static function clear_scheduled_autoposts($post, $instance_id) {
+    $cron = get_option('cron');
+    $c = array();
+    foreach ($cron as $ts => $hooks) {
+      if (!is_numeric($ts) || !is_array($hooks)) {
+        $c[$ts] = $hooks;
+        continue;
+      }
+			$h = array();
+			foreach ($hooks as $hook => $tasks) {
+				if ($hook != 'qs-sa/autopost/run') {
+					$h[$hook] = $tasks;
+					continue;
+				} else {
+					$t = array();
+					foreach ($tasks as $task_id => $task) {
+						if (!is_array($task['args'][0]) || $task['args'][0]['instance_id'] != $instance_id || $task['args'][0]['post_id'] != $post->ID) 
+							$t[$task_id] = $task;
+					}
+					if (!empty($t)) $h[$hook] = $t;
+				}
+			}
+      if (!empty($h)) $c[$ts] = $h;
+    }   
+    update_option('cron', $c);
+  }
 
 	// actually schedule the task
 	public static function schedule_autopost($acct, $post, $seconds=900, $extra=array()) {
@@ -305,6 +377,7 @@ class qs_social_automator {
 		$acct_info['post_id'] = $post->ID;
 		$acct_info['name'] = $acct->name('raw');
 		$acct_info = wp_parse_args($extra, $acct_info);
+		do_action('qs-sa/autopost/clear-schedule', $post, $acct_info['instance_id']);
 		wp_schedule_single_event(microtime(true) + $seconds, 'qs-sa/autopost/run', array($acct_info));
 	}
 
@@ -327,12 +400,20 @@ class qs_social_automator {
 			'jquery-ui-dialog',
 			'jquery-ui-tabs',
 		), self::$version);
+		wp_register_script('qs-sa-admin-edit-post', self::$plugin_url.'assets/js/admin/edit-post.js', array(
+			'qs-tools',
+			'jquery-chosen',
+			'jquery-ui-dialog',
+			'jquery-ui-tabs',
+			'media-editor',
+		), self::$version);
 	}
 
 	// on page load in the admin, enqueue the appropriate assets
 	public static function load_admin_assets($hook) {
 		// pretty much needed on every page
 		wp_enqueue_style('qs-sa-admin-primary');
+		wp_enqueue_media();
 
 		// based on the page, load only certain assets
 		switch ($hook) {
@@ -343,6 +424,16 @@ class qs_social_automator {
 				wp_localize_script('qs-sa-admin-settings', '_qs_ap_admin_settings', array(
 					'nonce' => wp_create_nonce('qs-sa/admin-ajax'),
 					'templates' => self::_admin_ui_templates(),
+				));
+			break;
+
+			case 'post-new.php':
+			case 'post.php':
+				wp_enqueue_style('jquery-chosen');
+				wp_enqueue_style('qs-sa-admin-jquery-ui');
+				wp_enqueue_script('qs-sa-admin-edit-post');
+				wp_localize_script('qs-sa-admin-edit-post', '_qs_sa_edit_post', array(
+					'nonce' => wp_create_nonce('qs-sa/repost'),
 				));
 			break;
 		}
@@ -404,10 +495,9 @@ class qs_social_automator {
 						</div>
 					</div>
 
-
-						<div class="qs-sa-accounts" rel="account-list">
-							<?php self::_draw_accounts(); /* draw already configured accounts */ ?>
-						</div>
+					<div class="qs-sa-accounts" rel="account-list">
+						<?php self::_draw_accounts(); /* draw already configured accounts */ ?>
+					</div>
 
 				</div>
 			</div>
@@ -916,25 +1006,14 @@ class qs_social_automator {
 					<?php if ($acct->is_enabled()): ?>
 						<?php $acct_info = $acct->instance_info(); ?>
 						<?php $post_acct_settings[$acct_info['instance_id']] = wp_parse_args($post_acct_settings[$acct_info['instance_id']], $defs); ?>
-						<li class="account">
+						<li class="account" acct="<?php echo esc_attr($acct_info['instance_id']) ?>">
 							<div class="header">
 								<h4 class="account-name"><?php echo $acct->name() ?></h4>
 								<?php self::_get_mb_actions($acct, $post) ?>
 							</div>
 
 							<div class="inner">
-								<?php if (!$acct->is_autopost_blocked($post)): ?>
-									<div class="field-wrap">
-										<?php $field = self::_field_name($acct, $post, 'enabled'); ?>
-										<input type="hidden" name="<?php echo $field ?>" value="0" />
-										<input type="checkbox" name="<?php echo $field ?>" value="1" <?php
-											checked(true, (bool)$post_acct_settings[$acct_info['instance_id']]['enabled'] && $post->post_status != 'publish')
-										?> />
-										<span>Submit to this account?</span>
-									</div>
-								<?php else: ?>
-									<div class="autopost-blocked-reason"><?php echo force_balance_tags($acct->why_is_autopost_blocked($post)) ?></div>
-								<?php endif ?>
+								<?php $acct->post_submit_form($post, $post_acct_settings[$acct_info['instance_id']], '_qssa_account_settings'); ?>
 							</div>
 						</li>
 						<?php $drawn++; ?>
@@ -979,6 +1058,17 @@ class qs_social_automator {
 		update_post_meta($post_id, '_qssa_post_account_settings', wp_parse_args($data, $current));
 	}
 
+	protected static function _update_post_overrides($post_id, $new_settings=array()) {
+		if (is_object($post_id)) $post_id = $post->ID;
+		$cur = self::_get_post_overrides($post_id);
+		if (is_array($new_settings)) foreach ($new_settings as $k => $v) {
+			if (!isset($cur[$k])) $cur[$k] = $v;
+			else $cur[$k] = array_merge($cur[$k], $v);
+		}
+		update_post_meta($post_id, '_qssa_post_account_settings', $cur);
+		return $cur;
+	}
+
 	protected static function _get_mb_actions($acct, $post) {
 		$acct_info = $acct->instance_info();
 		$actions = array();
@@ -989,9 +1079,10 @@ class qs_social_automator {
 			switch ($why) {
 				case 1:
 					$actions[] = sprintf(
-						'<a href="%s">%s</a>',
-						add_query_arg(array('rp' => $acct_info['instance_id'], 'pi' => $post->ID)),
-						$repost ? 'repost' : 'intial-post'
+						'<a class="%s" href="#">%s</a>',
+						'repost-form-show',
+						//add_query_arg(array('rp' => $acct_info['instance_id'], 'pi' => $post->ID)),
+						'repost'
 					);
 				break;
 			}

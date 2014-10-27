@@ -180,8 +180,8 @@ class qssa_facebook extends qssa__base_module {
 		<?php
 	}
 
-	// draw short settings panel
-	public function short_settings() {
+	public function allows_image() {
+		return $this->settings['posting_type'] == 'image-post';
 	}
 
 	public function can_reverify($settings='') {
@@ -253,6 +253,7 @@ class qssa_facebook extends qssa__base_module {
 		}
 
 		//die(__log($settings, $fb_user_id, $msg, $user_id, $access_token, $scope, $skip_extra_msg, $needs_reverify));
+		$url = apply_filters('qs-sa/url/reverify', '', $this->instance_id);
 		if ($this->can_reverify($settings)) {
 			$extra = ' You probably need to <a rel="reverify" href="'.esc_attr($url).'">Grant Access</a> to this plugin, before we can post. ['.var_export($fb_user_id, true).'] ['.microtime(true).']';
 		} else {
@@ -260,7 +261,6 @@ class qssa_facebook extends qssa__base_module {
 			$needs_reverify = 0;
 		}
 
-		$url = apply_filters('qs-sa/url/reverify', '', $this->instance_id);
 		$settings['needs_reverify'] = $needs_reverify;
 		$settings['scope_needed'] = implode(',', $scope);
 		$settings['access_token'] = $access_token;
@@ -297,9 +297,16 @@ class qssa_facebook extends qssa__base_module {
 
 	protected function _has_perms($need, $perms) {
 		$has = true;
-		foreach ($need as $perm) if (!isset($perms['data'][0][$perm]) || !$perms['data'][0][$perm]) {
-			$has = false;
-			break;
+		foreach ($need as $perm) {
+			$found = false;
+			foreach ($perms['data'] as $granted) if ($granted['permission'] == $perm && $granted['status'] == 'granted') {
+				$found = true;
+				break;
+			}
+			if (!$found) {
+				$has = false;
+				break;
+			}
 		}
 		return $has;
 	}
@@ -315,7 +322,7 @@ class qssa_facebook extends qssa__base_module {
 			$perms = $fb->api('/me/permissions');
 
 			if ($resp['id'] != $target_username && $resp['username'] != $target_username) {
-				$scope[] = 'publish_stream';
+				$scope[] = 'publish_actions';
 				$scope[] = 'manage_pages';
 				if ($this->_has_perms($scope, $perms)) {
 					$accts = $fb->api('/me/accounts');
@@ -406,8 +413,9 @@ class qssa_facebook extends qssa__base_module {
 		return $og && is_array($og) ? $og : array();
 	}
 
-	public function autopost($post) {
+	public function autopost($post, $use_settings='', $force=false) {
 		$post = get_post($post);
+		if ($this->already_autoposting($post, $force)) return;
 
 		if (!$this->_load_sdk()) {
 			do_action('qs-sa/autopost/log', 'log', $post->ID, 'Did not autopost, because we could not find the Facebook SDK.', 'bad');
@@ -453,7 +461,7 @@ class qssa_facebook extends qssa__base_module {
 				case 'photos':
 					// describe the image
 					$args = array(
-						'url' => $this->_get_thumbnail_url($post),
+						'url' => $this->_get_thumbnail_url($post, $use_settings),
 					);
 
 					// if we are posting photos, maybe post to the selected album

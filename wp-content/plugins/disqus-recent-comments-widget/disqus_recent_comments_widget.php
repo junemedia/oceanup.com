@@ -3,9 +3,9 @@
  * Plugin Name: Disqus Recent Comments Widget
  * Description: Add a widget to display recent comments from disqus
  * Author: Deus Machine LLC
- * Version: 1.1.2
+ * Version: 1.2
  * Author URI: http://deusmachine.com
- * Ported to WordPress by: Andrew Bartel, web developer for Deus Machine
+ * Ported to WordPress and maintained by: Andrew Bartel, former web developer for Deus Machine
  * Original Methodology and Script by: Aaron J. White http://aaronjwhite.org/
  * 
  */
@@ -54,6 +54,9 @@ class disqus_recent_comments_widget extends WP_Widget {
 			$title = $instance['title'];
 			if(!$title) $title = 'Recent Comments';
 
+			$use_relative_time = $instance['relative_time'];
+			if( !$use_relative_time) $use_relative_time = 0;
+
 			$api_version = '3.0';
 
 			$resource = 'posts/list';
@@ -66,7 +69,8 @@ class disqus_recent_comments_widget extends WP_Widget {
 				"filter_users" =>$filter_users,
 				'title'=>$title,
 				'markup_style'=>$markup_style,
-				'title_wrapper'=>$title_wrapper
+				'title_wrapper'=>$title_wrapper,
+				'use_relative_time' => $use_relative_time
 			);
 
 			$style_params = apply_filters( 'disqus_rcw_style_parameters' , $style_params );
@@ -86,10 +90,20 @@ class disqus_recent_comments_widget extends WP_Widget {
 			//add parameters to request string
 			$request = $this->add_query_str( $url , $disqus_params );
 
-			// get response with finished request url
-			$response = $this->file_get_contents_curl( $request );
+			if( get_option('disqus_rcw_disable_caching') !== 1 ) {
+				$response = get_transient( 'disqus_rcw_cache' );
+				if( false === $response ) {
+					// get response with finished request url
+					$response = $this->file_get_contents_curl( $request );
+					set_transient( 'disqus_rcw_cache', serialize($response), apply_filters( 'disqus_rcw_cache_time', 60 ) );
+				} else {
+					$response = maybe_unserialize($response);
+				}
+			} else {
+				$response = $this->file_get_contents_curl( $request );
+			}
 
-			//check repsonse
+			//check response
 			if( $response != false ) {
 				// convert response to php object
 				$response = @json_decode($response, true);
@@ -126,6 +140,37 @@ class disqus_recent_comments_widget extends WP_Widget {
 			$this->no_comments( $style_params, $args, false );
 		}
 
+	}
+
+	protected function relative_time($date) {
+		$now = time();
+		$diff = $now - $date;
+		if ($diff < 60){
+			return sprintf($diff > 1 ? '%s seconds ago' : 'a second ago', $diff);
+		}
+		$diff = floor($diff/60);
+		if ($diff < 60){
+			return sprintf($diff > 1 ? '%s minutes ago' : 'one minute ago', $diff);
+		}
+		$diff = floor($diff/60);
+		if ($diff < 24){
+			return sprintf($diff > 1 ? '%s hours ago' : 'an hour ago', $diff);
+		}
+		$diff = floor($diff/24);
+		if ($diff < 7){
+			return sprintf($diff > 1 ? '%s days ago' : 'yesterday', $diff);
+		}
+		if ($diff < 30)
+		{
+			$diff = floor($diff / 7);
+			return sprintf($diff > 1 ? '%s weeks ago' : 'one week ago', $diff);
+		}
+		$diff = floor($diff/30);
+		if ($diff < 12){
+			return sprintf($diff > 1 ? '%s months ago' : 'last month', $diff);
+		}
+		$diff = date('Y', $now) - date('Y', $date);
+		return sprintf($diff > 1 ? '%s years ago' : 'last year', $diff);
 	}
 
 	/**
@@ -190,7 +235,7 @@ class disqus_recent_comments_widget extends WP_Widget {
 	 * @param $parameters
 	 * @return string
 	 */
-	protected function add_query_str($base_url,$parameters) {
+	protected function add_query_str( $base_url, $parameters ) {
 		$i=0;
 		if (count($parameters) > 0) {
 			$new_url = $base_url;
@@ -304,7 +349,7 @@ class disqus_recent_comments_widget extends WP_Widget {
 	 * @param bool $args
 	 * @return void
 	 */
-	protected function echo_comments($comment, $api_key, $style_params,$args=false) {
+	protected function echo_comments($comment, $api_key, $style_params, $args=false) {
 
 		extract($args);
 		//basic counter
@@ -335,10 +380,15 @@ class disqus_recent_comments_widget extends WP_Widget {
 				$author_avatar = $comment_obj["author"]["avatar"]["large"]["cache"];
 				$message = $comment_obj["raw_message"];
 				$comment_id = '#comment-'.$comment_obj["id"];
-				$post_time = date(
-					$style_params["date_format"] ,
-					strtotime($comment_obj['createdAt'])
-				);
+
+				if( $style_params['use_relative_time'] == 1) {
+					$post_time = $this->relative_time( strtotime( $comment_obj['createdAt'] ) );
+				} else {
+					$post_time = date(
+						$style_params["date_format"] ,
+						strtotime($comment_obj['createdAt'])
+					);
+				}
 
 				$thread_info = $this->get_thread_info(
 					$comment_obj["thread"],
@@ -358,19 +408,19 @@ class disqus_recent_comments_widget extends WP_Widget {
 					//create comment html
 					$comment_html_format = '<div class="disqus_rcw_single_comment_wrapper">
 		                <div>
-		                  <div>
-		                    <img class="disqus_rcw_avatar" src="%1$s" alt="%2$s"/>
-		                    <div class="disqus_rcw_author_name">
-		                      <a href="%3$s">%2$s - <span class="disqus_rcw_post_time">%4$s</span></a>
+		                  	<div>
+		                   		<img class="disqus_rcw_avatar" src="%1$s" alt="%2$s"/>
+		                   		<div class="disqus_rcw_author_name">
+									<a href="%3$s">%2$s - <span class="disqus_rcw_post_time">%4$s</span></a>
+								</div>
 		                    </div>
-		                  </div>
-		                  <div class="disqus_rcw_clear"></div>
+		                  	<div class="disqus_rcw_clear"></div>
 		                </div>
 		                <div>
-		                  <a class="disqus_rcw_thread_title" href="%5$s">%6$s</a>
-		                  <div class="disqus_rcw_comment_actual_wrapper">
-		                  	<a href="%5$s%7$s">%8$s</a>
-		                  </div>
+		                    <a class="disqus_rcw_thread_title" href="%5$s">%6$s</a>
+		                    <div class="disqus_rcw_comment_actual_wrapper">
+		                  		<a href="%5$s%7$s">%8$s</a>
+		                    </div>
 		                </div>
 		              </div>';
 				} elseif($style_params['markup_style'] == 'html5') {
@@ -441,6 +491,7 @@ class disqus_recent_comments_widget extends WP_Widget {
 		$instance['comment_length'] = strip_tags($new_instance['comment_length']);
 		$instance['filter_users'] = strip_tags($new_instance['filter_users']);
 		$instance['title'] = strip_tags($new_instance['title']);
+		$instance['relative_time'] = strip_tags($new_instance['relative_time']);
 
 		return $instance;
 
@@ -457,18 +508,22 @@ class disqus_recent_comments_widget extends WP_Widget {
 		$comment_length = isset($instance['comment_length']) ? esc_attr($instance['comment_length']) : 200;
 		$filter_users = isset($instance['filter_users']) ? esc_attr($instance['filter_users']) : '';
 		$title = isset($instance['title']) ? esc_attr($instance['title']) : '';
+		$relative_time = ($instance['relative_time'] == 1) ? 1 : 0;
 
 		?>
 
 		<p><label for="<?php echo $this->get_field_id('title'); ?>"><?php _e('Title:'); ?></label> <input class="widefat" id="<?php echo $this->get_field_id('title'); ?>" name="<?php echo $this->get_field_name('title'); ?>" type="text" value="<?php echo $title; ?>" /></p>
 
-		<p><label for="<?php echo $this->get_field_id('comment_limit'); ?>"><?php _e( 'Comment Limit:' , 'disqus_rcw' ); ?></label>
+		<p><label for="<?php echo $this->get_field_id('relative_time'); ?>"><?php _e( 'Use Relative Time:', 'disqus_rcw' ); ?></label>
+			<input id="<?php echo $this->get_field_id('relative_time'); ?>" name="<?php echo $this->get_field_name('relative_time'); ?>" type="checkbox" <?php checked($relative_time, 1); ?> value="1"></p>
+
+		<p><label for="<?php echo $this->get_field_id('comment_limit'); ?>"><?php _e( 'Comment Limit:', 'disqus_rcw' ); ?></label>
 			<input id="<?php echo $this->get_field_id('comment_limit'); ?>" name="<?php echo $this->get_field_name('comment_limit'); ?>" type="text" value="<?php echo $comment_limit; ?>" /></p>
 
-		<p><label for="<?php echo $this->get_field_id('comment_length'); ?>"><?php _e( 'Comment Length:' , 'disqus_rcw' ); ?></label>
+		<p><label for="<?php echo $this->get_field_id('comment_length'); ?>"><?php _e( 'Comment Length:', 'disqus_rcw' ); ?></label>
 			<input id="<?php echo $this->get_field_id('comment_length'); ?>" name="<?php echo $this->get_field_name('comment_length'); ?>" type="text" size="4" value="<?php echo $comment_length; ?>" /></p>
 
-		<p><label for="<?php echo $this->get_field_id('filter_users'); ?>"><?php _e( 'Filter Users (comma separated):' , 'disqus_rcw' ); ?></label>
+		<p><label for="<?php echo $this->get_field_id('filter_users'); ?>"><?php _e( 'Filter Users (comma separated):', 'disqus_rcw' ); ?></label>
 			<textarea id="<?php echo $this->get_field_id('filter_users'); ?>" cols="30" name="<?php echo $this->get_field_name('filter_users'); ?>" type="text" ><?php echo $filter_users; ?></textarea></p>
 
 	<?php
@@ -540,19 +595,21 @@ class disqus_rcw_settings {
 
 		add_settings_section( 'disqus_rcw_settings_section' ,'', array( $this , 'disqus_rcw_section_callback' ), 'disqus_rcw' );
 
-		register_setting( 'disqus_rcw_settings_group' , 'disqus_rcw_forum_name' );
-		register_setting( 'disqus_rcw_settings_group' , 'disqus_rcw_api_key' );
-		register_setting( 'disqus_rcw_settings_group' , 'disqus_rcw_date_format' );
-		register_setting( 'disqus_rcw_settings_group' , 'disqus_rcw_dont_use_css', array( $this, 'validate_checkbox') );
-		register_setting( 'disqus_rcw_settings_group' , 'disqus_rcw_which_markup' );
-		register_setting( 'disqus_rcw_settings_group' , 'disqus_rcw_title_wrapper' );
+		register_setting( 'disqus_rcw_settings_group', 'disqus_rcw_forum_name' );
+		register_setting( 'disqus_rcw_settings_group', 'disqus_rcw_api_key' );
+		register_setting( 'disqus_rcw_settings_group', 'disqus_rcw_date_format' );
+		register_setting( 'disqus_rcw_settings_group', 'disqus_rcw_dont_use_css', array( $this, 'validate_checkbox') );
+		register_setting( 'disqus_rcw_settings_group', 'disqus_rcw_which_markup' );
+		register_setting( 'disqus_rcw_settings_group', 'disqus_rcw_title_wrapper' );
+		register_setting( 'disqus_rcw_settings_group', 'disqus_rcw_disable_caching' );
 
-		add_settings_field( 'disqus_rcw_forum_name' , __( 'Short Name' , 'disqus_rcw' ), array( $this , 'forum_name_callback' ), 'disqus_rcw' , 'disqus_rcw_settings_section' );
-		add_settings_field( 'disqus_rcw_api_key' , __( 'API Key' , 'disqus_rcw' ) , array( $this , 'api_key_callback' ), 'disqus_rcw' , 'disqus_rcw_settings_section' );
-		add_settings_field( 'disqus_rcw_date_format' , __( 'Date Format' , 'disqus_rcw' ) , array( $this , 'date_format_callback' ), 'disqus_rcw' , 'disqus_rcw_settings_section' );
-		add_settings_field( 'disqus_rcw_dont_use_css' , __( "Disable The Plugin's CSS" , 'disqus_rcw' ) , array( $this, 'custom_css_callback' ), 'disqus_rcw' , 'disqus_rcw_settings_section');
-		add_settings_field( 'disqus_rcw_title_wrapper' , __( 'Widget Title Markup' ), array( $this, 'widget_title_wrapper_callback' ), 'disqus_rcw', 'disqus_rcw_settings_section');
-		add_settings_field( 'disqus_rcw_which_markup' , __( 'General Markup Style', 'disqus_rcw' ), array( $this, 'markup_style_callback' ), 'disqus_rcw', 'disqus_rcw_settings_section');
+		add_settings_field( 'disqus_rcw_forum_name', __( 'Short Name' , 'disqus_rcw' ), array( $this , 'forum_name_callback' ), 'disqus_rcw' , 'disqus_rcw_settings_section' );
+		add_settings_field( 'disqus_rcw_api_key', __( 'API Key' , 'disqus_rcw' ) , array( $this , 'api_key_callback' ), 'disqus_rcw' , 'disqus_rcw_settings_section' );
+		add_settings_field( 'disqus_rcw_date_format', __( 'Date Format' , 'disqus_rcw' ) , array( $this , 'date_format_callback' ), 'disqus_rcw' , 'disqus_rcw_settings_section' );
+		add_settings_field( 'disqus_rcw_dont_use_css', __( "Disable The Plugin's CSS" , 'disqus_rcw' ) , array( $this, 'custom_css_callback' ), 'disqus_rcw' , 'disqus_rcw_settings_section' );
+		add_settings_field( 'disqus_rcw_title_wrapper', __( 'Widget Title Markup' ), array( $this, 'widget_title_wrapper_callback' ), 'disqus_rcw', 'disqus_rcw_settings_section' );
+		add_settings_field( 'disqus_rcw_which_markup', __( 'General Markup Style', 'disqus_rcw' ), array( $this, 'markup_style_callback' ), 'disqus_rcw', 'disqus_rcw_settings_section' );
+		add_settings_field( 'disqus_rcw_disable_caching', __( 'Disable Caching', 'disqus_rcw' ), array( $this, 'disable_caching_callback' ), 'disqus_rcw', 'disqus_rcw_settings_section' );
 	}
 
 	public function disqus_rcw_display_settings() {
@@ -586,8 +643,8 @@ class disqus_rcw_settings {
 	}
 
 	public function custom_css_callback() {
-		echo '<input '.checked(get_option('disqus_rcw_dont_use_css'),1,false).' type="checkbox" name="disqus_rcw_dont_use_css" value="1" >';
-		echo '<em> ' . __("Check this option to disable calling the plugin's stylesheet.  Your theme will need to have styles set if you enable this option.") . '</em>';
+		echo '<input ' . checked(get_option('disqus_rcw_dont_use_css'),1,false).' type="checkbox" name="disqus_rcw_dont_use_css" value="1" >';
+		echo '<em> ' . __( "Check this option to disable calling the plugin's stylesheet.  Your theme will need to have styles set if you enable this option.") . '</em>';
 	}
 
 	public function disqus_rcw_section_callback() {
@@ -603,11 +660,25 @@ class disqus_rcw_settings {
 	}
 
 	public function forum_name_callback() {
-		echo '<input type="text" name="disqus_rcw_forum_name" value="'. esc_attr( get_option( 'disqus_rcw_forum_name' ) ).'">';
+		echo '<input type="text" name="disqus_rcw_forum_name" value="' . esc_attr( get_option( 'disqus_rcw_forum_name' ) ).'">';
+	}
+
+	public function disable_caching_callback() {
+		echo '<input ' . checked( get_option('disqus_rcw_disable_caching'), 1, false ) . ' type="checkbox" name="disqus_rcw_disable_caching" value="1" >';
+		?>
+		<p class="description">
+			<?php
+			_e( 'By default, this plugin will only request new comments from disqus once a minute, so there will be a slight delay
+			before brand new comments show up on the widget.  This is because disqus caps the number of times you can request
+			comments per hour, and to speed up loading your site.  If you want to request new comments on every page load,
+			you can disable caching.  This is not recommended on sites with more than 1000 visits an hour.', 'disqus_rcw' );
+			?>
+		</p>
+	<?php
 	}
 
 	public function disqus_rcw_add_settings_menu_page() {
-		add_options_page( 'Disqus Comments','Disqus Comments','manage_options','disqus_rcw',array($this,'disqus_rcw_display_settings' ) );
+		add_options_page( 'Disqus Comments', 'Disqus Comments', 'manage_options', 'disqus_rcw', array( $this, 'disqus_rcw_display_settings' ) );
 	}
 
 }

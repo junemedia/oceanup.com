@@ -3,7 +3,7 @@
  * Plugin Name: Quadshot Social Automator Pro
  * Plugin URI:  http://quadshot.com/
  * Description: Upgrade to Quadshot Social Automator Lite, which includes more social networks
- * Version:     0.5.3
+ * Version:     0.6.0
  * Author:      Quadshot Software LLC
  * Author URI:  http://quadshot.com/
  * License: OpenTickets Software License Agreement
@@ -12,7 +12,7 @@
  */
 
 class qs_social_automator_pro {
-	protected static $version = '0.5.3';
+	protected static $version = '0.6.0';
 	protected static $plugin_path = '';
 	protected static $plugin_url = '';
 

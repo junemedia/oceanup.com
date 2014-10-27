@@ -161,8 +161,8 @@ class qssa_twitter extends qssa__base_module {
 		<?php
 	}
 
-	// draw short settings panel
-	public function short_settings() {
+	public function allows_image() {
+		return (bool)$this->settings['attach_image'];
 	}
 
 	public function can_reverify() {
@@ -259,7 +259,9 @@ class qssa_twitter extends qssa__base_module {
 		return true;
 	}
 
-	protected function _get_image_filename($image_id) {
+	protected function _get_image_filename($image_id, $use_settings='') {
+		$use_settings = wp_parse_args($use_settings, array('use_image' => 0));
+		$image_id = $use_settings['use_image'] > 0 ? $use_settings['use_image'] : $image_id;
 		$file = '';
 		$u = wp_upload_dir();
 		$meta = wp_get_attachment_metadata($image_id);
@@ -292,8 +294,9 @@ class qssa_twitter extends qssa__base_module {
 		return $file;
 	}
 
-	public function autopost($post) {
+	public function autopost($post, $use_settings='', $force=false) {
 		$post = get_post($post);
+		if ($this->already_autoposting($post, $force)) return;
 
 		if (!$this->_load_sdk()) {
 			do_action('qs-sa/autopost/log', 'log', $post->ID, 'Did not autopost, because we could not find the Twitter SDK.', 'bad');

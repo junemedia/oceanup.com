@@ -6,6 +6,20 @@ li:hover > a > .qs-brand { color:#E98326; }
 .qssa-log-bad { font-weight:bold; color:#880000; }
 .qssa-log-good { font-weight:bold; color:#008800; }
 
+#qs-sa-accounts .field-label { font-weight:bold; }
+#qs-sa-accounts .field-wrap { margin-top:5px; }
+#qs-sa-accounts .field-wrap:first-child { margin-top:0; }
+.repost-form { display:none; }
+
+.qssa-image-selection { margin-left:23px; }
+.qssa-image-selection .preview-image-wrap { width:90px; height:90px; overflow:hidden; }
+.qssa-image-selection .preview-image-wrap img { max-width:100%; height:auto; }
+.qssa-image-selection .preview-image-wrap .fake-image { border:1px dotted #888888; background-color:#dfdfdf; text-align:center; width:88px; height:88px; }
+.qssa-image-selection .image-type { width:100px; display:inline-block; height:115px; position:relative; cursor:pointer; }
+.qssa-image-selection .image-type .image-type-inside { padding:0 5px 5px; }
+.qssa-image-selection .image-type .image-type-title { font-size:8px; font-weight:bold; text-transform:uppercase; }
+.qssa-image-selection .image-type.selected { background-color:#439ED3; }
+
 .log-comments .log-item { font-size:11px; }
 .log-comments .log-item .details { display:none; }
 
