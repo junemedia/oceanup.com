@@ -28,6 +28,7 @@
 <?php if(is_home()): ?>
 <!-- BEGIN GN Ad Tag for OceanUP 1000x1000 home -->
 <script type="text/javascript">
+	if(window.location.href.indexOf("_ae") > -1) { f311042 = 0; }
 	if((typeof(f311042)=='undefined' || f311042 > 0) ){
 		if(typeof(gnm_ord)=='undefined') gnm_ord=Math.random()*10000000000000000; if(typeof(gnm_tile) == 'undefined') gnm_tile=1;
 		document.write('<scr'+'ipt src="http://n4403ad.doubleclick.net/adj/gn.oceanup.com/home;sect=home;mtfInline=true;sz=1000x1000;tile='+(gnm_tile++)+';ord='+gnm_ord+'?" type="text/javascript"></scr'+'ipt>');
@@ -38,6 +39,7 @@
 <!-- BEGIN GN Ad Tag for OceanUP 1000x1000 ros -->
 <script type="text/javascript">
 if ((typeof(f311044)=='undefined' || f311044 > 0) ) {
+	//if(window.location.href.indexOf("_ae") > -1) { f311042 = 0; }
 	if(typeof(gnm_ord)=='undefined') gnm_ord=Math.random()*10000000000000000; if(typeof(gnm_tile) == 'undefined') gnm_tile=1;
 	document.write('<scr'+'ipt src="http://n4403ad.doubleclick.net/adj/gn.oceanup.com/ros;sect=ros;mtfInline=true;sz=1000x1000;tile='+(gnm_tile++)+';ord='+gnm_ord+'?" type="text/javascript"></scr'+'ipt>');
 }
