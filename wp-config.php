@@ -1,13 +1,4 @@
 <?php
-/*
-if (!function_exists('getallheaders')) {
-	function getallheaders() { $headers = ''; foreach ($_SERVER as $name => $value) if (substr($name, 0, 5) == 'HTTP_') $headers[str_replace(' ', '-', ucwords(strtolower(str_replace('_', ' ', substr($name, 5)))))] = $value; return $headers; }
-}
-
-function qsssd_maybe_ua() { $h = getallheaders(); if (isset($h['qsssd-iua']) && $h['qsssd-iua'] == '123') ignore_user_abort(1); }
-qsssd_maybe_ua();
-*/
-
 /**
  * The base configurations of the WordPress.
  *
@@ -25,16 +16,19 @@ qsssd_maybe_ua();
 
 // ** MySQL settings - You can get this info from your web host ** //
 /** The name of the database for WordPress */
-define('DB_NAME', 'oceanup_dev');
+define('WP_CACHE', true); //Added by WP-Cache Manager
+define( 'WPCACHEHOME', '/home/oceanup/public_html/wp-content/plugins/wp-super-cache/' ); //Added by WP-Cache Manager
+define('DB_NAME', 'oceanup_www');
 // wpadmin user ouadmin, asdftyghbn
 /** MySQL database username */
-define('DB_USER', 'oceanup_dev');
+define('DB_USER', 'oceanup_www');
 
 /** MySQL database password */
-define('DB_PASSWORD', '4VCOFhDK4S');
+#define('DB_PASSWORD', 'pun$vmaChat');
+define('DB_PASSWORD', 'UPGtm2aiwNYhdEez');
 
 /** MySQL hostname */
-define('DB_HOST', 'localhost');
+define('DB_HOST', '2d7e6c49ff630b3899942e9d35b02e566c4f405a.rackspaceclouddb.com');
 
 /** Database Charset to use in creating database tables. */
 define('DB_CHARSET', 'utf8');
@@ -95,24 +89,6 @@ define('WP_DEBUG', false);
 if ( !defined('ABSPATH') )
 	define('ABSPATH', dirname(__FILE__) . '/');
 
-function __log() {
-  $a = func_get_args();
-  echo defined('PHP_SAPI') && PHP_SAPI == 'cli' ? "-----\n" : '<pre style="text-align:left !important; max-width:100%; width:100%;">';
-  $d = debug_backtrace();
-  $l = false;
-  while (count($d) && empty($l)) {
-    $l = array_shift($d);
-    if (is_string($l['function']) && in_array($l['function'], array('call_user_func_array', 'call_user_func'))) $l = false;
-  }
-  if ($l['function'] == '__log') $l['function'] = $d[0]['function'];
-  echo sprintf("FROM: %s @ line [%s] -> %s()\n", $l['file'], $l['line'], $l['function']);
-	ob_start();
-  if (count($a)) foreach ($a as $b) { if (is_object($b) || is_array($b)) print_r($b); else var_dump($b); }
-	$output = ob_get_contents();
-	ob_end_clean();
-	echo htmlspecialchars($output);
-  echo defined('PHP_SAPI') && PHP_SAPI == 'cli' ? '' : '</pre>';
-}
 /** Sets up WordPress vars and included files. */
 require_once(ABSPATH . 'wp-settings.php');
 

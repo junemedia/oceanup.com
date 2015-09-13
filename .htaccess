@@ -1,3 +1,15 @@
+RewriteEngine On
+RewriteRule /trackback$ - [F,L]
+
+<IfModule mod_alias.c>
+	RedirectMatch 403 /xmlrpc.php
+</IfModule>
+
+<IfModule mod_alias.c>
+	RedirectMatch 403 /xmlrpc.php
+</IfModule>
+
+# BEGIN WordPress
 <IfModule mod_rewrite.c>
 RewriteEngine On
 RewriteBase /
@@ -6,3 +18,5 @@ RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_FILENAME} !-d
 RewriteRule . /index.php [L]
 </IfModule>
+
+# END WordPress
