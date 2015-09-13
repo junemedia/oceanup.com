@@ -1,0 +1,50 @@
+body{
+	font-family: 'Open Sans', sans-serif;
+}
+
+.instagram a{
+	background: #517fa4;
+	background: -moz-linear-gradient(top, #517fa4 0%, #306088 100%);
+	background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#517fa4), color-stop(100%,#306088));
+	background: -webkit-linear-gradient(top, #517fa4 0%,#306088 100%);
+	background: -o-linear-gradient(top, #517fa4 0%,#306088 100%);
+	background: -ms-linear-gradient(top, #517fa4 0%,#306088 100%);
+	background: linear-gradient(to bottom, #517fa4 0%,#306088 100%);
+	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#517fa4', endColorstr='#306088',GradientType=0 );
+	color: white;
+	-webkit-border-radius: 0 5px 5px 0;
+	-moz-border-radius: 0 5px 5px 0;
+	-o-border-radius: 0 5px 5px 0;
+	border-radius: 0 5px 5px 0;
+	line-height: 40px;
+	font-size: 13px;
+	text-decoration: none;
+	padding: 0 10px;
+	display: inline-block;
+	border: 1px solid #557087;
+	border-left: none;
+}
+
+.instagram span i{
+	background: #517fa4;
+	background: -moz-linear-gradient(top, #517fa4 0%, #306088 100%);
+	background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#517fa4), color-stop(100%,#306088));
+	background: -webkit-linear-gradient(top, #517fa4 0%,#306088 100%);
+	background: -o-linear-gradient(top, #517fa4 0%,#306088 100%);
+	background: -ms-linear-gradient(top, #517fa4 0%,#306088 100%);
+	background: linear-gradient(to bottom, #517fa4 0%,#306088 100%);
+	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#517fa4', endColorstr='#306088',GradientType=0 );
+	color: white;
+	-webkit-border-radius: 5px 0 0 5px;
+	-moz-border-radius: 5px 0 0 5px;
+	-o-border-radius: 5px 0 0 5px;
+	border-radius: 5px 0 0 5px;
+	line-height: 40px;
+	font-size: 13px;
+	text-decoration: none;
+	padding: 0 10px 0 15px;
+	border: 1px solid #557087;
+	display: inline-block;
+	position: relative;
+	top: -1px;
+}

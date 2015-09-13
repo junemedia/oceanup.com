@@ -1,0 +1,396 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: instagram-shortcode-and-widget\n"
+"POT-Creation-Date: 2015-05-27 14:59+0530\n"
+"PO-Revision-Date: 2015-05-27 14:59+0530\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"Language: hi_IN\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Poedit 1.7.5\n"
+"X-Poedit-Basepath: .\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Poedit-SourceCharset: UTF-8\n"
+"X-Poedit-KeywordsList: __;_e;_x\n"
+"X-Poedit-SearchPath-0: ..\n"
+
+#: ../instagram-shortcode-and-widget.php:70
+msgid "Help and Support"
+msgstr ""
+
+#: ../instagram-shortcode-and-widget.php:122
+#: ../instagram-shortcode-and-widget.php:123
+msgid "Instagram Shortcode And Widget"
+msgstr ""
+
+#: ../instagram-shortcode-and-widget.php:124
+#: ../instagram-shortcode-and-widget.php:125
+msgid "Add New Instagram"
+msgstr ""
+
+#: ../instagram-shortcode-and-widget.php:126
+msgid "Edit Instagram"
+msgstr ""
+
+#: ../instagram-shortcode-and-widget.php:127
+msgid "New Instagram"
+msgstr ""
+
+#: ../instagram-shortcode-and-widget.php:128
+msgid "View Instagram"
+msgstr ""
+
+#: ../instagram-shortcode-and-widget.php:129
+msgid "Search Instagram"
+msgstr ""
+
+#: ../instagram-shortcode-and-widget.php:130
+msgid "No Instagram found"
+msgstr ""
+
+#: ../instagram-shortcode-and-widget.php:131
+msgid "No Instagram found in Trash"
+msgstr ""
+
+#: ../instagram-shortcode-and-widget.php:132
+msgid "Parent Instagram:"
+msgstr ""
+
+#: ../instagram-shortcode-and-widget.php:133
+msgid "All Instagram Shortcode"
+msgstr ""
+
+#: ../instagram-shortcode-and-widget.php:134
+#: ../instagram-shortcode-and-widget.php:165
+msgid "Instagram Shortcode"
+msgstr ""
+
+#: ../instagram-shortcode-and-widget.php:164
+msgid "Instagram Shortcode Pro"
+msgstr ""
+
+#: ../instagram-shortcode-and-widget.php:166
+msgid "Date"
+msgstr "तिथि"
+
+#: ../instagram-shortcode-and-widget.php:183
+msgid "Apply Setting On Instagram"
+msgstr ""
+
+#: ../instagram-shortcode-and-widget.php:185
+msgid "Gallery Shortcode"
+msgstr ""
+
+#: ../instagram-shortcode-and-widget.php:188
+msgid "Show us some love, Rate Us"
+msgstr ""
+
+#: ../instagram-shortcode-and-widget.php:190
+msgid "Upgrade To Pro Version"
+msgstr ""
+
+#: ../instagram-shortcode-and-widget.php:192
+msgid "Pro Features"
+msgstr ""
+
+#: ../instagram-shortcode-and-widget.php:203
+msgid "Use below shortcode in any Page/Post to publish your Instagram"
+msgstr ""
+
+#: ../isw_help_and_support.php:10
+msgid "View Support Docs or Open a Ticket"
+msgstr ""
+
+#: ../isw_help_and_support.php:62
+msgid "Here is Solution"
+msgstr ""
+
+#~ msgid "Transition Effect"
+#~ msgstr "संक्रमण प्रभाव"
+
+#~ msgid "Effect 1"
+#~ msgstr "प्रभाव 1"
+
+#~ msgid "Effect 2"
+#~ msgstr "प्रभाव 2"
+
+#~ msgid "Effect 3"
+#~ msgstr "प्रभाव 3"
+
+#~ msgid "Effect 4"
+#~ msgstr "प्रभाव 4"
+
+#~ msgid "Effect 5"
+#~ msgstr "प्रभाव 5"
+
+#~ msgid "Effect 6"
+#~ msgstr "प्रभाव 6"
+
+#~ msgid "Effect 7"
+#~ msgstr "प्रभाव 7"
+
+#~ msgid "Effect 8"
+#~ msgstr "प्रभाव 8"
+
+#~ msgid "Effect 9"
+#~ msgstr "प्रभाव 9"
+
+#~ msgid "Effect 10"
+#~ msgstr "प्रभाव 10"
+
+#~ msgid "Effect 11"
+#~ msgstr "प्रभाव 11"
+
+#~ msgid "Effect 12"
+#~ msgstr "प्रभाव 12"
+
+#~ msgid "Effect 13"
+#~ msgstr "प्रभाव 13"
+
+#~ msgid "Effect 14"
+#~ msgstr "प्रभाव 14"
+
+#~ msgid "Effect 15"
+#~ msgstr "प्रभाव 15"
+
+#~ msgid "Effect 16"
+#~ msgstr "प्रभाव 16"
+
+#~ msgid "Effect 17"
+#~ msgstr "प्रभाव 17"
+
+#~ msgid "Effect 18"
+#~ msgstr "प्रभाव 18"
+
+#~ msgid "Effect 19"
+#~ msgstr "प्रभाव 19"
+
+#~ msgid "Choose an animation effect apply on images after mouse hover."
+#~ msgstr "ऐनिमेशन प्रभाव के बाद माउस मंडराना छवियों पर लागू करें का चयन करें।"
+
+#~ msgid "Image Layout"
+#~ msgstr "पृष्ठभूमि छवि"
+
+#~ msgid "Select Rectangle/Circle option to set album image style."
+#~ msgstr "आयत/सर्किल एल्बम छवि शैली सेट करने के लिए विकल्प का चयन करें।"
+
+#~ msgid "Preview"
+#~ msgstr "पूर्वावलोकन"
+
+#~ msgid "Image Hover Color"
+#~ msgstr "हल्के रंग थीम"
+
+#~ msgid "Select any color to apply on image gallery."
+#~ msgstr "छवि गैलरी पर लागू करने के लिए किसी रंग का चयन करें।"
+
+#~ msgid "Show Gallery Title"
+#~ msgstr "विजेट हैडर दिखाएँ "
+
+#~ msgid "Select Yes/No option to hide or show gallery title."
+#~ msgstr "हाँ/नहीं छुपाएँ या दिखाएँ गैलरी शीर्षक करने के लिए विकल्प का चयन करें।"
+
+#~ msgid "Show Image Label"
+#~ msgstr "विजेट हैडर दिखाएँ "
+
+#~ msgid "Select Yes/No option to hide or show label on image."
+#~ msgstr "हाँ/नहीं छुपाना या लेबल पर छवि दिखाने के लिए विकल्प का चयन करें।"
+
+#~ msgid "Gallery Layout"
+#~ msgstr "सामाजिक मीडिया चिह्न लेआउट"
+
+#~ msgid "Two Column"
+#~ msgstr "दो कॉलम"
+
+#~ msgid "Three Column"
+#~ msgstr "तीन कॉलम"
+
+#~ msgid "Four Column"
+#~ msgstr "चार स्तम्भ"
+
+#~ msgid "Choose a column layout for image gallery."
+#~ msgstr "छवि गैलरी के लिए एक स्तंभ लेआउट का चयन करें।"
+
+#~ msgid "Open Link"
+#~ msgstr "खुली लिंक"
+
+#~ msgid "In Same Tab"
+#~ msgstr "एक ही टैब में"
+
+#~ msgid "In New Tab"
+#~ msgstr "नए टैब में"
+
+#~ msgid "Select option to open link in save tab or in new tab."
+#~ msgstr "टैब को बचाने में या नए टैब में लिंक को खोलने के लिए विकल्प का चयन करें ।"
+
+#~ msgid "Color Opacity"
+#~ msgstr "रंग अपारदर्शिता"
+
+#~ msgid "Choose hover color opacity on images."
+#~ msgstr "छवियों पर हॉवर रंग पारदर्शिता चुनें ।"
+
+#~ msgid "Font Style"
+#~ msgstr "फ़ॉन्ट शैली"
+
+#~ msgid "Choose a caption font style."
+#~ msgstr "एक शीर्षक फ़ॉन्ट शैली चुनें ।"
+
+#~ msgid "Light Box Styles"
+#~ msgstr "लाइट बॉक्स शैलियाँ"
+
+#~ msgid "Choose an image Title style."
+#~ msgstr "एक छवि शीर्षक शैली चुनें।"
+
+#~ msgid "Image Border"
+#~ msgstr "छवि सीमा"
+
+#~ msgid "Select Yes/No option to apply border on portfolio image thumbnails."
+#~ msgstr "पोर्टफोलियो छवि थंबनेल पर सीमा लागू करने के लिए हां / नहीं विकल्प चुनें।"
+
+#~ msgid "Image Border Size"
+#~ msgstr "छवि सीमा आकार"
+
+#~ msgid "Choose a image border size."
+#~ msgstr "एक छवि सीमा आकार चुनें।"
+
+#~ msgid "Image Border Color"
+#~ msgstr "छवि बॉर्डर रंग"
+
+#~ msgid "Select any color to apply on image border."
+#~ msgstr "छवि सीमा पर लागू करने के लिए किसी भी रंग का चयन करें।"
+
+#~ msgid "Photo Gallery Pro"
+#~ msgstr "फोटो गैलरी प्रो"
+
+#~ msgid "Add New Gallery"
+#~ msgstr "नई गैलरी में जोड़ें"
+
+#~ msgid "Edit Photo Gallery"
+#~ msgstr "संपादन फोटो गैलरी"
+
+#~ msgid "New Gallery"
+#~ msgstr "नई गैलरी"
+
+#~ msgid "View Gallery"
+#~ msgstr "गैलरी देखें"
+
+#~ msgid "Search Gallery"
+#~ msgstr "खोज गैलरी"
+
+#~ msgid "No Gallery found"
+#~ msgstr "कोई गैलरी नही पाया"
+
+#~ msgid "No Gallery found in Trash"
+#~ msgstr "कोई गैलरी कचरे में पाया"
+
+#~ msgid "Parent Photo Gallery:"
+#~ msgstr "पैरेंट फोटो गैलरी:"
+
+#~ msgid "All Photo Gallery"
+#~ msgstr "सभी फोटो गैलरी"
+
+#~ msgid "Photo Gallery"
+#~ msgstr "फोटो गैलरी"
+
+#~ msgid "Photo Gallery Shortcode"
+#~ msgstr "फोटो गैलरी शोर्ट"
+
+#~ msgid "Add Images"
+#~ msgstr "छवियां जोड़ें"
+
+#~ msgid "Apply Setting On Photo Gallery"
+#~ msgstr "फोटो गैलरी पर सेटिंग लागू"
+
+#~ msgid "Image"
+#~ msgstr "छवि"
+
+#~ msgid "Video"
+#~ msgstr "वीडियो"
+
+#~ msgid "Link"
+#~ msgstr "लिंक"
+
+#~ msgid "Label"
+#~ msgstr "लेबल"
+
+#~ msgid "Video URL"
+#~ msgstr "वीडियो यूआरएल"
+
+#~ msgid "Help"
+#~ msgstr "मदद"
+
+#~ msgid "Add New Media"
+#~ msgstr "न्यू मीडिया जोड़ें"
+
+#~ msgid "Use below shortcode in any Page/Post to publish your photo gallery"
+#~ msgstr "किसी भी पृष्ठ में शोर्ट- नीचे का प्रयोग करें / पोस्ट आपके फोटो गैलरी प्रकाशित करने के लिए"
+
+#~ msgid "Select Photo Gallery to insert into post"
+#~ msgstr "पोस्ट में डालने के लिए फोटो गैलरी प्रो चयन करें"
+
+#~ msgid "Photo Gallery Pro Shortcode"
+#~ msgstr "फोटो गैलरी प्रो शॉर्ट कोड"
+
+#~ msgid "Select Photo Gallery Pro To Insert Into Post"
+#~ msgstr "पोस्ट में डालने के लिए फोटो गैलरी प्रो चयन करें"
+
+#~ msgid "Insert Photo Gallery Shortcode"
+#~ msgstr "सम्मिलित करें फोटो गैलरी शोर्ट"
+
+#~ msgid "Animation"
+#~ msgstr "एनीमेशन"
+
+#~ msgid "Left to Right"
+#~ msgstr "बाएं से दाएं"
+
+#~ msgid "Right to Left"
+#~ msgstr "दाएं से बाएं"
+
+#~ msgid "Top to Bottom"
+#~ msgstr "ऊपर से नीचे"
+
+#~ msgid "Bottom to Top"
+#~ msgstr "नीचे से ऊपर"
+
+#~ msgid "Choose Animation style."
+#~ msgstr "एनीमेशन शैली चुनें ।"
+
+#~ msgid "Scale Up"
+#~ msgstr "स्केल अप"
+
+#~ msgid "Scale Down"
+#~ msgstr "घटाना"
+
+#~ msgid "Scale Down Up"
+#~ msgstr "ऊपर नीचे पैमाने पर"
+
+#~ msgid "Gallery Title"
+#~ msgstr "शीर्षक"
+
+#~ msgid "Image Label"
+#~ msgstr "पृष्ठभूमि छवि"
+
+#~ msgid "Rectangle"
+#~ msgstr "आयत"
+
+#~ msgid "Circle"
+#~ msgstr "गोला"
+
+#~ msgid "Set featured image"
+#~ msgstr "समूह के साथ छापा गया चित्र"
+
+#~ msgid "Set Album Cover"
+#~ msgstr "एल्बम सेट कवर"
+
+#~ msgid "Remove featured image"
+#~ msgstr "विशेष रुप से प्रदर्शित छवि निकालें"
+
+#~ msgid "Remove Album Cover"
+#~ msgstr "एल्बम कवर निकालें"
+
+#~ msgid "pppp"
+#~ msgstr "pppp"
+
+#~ msgid "Amination"
+#~ msgstr "एनीमेशन"
