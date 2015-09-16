@@ -50,6 +50,8 @@ if ((typeof(f311044)=='undefined' || f311044 > 0) ) {
 </head>
 <body <?php body_class(); ?>>
 
+<!-- <?php echo gethostname(); ?> -->
+
 <?php woo_top(); ?>
 <div id="wrapper">
 	<div id="inner-wrapper">
