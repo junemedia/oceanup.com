@@ -18,17 +18,26 @@
 /** The name of the database for WordPress */
 define('WP_CACHE', true); //Added by WP-Cache Manager
 define( 'WPCACHEHOME', '/home/oceanup/public_html/wp-content/plugins/wp-super-cache/' ); //Added by WP-Cache Manager
-define('DB_NAME', 'oceanup_www');
-// wpadmin user ouadmin, asdftyghbn
-/** MySQL database username */
-define('DB_USER', 'oceanup_www');
 
-/** MySQL database password */
-#define('DB_PASSWORD', 'pun$vmaChat');
-define('DB_PASSWORD', 'UPGtm2aiwNYhdEez');
+/*
+ * https://markjaquith.wordpress.com/2011/06/24/wordpress-local-dev-tips/
+ */
+if ( file_exists( dirname( __FILE__ ) . '/local-config.php' ) ) {
+  include( dirname( __FILE__ ) . '/local-config.php' );
+  #define( 'WP_LOCAL_DEV', true );
+} else {
+  define('DB_NAME', 'oceanup_www');
+  // wpadmin user ouadmin, asdftyghbn
+  /** MySQL database username */
+  define('DB_USER', 'oceanup_www');
 
-/** MySQL hostname */
-define('DB_HOST', '2d7e6c49ff630b3899942e9d35b02e566c4f405a.rackspaceclouddb.com');
+  /** MySQL database password */
+  #define('DB_PASSWORD', 'pun$vmaChat');
+  define('DB_PASSWORD', 'UPGtm2aiwNYhdEez');
+
+  /** MySQL hostname */
+  define('DB_HOST', '2d7e6c49ff630b3899942e9d35b02e566c4f405a.rackspaceclouddb.com');
+}
 
 /** Database Charset to use in creating database tables. */
 define('DB_CHARSET', 'utf8');
