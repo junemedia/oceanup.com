@@ -19,7 +19,6 @@
 <link rel="pingback" href="<?php echo esc_url( get_bloginfo( 'pingback_url' ) ); ?>" />
 <?php wp_head(); ?>
 <?php woo_head(); ?>
-<script type="text/javascript"> window._taboola = window._taboola || []; _taboola.push({article: 'auto'}); !function (e, f, u) { e.async = 1; e.src = u; f.parentNode.insertBefore(e, f); } (document.createElement('script'), document.getElementsByTagName('script')[0], '//cdn.taboola.com/libtrc/oceanup-oceanup/loader.js'); </script> 
 
 <meta name="google-site-verification" content="TgIB1gz9bK1CokHPqDr6z6K6RPM5_qPOoEdjghctIas" />
 </head>
