@@ -776,24 +776,6 @@ function qs_hide_admin_bar_on_frontend($show) {
 }
 //add_filter('show_admin_bar', 'qs_hide_admin_bar_on_frontend', 10, 1); 
 
-function qsou_after_post() {
-	if (is_single()):
-		?>
-			<div id="hexagram_3972"></div>
-			<script src="//ssl-nau.hexagram.com/js/hexagram.min.js"></script>
-		<?php
-	endif;
-}
-add_action('woo_post_after', 'qsou_after_post', 1);
-
-function qsou_loop_after() {
-	?>
-		<div id="hexagram_3972"></div>
-		<script src="//ssl-nau.hexagram.com/js/hexagram.min.js"></script>
-	<?php
-}
-add_action('woo_loop_after', 'qsou_loop_after');
-
 function qs_add_image_size() {
 	add_image_size( 'gallery-thumb', 80, 80 );
 	add_image_size( 'hot-uppers', 120, 120 );
