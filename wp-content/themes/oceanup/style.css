@@ -29,6 +29,10 @@ body img { height:auto; }
 .clearfix{ clear:both; }
 .relative { position: relative; }
 
+
+/* Make sure post iframes, e.g. YouTube vids, behave */
+.post p iframe { max-width: 99%; }
+
 /* Padding and Margins */
 
 .alt-style-darkblue #content, .alt-style-darkblue #footer, #oceanup-header-widgets-top .widget, #oceanup-header-widgets-bottom .widget, .alt-style-darkblue #wrapper, #header.container { padding: .8em; }
