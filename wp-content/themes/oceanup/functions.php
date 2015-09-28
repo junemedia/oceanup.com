@@ -310,6 +310,22 @@ if (!function_exists('oceanup_enqueue_scripts')){
 }
 add_action( 'woo_head', 'oceanup_enqueue_scripts' );
 
+// Enqueue JS for OpenX ad calls
+if (!function_exists('openx_enqueue_scripts')){
+	function openx_enqueue_scripts(){
+		wp_register_script(
+			'openx-js',
+      '//ox-d.junemedia.com/w/1.0/jstag',
+			false,
+			false,
+			false
+		);
+
+		wp_enqueue_script( 'openx-js' );
+	}
+}
+add_action( 'woo_head', 'openx_enqueue_scripts' );
+
 //Global options setup
 function oceanup_global_options(){
 	// Populate WooThemes option in array for use in theme
