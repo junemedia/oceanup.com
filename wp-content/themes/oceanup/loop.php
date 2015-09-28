@@ -13,9 +13,9 @@
  * @subpackage Template
  */
  global $more; $more = 0;
- 
+
 woo_loop_before();
-		
+
 if (have_posts()) { $count = 0;
 ?>
 
@@ -24,12 +24,6 @@ if (have_posts()) { $count = 0;
 <?php
 	while (have_posts()) { the_post(); $count++;
 		woo_get_template_part( 'content', get_post_type() );
-		if( $count == 1 ) {
-			if( is_active_sidebar( 'home-taboola' ) ) {
-				dynamic_sidebar( 'home-taboola' );
-			}
-		}
-
 		if( $count == 2 ) {
 			if( is_active_sidebar( 'home-river' ) ) {
 				dynamic_sidebar( 'home-river' );
