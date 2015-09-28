@@ -25,8 +25,14 @@ if (have_posts()) { $count = 0;
 	while (have_posts()) { the_post(); $count++;
 		woo_get_template_part( 'content', get_post_type() );
 		if( $count == 2 ) {
-			if( is_active_sidebar( 'home-river' ) ) {
-				dynamic_sidebar( 'home-river' );
+			if( is_active_sidebar( 'second-post-ad' ) ) {
+				dynamic_sidebar( 'second-post-ad' );
+			}
+		}
+
+		if( $count == 4 ) {
+			if( is_active_sidebar( 'fourth-post-ad' ) ) {
+				dynamic_sidebar( 'fourth-post-ad' );
 			}
 		}
 

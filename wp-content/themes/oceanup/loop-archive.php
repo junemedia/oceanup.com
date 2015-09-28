@@ -37,8 +37,14 @@ if (have_posts()) { $count = 0;
 		woo_get_template_part( 'content', get_post_type() );
 
 		if( $count == 2 ) {
-			if( is_active_sidebar( 'tag-river' ) ) {
-				dynamic_sidebar( 'tag-river' );
+			if( is_active_sidebar( 'second-post-ad' ) ) {
+				dynamic_sidebar( 'second-post-ad' );
+			}
+		}
+
+		if( $count == 4 ) {
+			if( is_active_sidebar( 'fourth-post-ad' ) ) {
+				dynamic_sidebar( 'fourth-post-ad' );
 			}
 		}
 	} // End WHILE Loop

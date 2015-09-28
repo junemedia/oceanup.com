@@ -37,20 +37,21 @@ function qsou_extra_widget_areas() {
 		'before_title' => '<h3>',
 		'after_title' => '</h3>'
 	) );
-	
+
 	register_sidebar( array(
-		'name' => __( 'Home 2nd post ad', 'woothemes' ),
-		'id' => 'home-river',
-		'description' => __( 'To display an ad inline in homepage post river.', 'woothemes' ),
+		'name' => __( 'Ad after 2nd post', 'woothemes' ),
+		'id' => 'second-post-ad',
+		'description' => __( 'To display an ad inline after second post in river.', 'woothemes' ),
 		'before_widget' => '<div id="%1$s" class="widget %2$s">',
 		'after_widget' => '</div>',
 		'before_title' => '<h3>',
 		'after_title' => '</h3>'
 	) );
+
 	register_sidebar( array(
-		'name' => __( 'Tag Archives 2nd post ad', 'woothemes' ),
-		'id' => 'tag-river',
-		'description' => __( 'To display an ads inline in tag archive  post river.', 'woothemes' ),
+		'name' => __( 'Ad after 4th post', 'woothemes' ),
+		'id' => 'fourth-post-ad',
+		'description' => __( 'To display an ad inline after fourth post in river.', 'woothemes' ),
 		'before_widget' => '<div id="%1$s" class="widget %2$s">',
 		'after_widget' => '</div>',
 		'before_title' => '<h3>',
@@ -59,7 +60,7 @@ function qsou_extra_widget_areas() {
 
 }
 qsou_extra_widget_areas();
-	
+
 function qsou_extra_widget_areas_special() {
 	/**** POSTS ONLY ****/
 	register_sidebar(array(
@@ -123,7 +124,7 @@ function qsou_extra_widget_areas_special() {
 		// Widgetized sidebars
 	    register_sidebar( array( 'name' => __( 'Photos - Primary', 'woothemes' ), 'id' => 'primary-photos', 'description' => __( 'The default primary sidebar for your website, used in two or three-column layouts.', 'woothemes' ), 'before_widget' => '<div id="%1$s" class="widget %2$s">', 'after_widget' => '</div>', 'before_title' => '<h3>', 'after_title' => '</h3>' ) );
 	    register_sidebar( array( 'name' => __( 'Photos - Secondary', 'woothemes' ), 'id' => 'secondary-photos', 'description' => __( 'A secondary sidebar for your website, used in three-column layouts.', 'woothemes' ), 'before_widget' => '<div id="%1$s" class="widget %2$s">', 'after_widget' => '</div>', 'before_title' => '<h3>', 'after_title' => '</h3>' ) );
-	
+
 		// Footer widgetized areas
 		$total = get_option( 'woo_footer_sidebars', 4 );
 		if ( ! $total ) $total = 4;
@@ -256,7 +257,7 @@ if ( ! function_exists('oceanup_get_next_image_link') ){
 }
 if ( ! function_exists( 'oceanup_post_meta' ) ) {
 	function oceanup_post_meta( $_post_info = '' ){
-		
+
 		if ( get_post_gallery() ){
 			$images =& get_children( 'post_type=attachment&post_mime_type=image&post_parent=' . $GLOBALS['post']->ID );
 			$first_image = array_pop($images);
@@ -394,7 +395,7 @@ function oc_set_post_types() {
 		'view_item' => 'View Gallery',
 		'search_items' => 'Search Galleries',
 		'not_found' =>  'No galleries found',
-		'not_found_in_trash' => 'No galleries found in Trash', 
+		'not_found_in_trash' => 'No galleries found in Trash',
 		'parent_item_colon' => '',
 		'menu_name' => 'Galleries'
 	);
@@ -402,16 +403,16 @@ function oc_set_post_types() {
 		'labels' => $labels,
 		'public' => true,
 		'publicly_queryable' => true,
-		'show_ui' => true, 
-		'show_in_menu' => true, 
+		'show_ui' => true,
+		'show_in_menu' => true,
 		'query_var' => true,
 		'rewrite' => array( 'slug' => 'gallery' ),
 		'capability_type' => 'post',
-		'has_archive' => true, 
+		'has_archive' => true,
 		'hierarchical' => false,
 		'menu_position' => null,
 		'supports' => array( 'title', 'editor', 'author', 'thumbnail', 'comments' )
-	); 
+	);
 	register_post_type( 'oc_gallery', $args );
 }
 
@@ -679,7 +680,7 @@ function qsou_save_post( $post_id, $post ) {
 }
 add_action( 'save_post', 'qsou_save_post', 10, 2 );
 
-function qsou_meta() { 
+function qsou_meta() {
 	global $post, $wp_query;
 
 	// for a photo page, get the tags of post_parent, otherwise get tags
@@ -770,7 +771,7 @@ add_action('print_media_templates', 'qs_default_att_page');
 function qs_hide_admin_bar_on_frontend($show) {
 	return is_admin();
 }
-//add_filter('show_admin_bar', 'qs_hide_admin_bar_on_frontend', 10, 1); 
+//add_filter('show_admin_bar', 'qs_hide_admin_bar_on_frontend', 10, 1);
 
 function qs_add_image_size() {
 	add_image_size( 'gallery-thumb', 80, 80 );
