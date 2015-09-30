@@ -318,7 +318,7 @@ div.pp_pic_holder { z-index:20000003 !important; }
 .entry .from-legacy-table img { padding:0; border:0; }
 
 @media only screen and (min-width: 769px) {
-	#sidebar-top-ad { clear:right; float:right; width:41.5%; text-align:center; padding-top:20px; }
+	#sidebar-top-ad { clear:right; float:right; width:41.5%; text-align:center; padding-top:0px; }
 
 	html .three-col-left #main-sidebar-container #sidebar {
 		margin-left:2%;
