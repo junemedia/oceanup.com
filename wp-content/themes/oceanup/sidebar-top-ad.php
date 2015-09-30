@@ -1,51 +1,105 @@
 <?php
 /**
- * Alternate Sidebar Template
- *
- * If a `secondary` widget area is active and has widgets,
- * and the selected layout has a third column, display the sidebar.
+ * Top Ad Sidebar Template
  *
  * @package WooFramework
  * @subpackage Template
  */
 	global $woo_options;
-	
-	$selected_layout = 'one-col';
-	$layouts = array( 'three-col-left', 'three-col-middle', 'three-col-right' );
-	if ( is_array( $woo_options ) && array_key_exists( 'woo_layout', $woo_options ) ) { $selected_layout = $woo_options['woo_layout']; }
-	
-	if ( in_array( $selected_layout, $layouts ) ) {
 
-		$barname = 'top-sidebar-ad-area';
-		$barsuffix = '';
-		if (is_singular(array('attachment', 'oc_gallery'))) $barsuffix = '-photos';
-
-		if ( woo_active_sidebar( $barname.$barsuffix ) ) {
-	
-			woo_sidebar_before();
+	$barname = 'top-sidebar-ad-area';
+	$barsuffix = '';
+	if (is_singular(array('attachment', 'oc_gallery'))) $barsuffix = '-photos';
+	woo_sidebar_before();
 ?>
 <aside id="sidebar-top-ad">
-	<?php
-		woo_sidebar_inside_before();
-		woo_sidebar( $barname.$barsuffix );
-		woo_sidebar_inside_after();
-	?>
-</aside><!-- /#sidebar-alt -->
+
+	<div class="widget adspace-widget">
+		<div id="538014855_300x250ATF" style="width:300px;height:250px;margin:0;padding:0">
+			<noscript>
+				<iframe id="cecbd3d7da" name="cecbd3d7da" src="//ox-d.junemedia.com/w/1.0/afr?auid=538014855&cb=INSERT_RANDOM_NUMBER_HERE" frameborder="0" scrolling="no" width="300" height="250">
+					<a href="//ox-d.junemedia.com/w/1.0/rc?cs=cecbd3d7da&cb=INSERT_RANDOM_NUMBER_HERE" >
+						<img src="//ox-d.junemedia.com/w/1.0/ai?auid=538014855&cs=cecbd3d7da&cb=INSERT_RANDOM_NUMBER_HERE" border="0" alt="">
+					</a>
+				</iframe>
+			</noscript>
+		</div>
+		<script type="text/javascript">
+			var OX_ads = OX_ads || [];
+			OX_ads.push({
+				slot_id: "538014855_300x250ATF",
+				auid: "538014855"
+			});
+		</script>
+	</div>
+
+	<div class="widget adspace-widget">
+		<div id="538014856_300x250BTF" style="width:300px;height:250px;margin:0;padding:0">
+			<noscript>
+				<iframe id="5fb32e2163" name="5fb32e2163" src="http://ox-d.junemedia.com/w/1.0/afr?auid=538014856&cb=INSERT_RANDOM_NUMBER_HERE" frameborder="0" scrolling="no" width="300" height="250">
+					<a href="http://ox-d.junemedia.com/w/1.0/rc?cs=5fb32e2163&cb=INSERT_RANDOM_NUMBER_HERE" >
+						<img src="http://ox-d.junemedia.com/w/1.0/ai?auid=538014856&cs=5fb32e2163&cb=INSERT_RANDOM_NUMBER_HERE" border="0" alt="">
+					</a>
+				</iframe>
+			</noscript>
+		</div>
+		<script type="text/javascript">
+			var OX_ads = OX_ads || [];
+			OX_ads.push({
+				slot_id: "538014856_300x250BTF",
+				auid: "538014856"
+			});
+		</script>
+	</div>
+
+	<div class="widget widget-text">
+		<div class="textwidget">
+			<h3 style="color:#878787;border:none;box-sizing:border-box;display:block;font-family:Oswald;font-size:18px;line-height:21.600000381469727px;padding:.2em;text-transform:capitalize; width: 270px;text-align:left;margin: 0 auto;">We Recommend</h3>
+
+			<div id="_CI_widget_34389"></div>
+			<script type='text/javascript'>
+				(function() {
+					var script = document.createElement('script');
+					script.type = 'text/javascript';
+					script.src = 'http://widget.crowdignite.com/widgets/34389?_ci_wid=_CI_widget_34389';
+					script.async = true;
+					script.charset = 'utf-8';
+					document.getElementsByTagName('head')[0].appendChild(script);
+				})();
+			</script>
+			<style>
+				#_CI_widget_34389 { width: 270px; margin-right: auto; margin-left: auto; }
+				#_CI_widget_34389 ci_image_anchor img { border-color: transparent; }
+			</style>
+		</div>
+	</div>
+
+	<div class="widget adspace-widget">
+		<div id="538096517_160x600BTF" style="width:300px;height:600px;margin:0;padding:0">
+			<noscript>
+				<iframe id="47ca519d95" name="47ca519d95" src="http://ox-d.junemedia.com/w/1.0/afr?auid=538096517&cb=INSERT_RANDOM_NUMBER_HERE" frameborder="0" scrolling="no" width="300" height="600">
+					<a href="http://ox-d.junemedia.com/w/1.0/rc?cs=47ca519d95&cb=INSERT_RANDOM_NUMBER_HERE" >i
+						<img src="http://ox-d.junemedia.com/w/1.0/ai?auid=538096517&cs=47ca519d95&cb=INSERT_RANDOM_NUMBER_HERE" border="0" alt="">i
+					</a>
+				</iframe>
+			</noscript>
+		</div>
+		<script type="text/javascript">
+			var OX_ads = OX_ads || [];
+			OX_ads.push({
+				slot_id: "538096517_160x600BTF",
+				auid: "538096517"
+			});
+		</script>
+	</div>
+
 <?php
-			woo_sidebar_after();
-		} elseif ( woo_active_sidebar( $barname ) ) {
-	
-			woo_sidebar_before();
+	woo_sidebar_inside_before();
+	woo_sidebar( $barname.$barsuffix );
+	woo_sidebar_inside_after();
 ?>
-<aside id="sidebar-top-ad">
-	<?php
-		woo_sidebar_inside_before();
-		woo_sidebar( $barname );
-		woo_sidebar_inside_after();
-	?>
-</aside><!-- /#sidebar-alt -->
+
+</aside><!-- /#sidebar-top-ad -->
 <?php
-			woo_sidebar_after();
-		} // End IF Statement
-	} // End IF Statement
+	woo_sidebar_after();
 ?>
