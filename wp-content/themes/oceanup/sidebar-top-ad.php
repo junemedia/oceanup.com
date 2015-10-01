@@ -14,6 +14,7 @@
 ?>
 <aside id="sidebar-top-ad">
 
+  <?php // these four widgets all get initiated in js/adunits.js ?>
 	<div class="widget adspace-widget">
 		<div id="538014855_300x250ATF" style="width:300px;height:250px;margin:0;padding:0">
 			<noscript>
@@ -24,13 +25,6 @@
 				</iframe>
 			</noscript>
 		</div>
-		<script type="text/javascript">
-			var OX_ads = OX_ads || [];
-			OX_ads.push({
-				slot_id: "538014855_300x250ATF",
-				auid: "538014855"
-			});
-		</script>
 	</div>
 
 	<div class="widget adspace-widget">
@@ -43,30 +37,12 @@
 				</iframe>
 			</noscript>
 		</div>
-		<script type="text/javascript">
-			var OX_ads = OX_ads || [];
-			OX_ads.push({
-				slot_id: "538014856_300x250BTF",
-				auid: "538014856"
-			});
-		</script>
 	</div>
 
 	<div class="widget widget-text">
 		<div class="textwidget">
-			<h3 style="color:#878787;border:none;box-sizing:border-box;display:block;font-family:Oswald;font-size:18px;line-height:21.600000381469727px;padding:.2em;text-transform:capitalize; width: 270px;text-align:left;margin: 0 auto;">We Recommend</h3>
-
+			<h3 style="border:none;box-sizing:border-box;padding:0 .4em;text-transform:capitalize;width:270px;text-align:left;margin:0 auto;">We Recommend</h3>
 			<div id="_CI_widget_34389"></div>
-			<script type='text/javascript'>
-				(function() {
-					var script = document.createElement('script');
-					script.type = 'text/javascript';
-					script.src = 'http://widget.crowdignite.com/widgets/34389?_ci_wid=_CI_widget_34389';
-					script.async = true;
-					script.charset = 'utf-8';
-					document.getElementsByTagName('head')[0].appendChild(script);
-				})();
-			</script>
 			<style>
 				#_CI_widget_34389 { width: 270px; margin-right: auto; margin-left: auto; }
 				#_CI_widget_34389 ci_image_anchor img { border-color: transparent; }
@@ -78,20 +54,14 @@
 		<div id="538096517_160x600BTF" style="width:300px;height:600px;margin:0;padding:0">
 			<noscript>
 				<iframe id="47ca519d95" name="47ca519d95" src="http://ox-d.junemedia.com/w/1.0/afr?auid=538096517&cb=INSERT_RANDOM_NUMBER_HERE" frameborder="0" scrolling="no" width="300" height="600">
-					<a href="http://ox-d.junemedia.com/w/1.0/rc?cs=47ca519d95&cb=INSERT_RANDOM_NUMBER_HERE" >i
+					<a href="http://ox-d.junemedia.com/w/1.0/rc?cs=47ca519d95&cb=INSERT_RANDOM_NUMBER_HERE" >
 						<img src="http://ox-d.junemedia.com/w/1.0/ai?auid=538096517&cs=47ca519d95&cb=INSERT_RANDOM_NUMBER_HERE" border="0" alt="">i
 					</a>
 				</iframe>
 			</noscript>
 		</div>
-		<script type="text/javascript">
-			var OX_ads = OX_ads || [];
-			OX_ads.push({
-				slot_id: "538096517_160x600BTF",
-				auid: "538096517"
-			});
-		</script>
 	</div>
+  <?php /* end adunits.js widgets */ ?>
 
 <?php
 	woo_sidebar_inside_before();

@@ -297,6 +297,11 @@ div.pp_pic_holder { z-index:20000003 !important; }
 
 @media only screen and (max-width: 320px) {
 	.qsou-gallery .gallery-image-outer { width:33.33%; }
+
+	/* go full-width on 320 and under to accomodate the 320x50 ad untis */
+	.alt-style-darkblue #wrapper { padding: 0; }
+	.alt-style-darkblue #inner-wrapper { border: none; }
+	#oceanup-header-widgets-top .adspace-widget { padding: .8em 0; }
 }
 
 @media only screen and (max-width: 510px) {
@@ -352,6 +357,9 @@ div.pp_pic_holder { z-index:20000003 !important; }
 @media only screen and (max-width: 768px) {
 	#sidebar-top-ad { clear:none; float:none; }
 	body .entry img, img.thumbnail, #portfolio .group.portfolio-img img { padding:0; }
+
+	/* don't display widgets on tablet or smaller */
+	#sidebar-top-ad .widget { display: none; }
 }
 
 #oceanup-header-widgets-bottom .featuredpost .featured-posts-list .post-item { margin:0; border:0; width:19%; padding:0.5%; }
