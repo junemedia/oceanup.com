@@ -106,6 +106,10 @@ body .entry p { margin-bottom:0; padding:.6em 0; }
 #oceanup-header-widgets-top .adspace-widget { padding: 0; margin: 10px auto; }
 #oceanup-header-widgets-bottom { text-align: center; margin: 0 auto; background-color:#aaaaaa; }
 
+
+/* override canvas/style.css, line 2605*/
+.widget { margin: 0 0 20px 0; }
+
 /* deprecated
 #oceanup-header-widgets-bottom { background: url(images/bg-tiger.jpg) no-repeat center center; border-bottom: 1px solid #d1d1d1; text-align: center; margin: 0 auto;
 	-webkit-box-shadow: 0px 6px 5px rgba(50, 50, 50, 0.50);
@@ -317,6 +321,7 @@ div.pp_pic_holder { z-index:20000003 !important; }
 .addthis_default_style .at15t_expanded, .addthis_default_style .at15t_compact { margin-right:0 !important; }
 .addthis_counter { display:none !important; }
 .bottom-widget-area { text-align:center; }
+.bottom-widget-area .widget { padding: 0; margin: 10px auto; }
 .adspace-widget { text-align:center; }
 .adspace-widget .qc-ad-160x600 { margin:0 auto; }
 .adspace-widget .GoogleActiveViewClass > div { margin:0 auto; }
@@ -330,6 +335,7 @@ img.thumbnail,
 #portfolio .group.portfolio-img img {
   box-sizing: border-box;
 }
+
 
 /* custom yarpp styles for sidebar */
 #sidebar-top-ad .widget.yarpp {
