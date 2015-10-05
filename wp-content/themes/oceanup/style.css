@@ -322,6 +322,34 @@ div.pp_pic_holder { z-index:20000003 !important; }
 .entry .from-legacy-table { padding:3px; border:1px solid #eeeeee; }
 .entry .from-legacy-table img { padding:0; border:0; }
 
+/* custom yarpp styles for sidebar */
+#sidebar-top-ad .widget.yarpp {
+  margin: 0 auto 30px;
+  max-width: 300px;
+}
+#sidebar-top-ad .yarpp-related {
+  text-align: left;
+}
+#sidebar-top-ad .yarpp-related h3 {
+  color: #0e0e0e;
+  border: none;
+  font: bold 20px/1.2em 'Istok Web', arial, sans-serif
+}
+#sidebar-top-ad .yarpp-related ol {
+  margin: 0 0 15px 0;
+  padding: 0 0 0 24px;
+}
+#sidebar-top-ad .yarpp-related ol li {
+  list-style-type: decimal;
+  color: #555;
+}
+@media only screen and (min-width: 769px) {
+  /* don't display in-post list on desktop */
+	#main .yarpp-related { display: none; }
+}
+/* end custom yarpp */
+
+
 @media only screen and (min-width: 769px) {
 	#sidebar-top-ad { clear:right; float:right; width:41.5%; text-align:center; padding-top:0px; }
 

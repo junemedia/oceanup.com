@@ -13,8 +13,9 @@
 	woo_sidebar_before();
 ?>
 <aside id="sidebar-top-ad">
+<?php woo_sidebar_inside_before(); ?>
 
-  <?php // these four widgets all get initiated in js/adunits.js ?>
+  <?php // OpenX ad, gets initiated in js/adunits.js ?>
 	<div class="widget adspace-widget">
 		<div id="538014855_300x250ATF" style="width:300px;height:250px;margin:0;padding:0">
 			<noscript>
@@ -27,6 +28,7 @@
 		</div>
 	</div>
 
+  <?php // OpenX ad, gets initiated in js/adunits.js ?>
 	<div class="widget adspace-widget">
 		<div id="538014856_300x250BTF" style="width:300px;height:250px;margin:0;padding:0">
 			<noscript>
@@ -39,6 +41,7 @@
 		</div>
 	</div>
 
+  <?php // CrowdIgnite, gets initiated in js/adunits.js ?>
 	<div class="widget widget-text">
 		<div class="textwidget">
 			<h3 style="border:none;box-sizing:border-box;padding:0 .4em;text-transform:capitalize;width:270px;text-align:left;margin:0 auto;">We Recommend</h3>
@@ -50,6 +53,12 @@
 		</div>
 	</div>
 
+	<?php // related posts ?>
+	<div class="widget yarpp">
+		<?php if ( is_single( 'post' ) ) { related_posts(); } ?>
+  </div>
+
+  <?php // OpenX ad, gets initiated in js/adunits.js ?>
 	<div class="widget adspace-widget">
 		<div id="538096517_160x600BTF" style="width:300px;height:600px;margin:0;padding:0">
 			<noscript>
@@ -61,13 +70,10 @@
 			</noscript>
 		</div>
 	</div>
-  <?php /* end adunits.js widgets */ ?>
 
-<?php
-	woo_sidebar_inside_before();
-	woo_sidebar( $barname.$barsuffix );
-	woo_sidebar_inside_after();
-?>
+<?php woo_sidebar( $barname.$barsuffix ); ?>
+
+<?php woo_sidebar_inside_after(); ?>
 
 </aside><!-- /#sidebar-top-ad -->
 <?php
