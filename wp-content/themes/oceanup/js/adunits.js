@@ -78,9 +78,17 @@ if (OU.screenContext === 'desktop') {
 
 }
 
-/* Mobile-only ad units */
+/* Tablet and mobile ad units */
 else {
-  console.info('MOBILE');
+  // ad at bottom of post
+  if (document.getElementById('538014858_300x250POST-1') !== null) {
+    console.log('here');
+    OX_ads.push({
+      slot_id: '538014858_300x250POST-1',
+      auid: '538014858'
+    });
+  }
+
   OX_ads.push(
     // header mobile banner ad
     { slot_id: 'header_728x90ATF', auid: '538099189' },

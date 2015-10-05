@@ -87,6 +87,20 @@ woo_post_inside_after();
 	</div>
 <?php endif; ?>
 </article><!-- /.post -->
+
+  <?php // OpenX mid-post ad unit, gets initiated in adunits.js ?>
+  <div class="widget adspace-widget mobile">
+    <div id="538014858_300x250POST-1" style="width:300px;height:250px;margin:0;padding:0">
+      <noscript>
+        <iframe id="87cd89828f" name="87cd89828f" src="http://ox-d.junemedia.com/w/1.0/afr?auid=538014858&cb=INSERT_RANDOM_NUMBER_HERE" frameborder="0" scrolling="no" width="300" height="250">
+          <a href="http://ox-d.junemedia.com/w/1.0/rc?cs=87cd89828f&cb=INSERT_RANDOM_NUMBER_HERE" >
+            <img src="http://ox-d.junemedia.com/w/1.0/ai?auid=538014858&cs=87cd89828f&cb=INSERT_RANDOM_NUMBER_HERE" border="0" alt="">
+          </a>
+        </iframe>
+      </noscript>
+    </div>
+  </div>
+
 <?php
 woo_post_after();
 $comm = $settings['comments'];

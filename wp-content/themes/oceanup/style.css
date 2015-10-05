@@ -397,6 +397,10 @@ img.thumbnail,
   }
 }
 
+@media only screen and (min-width: 769px) {
+	#main .adspace-widget.mobile { display: none; }
+}
+
 @media only screen and (min-width: 480px) {
   #main .ci_widget { width: 410px; margin-right: auto; margin-left: auto; }
 }
