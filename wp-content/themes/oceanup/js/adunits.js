@@ -5,28 +5,27 @@
  */
 var OU = OU || {};
 
-OU.pageConfig = {
-  mobile: {
-    breakpoint: 768
-  },
-  desktop: {
-    breakpoint: false
-  }
+OU.breakPoint = {
+  mobile: 480,
+  tablet: 768,
+  desktop: false
 };
 
 OU.setScreenContext = function setScreenContext(screenWidth) {
-  var mobile = OU.pageConfig.mobile.breakpoint;
-  var type;
+  var mobile  = OU.breakPoint.mobile;
+  var tablet = OU.breakPoint.tablet;
 
   if (screenWidth <= mobile) {
-    type = 'mobile';
-  } else {
-    type = 'desktop';
+    return 'mobile';
   }
-  return type;
+  if (screenWidth > mobile && screenWidth <= tablet) {
+    return 'tablet';
+  }
+  return 'desktop';
 }
 
 OU.screenContext = OU.setScreenContext(document.documentElement.clientWidth);
+console.info('screen context:', OU.screenContext);
 
 
 // Initialize OpenX ads array
@@ -77,17 +76,6 @@ if (OU.screenContext === 'desktop') {
     document.getElementsByTagName('head')[0].appendChild(script);
   })();
 
-  // CrowdIgnite post unit
-  if (document.getElementById('post_CI_widget') !== null) {
-    (function() {
-      var script = document.createElement('script');
-      script.type = 'text/javascript';
-      script.src = 'http://widget.crowdignite.com/widgets/34397?_ci_wid=post_CI_widget';
-      script.async = true;
-      script.charset = 'utf-8';
-      document.getElementsByTagName('head')[0].appendChild(script);
-    })();
-  }
 }
 
 /* Mobile-only ad units */
@@ -101,7 +89,24 @@ else {
     { slot_id: 'footer_728x90BTF', auid: '538099192' }
   );
 
-  // CrowdIgnite post unit
+}
+
+/* CrowdIgnite units */
+if (OU.screenContext === 'desktop' || OU.screenContext === 'tablet') {
+  // Post 3x2 unit
+  if (document.getElementById('post_CI_widget') !== null) {
+    (function() {
+      var script = document.createElement('script');
+      script.type = 'text/javascript';
+      script.src = 'http://widget.crowdignite.com/widgets/34397?_ci_wid=post_CI_widget';
+      script.async = true;
+      script.charset = 'utf-8';
+      document.getElementsByTagName('head')[0].appendChild(script);
+    })();
+  }
+}
+else {
+  // Post 2x2 unit
   (function() {
     var script = document.createElement('script');
     script.type = 'text/javascript';
@@ -111,5 +116,3 @@ else {
     document.getElementsByTagName('head')[0].appendChild(script);
   })();
 }
-
-
