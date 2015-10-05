@@ -38,6 +38,13 @@ get_header();
 
 	woo_loop_after();
 ?>
+		<?php // CrowdIgnite widget, gets populated in adunits.js ?>
+		<div class="widget widget_text">
+			<div class="textwidget">
+				<h3 style="border:none;box-sizing:border-box;padding:0 .4em;text-transform:capitalize;text-align:left;margin:0 auto;">More from around the web</h3>
+				<div id="post_CI_widget"></div>
+			</div>
+		</div>
             </section><!-- /#main -->
             <?php woo_main_after(); ?>
 
@@ -52,12 +59,5 @@ get_header();
     </div><!-- /#content -->
 	<?php woo_content_after(); ?>
 
-		<?php // CrowdIgnite widget, gets populated in adunits.js ?>
-		<div class="widget widget_text">
-			<div class="textwidget">
-				<h3 style="border:none;box-sizing:border-box;padding:0 .4em;text-transform:capitalize;text-align:left;margin:0 auto;">More from around the web</h3>
-				<div id="post_CI_widget"></div>
-			</div>
-		</div>
 
 <?php get_footer(); ?>
