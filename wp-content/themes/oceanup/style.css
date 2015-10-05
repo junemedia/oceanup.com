@@ -103,7 +103,9 @@ body .entry p { margin-bottom:0; padding:.6em 0; }
 /* Top Widget Areas */
 #oceanup-header-widgets-top li, #oceanup-header-widgets-bottom li { list-style: none; }
 #oceanup-header-widgets-top .widget, #oceanup-header-widgets-bottom .widget { margin: 10px 0; }
+#oceanup-header-widgets-top .adspace-widget { padding: 0; margin: 10px auto; }
 #oceanup-header-widgets-bottom { text-align: center; margin: 0 auto; background-color:#aaaaaa; }
+
 /* deprecated
 #oceanup-header-widgets-bottom { background: url(images/bg-tiger.jpg) no-repeat center center; border-bottom: 1px solid #d1d1d1; text-align: center; margin: 0 auto;
 	-webkit-box-shadow: 0px 6px 5px rgba(50, 50, 50, 0.50);
