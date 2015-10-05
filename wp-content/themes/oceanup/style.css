@@ -324,6 +324,13 @@ div.pp_pic_holder { z-index:20000003 !important; }
 .entry .from-legacy-table { padding:3px; border:1px solid #eeeeee; }
 .entry .from-legacy-table img { padding:0; border:0; }
 
+
+.entry img,
+img.thumbnail,
+#portfolio .group.portfolio-img img {
+  box-sizing: border-box;
+}
+
 /* custom yarpp styles for sidebar */
 #sidebar-top-ad .widget.yarpp {
   margin: 0 auto 30px;
