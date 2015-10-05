@@ -55,7 +55,7 @@
 
 	<?php // related posts ?>
 	<div class="widget yarpp">
-		<?php if ( is_single( 'post' ) ) { related_posts(); } ?>
+		<?php if ( is_single() ) { related_posts(); } ?>
   </div>
 
   <?php // OpenX ad, gets initiated in js/adunits.js ?>
