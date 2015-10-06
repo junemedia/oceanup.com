@@ -21,7 +21,7 @@
 		<div class="bottom-widget-area">
 			<?php dynamic_sidebar($barname.$barsuffix); ?>
 
-			<?php get_template_part( 'partials/ads/openx', 'footer' ); ?>
+			<?php get_template_part( 'partials/ads/openx', '728x90btf' ); ?>
 		</div>
 	<?php endif; ?>
 

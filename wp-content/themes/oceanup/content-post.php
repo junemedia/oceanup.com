@@ -88,20 +88,9 @@ woo_post_inside_after();
 <?php endif; ?>
 </article><!-- /.post -->
 
-  <?php if (is_single()): ?>
-  <?php // OpenX mid-post ad unit, gets initiated in adunits.js ?>
-  <div class="widget adspace-widget mobile">
-    <div id="538014858_300x250POST-1" style="width:300px;height:250px;margin:0;padding:0">
-      <noscript>
-        <iframe id="87cd89828f" name="87cd89828f" src="http://ox-d.junemedia.com/w/1.0/afr?auid=538014858&cb=<?php echo uniqid(); ?>" frameborder="0" scrolling="no" width="300" height="250">
-          <a href="http://ox-d.junemedia.com/w/1.0/rc?cs=87cd89828f&cb=<?php echo uniqid(); ?>" >
-            <img src="http://ox-d.junemedia.com/w/1.0/ai?auid=538014858&cs=87cd89828f&cb=<?php echo uniqid(); ?>" border="0" alt="">
-          </a>
-        </iframe>
-      </noscript>
-    </div>
-  </div>
-  <?php endif; ?>
+<?php if (is_single()) {
+	get_template_part( 'partials/ads/openx', '300x250post1' );
+} ?>
 
 <?php
 woo_post_after();

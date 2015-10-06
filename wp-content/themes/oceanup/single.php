@@ -37,14 +37,9 @@ get_header();
 	}
 
 	woo_loop_after();
+
+	get_template_part( 'partials/ads/ci', 'post' );
 ?>
-		<?php // CrowdIgnite widget, gets populated in adunits.js ?>
-		<div class="widget widget_text ci_widget">
-			<div class="textwidget">
-				<h3 style="border:none;box-sizing:border-box;padding:0 .4em;text-transform:capitalize;text-align:left;margin:0 auto;">More from around the web</h3>
-				<div id="post_CI_widget"></div>
-			</div>
-		</div>
             </section><!-- /#main -->
             <?php woo_main_after(); ?>
 

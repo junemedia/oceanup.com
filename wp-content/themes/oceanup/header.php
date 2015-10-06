@@ -34,6 +34,6 @@
 					<?php woo_header_inside(); ?>
 				</header>
 
-			<?php get_template_part( 'partials/ads/openx', 'header' ); ?>
+			<?php get_template_part( 'partials/ads/openx', '728x90atf' ); ?>
 
 			<?php woo_header_after(); ?>
