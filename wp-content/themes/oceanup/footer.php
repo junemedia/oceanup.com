@@ -20,10 +20,8 @@
 	<?php if (is_active_sidebar($barname.$barsuffix)): ?>
 		<div class="bottom-widget-area">
 			<?php dynamic_sidebar($barname.$barsuffix); ?>
-		</div>
-	<?php elseif (is_active_sidebar($barname)): ?>
-		<div class="bottom-widget-area">
-			<?php dynamic_sidebar($barname); ?>
+
+			<?php get_template_part( 'partials/ads/openx', 'footer' ); ?>
 		</div>
 	<?php endif; ?>
 

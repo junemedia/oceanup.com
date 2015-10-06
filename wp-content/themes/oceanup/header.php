@@ -33,4 +33,7 @@
 				<header id="header" class="container">
 					<?php woo_header_inside(); ?>
 				</header>
+
+			<?php get_template_part( 'partials/ads/openx', 'header' ); ?>
+
 			<?php woo_header_after(); ?>
