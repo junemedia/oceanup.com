@@ -8,22 +8,20 @@
  * @subpackage Template
  */
 
- global $woo_options;
+	global $woo_options;
 
 	woo_footer_top();
  	woo_footer_before();
 
-	$barname = 'bottom-widget-area';
-	$barsuffix = '';
-	if (is_singular(array('attachment', 'oc_gallery'))) $barsuffix = '-photos';
 ?>
-	<?php if (is_active_sidebar($barname.$barsuffix)): ?>
-		<div class="bottom-widget-area">
-			<?php dynamic_sidebar($barname.$barsuffix); ?>
+	<div class="bottom-widget-area">
 
-			<?php get_template_part( 'partials/ads/openx', '728x90btf' ); ?>
-		</div>
-	<?php endif; ?>
+		<?php if (is_active_sidebar('bottom-widget-area')): ?>
+			<?php dynamic_sidebar('bottom-widget-area'); ?>
+		<?php endif; ?>
+
+		<?php get_template_part( 'partials/ads/openx', '728x90btf' ); ?>
+	</div>
 
 	<footer id="footer" class="col-full">
 
