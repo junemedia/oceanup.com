@@ -296,7 +296,7 @@ if (!function_exists('openx_enqueue_scripts')){
 	function openx_enqueue_scripts(){
 		wp_register_script(
 			'openx-js',
-      '//ox-d.junemedia.com/w/1.0/jstag',
+      '//junemedia-d.openx.net/w/1.0/jstag',
 			false,
 			false,
 			false
