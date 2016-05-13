@@ -39,7 +39,7 @@ body img { height:auto; }
 .alt-style-darkblue #inner-wrapper { padding: 20px 0 0 0; }
 .entry { padding-bottom: 36px;} 
 body .entry p { margin-bottom:0; padding:.6em 0; }
-.alt-style-darkblue #wrapper { margin-top: 10px; }
+.alt-style-darkblue #wrapper { margin-top: 10px; margin-bottom: 70px; }
 .post, .search .page { margin-bottom: 20px; }
 .post-meta { margin-bottom: .5em; }
 .post p.tags { margin-bottom: 4px; }
