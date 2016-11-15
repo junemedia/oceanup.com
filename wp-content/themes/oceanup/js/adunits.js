@@ -114,13 +114,11 @@ if (OU.screenContext === 'desktop' || OU.screenContext === 'tablet') {
   }
 }
 else {
-  // Post 2x2 unit
   (function() {
-    var script = document.createElement('script');
-    script.type = 'text/javascript';
-    script.src = 'http://widget.crowdignite.com/widgets/34401?_ci_wid=post_CI_widget';
-    script.async = true;
-    script.charset = 'utf-8';
-    document.getElementsByTagName('head')[0].appendChild(script);
+    var zergnet = document.createElement('script');
+    zergnet.type = 'text/javascript'; zergnet.async = true;
+    zergnet.src = (document.location.protocol == "https:" ? "https:" : "http:") + '//www.zergnet.com/zerg.js?id=43935';
+    var znscr = document.getElementsByTagName('script')[0];
+    znscr.parentNode.insertBefore(zergnet, znscr);
   })();
 }
