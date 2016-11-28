@@ -66,6 +66,16 @@ if (OU.screenContext === 'desktop') {
     { slot_id: 'footer_728x90BTF', auid: '538014854' }
   );
 
+  // Zergnet 2x2 paid unit
+  (function() {
+    var zergnet = document.createElement('script');
+    zergnet.type = 'text/javascript';
+    zergnet.async = true;
+    zergnet.src = (document.location.protocol == "https:" ? "https:" : "http:") + '//www.zergnet.com/zerg.js?id=46179';
+    var znscr = document.getElementsByTagName('script')[0];
+    znscr.parentNode.insertBefore(zergnet, znscr);
+  })();
+
   // CrowdIgnite 2x2 rail unit
   (function() {
     var script = document.createElement('script');
