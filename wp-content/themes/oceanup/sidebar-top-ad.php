@@ -19,13 +19,13 @@
 
 	<?php get_template_part( 'partials/ads/openx', '300x250btf' ); ?>
 
-	<?php get_template_part( 'partials/ads/zergnet', 'paid' ); ?>
+	<?php get_template_part( 'partials/ads/contentad', 'rail' ); ?>
 
 	<div class="widget yarpp"> <?php if ( is_single() ) { related_posts(); } ?> </div>
 
 	<?php get_template_part( 'partials/ads/openx', '160x600btf' ); ?>
 
-	<?php get_template_part( 'partials/ads/ci', 'rail' ); ?>
+	<?php get_template_part( 'partials/ads/zergnet', 'paid' ); ?>
 
 	<?php woo_sidebar( $barname.$barsuffix ); ?>
 

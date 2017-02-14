@@ -66,6 +66,25 @@ if (OU.screenContext === 'desktop') {
     { slot_id: 'footer_728x90BTF', auid: '538014854' }
   );
 
+
+  // Content.ad 1x6 right rail unit
+  (function(d) {
+    var params =
+    {
+      id: "5dddd54e-0bd5-4920-bac0-06f90d7643e3",
+      d:  "b2NlYW51cC5jb20=",
+      wid: "314792",
+      cb: (new Date()).getTime()
+    };
+
+    var qs=[];
+    for(var key in params) qs.push(key+'='+encodeURIComponent(params[key]));
+    var s = d.createElement('script');s.type='text/javascript';s.async=true;
+    var p = 'https:' == document.location.protocol ? 'https' : 'http';
+    s.src = p + "://api.content-ad.net/Scripts/widget2.aspx?" + qs.join('&');
+    d.getElementById("contentad314792").appendChild(s);
+  })(document);
+
   // Zergnet 2x2 paid unit
   (function() {
     var zergnet = document.createElement('script');
@@ -75,17 +94,6 @@ if (OU.screenContext === 'desktop') {
     var znscr = document.getElementsByTagName('script')[0];
     znscr.parentNode.insertBefore(zergnet, znscr);
   })();
-
-  // CrowdIgnite 2x2 rail unit
-  (function() {
-    var script = document.createElement('script');
-    script.type = 'text/javascript';
-    script.src = 'http://widget.crowdignite.com/widgets/34389?_ci_wid=_CI_widget_34389';
-    script.async = true;
-    script.charset = 'utf-8';
-    document.getElementsByTagName('head')[0].appendChild(script);
-  })();
-
 }
 
 /* Tablet and mobile ad units */
@@ -109,19 +117,24 @@ else {
 
 }
 
-/* CrowdIgnite units */
+/* Units at bottom of posts/loop */
 if (OU.screenContext === 'desktop' || OU.screenContext === 'tablet') {
-  // Post 3x2 unit
-  if (document.getElementById('post_CI_widget') !== null) {
-    (function() {
-      var script = document.createElement('script');
-      script.type = 'text/javascript';
-      script.src = 'http://widget.crowdignite.com/widgets/34397?_ci_wid=post_CI_widget';
-      script.async = true;
-      script.charset = 'utf-8';
-      document.getElementsByTagName('head')[0].appendChild(script);
-    })();
-  }
+  (function(d) {
+    var params =
+    {
+      id: "863aca8a-df2c-4353-8a82-9c58a6f51737",
+      d:  "b2NlYW51cC5jb20=",
+      wid: "314793",
+      cb: (new Date()).getTime()
+    };
+
+    var qs=[];
+    for(var key in params) qs.push(key+'='+encodeURIComponent(params[key]));
+    var s = d.createElement('script');s.type='text/javascript';s.async=true;
+    var p = 'https:' == document.location.protocol ? 'https' : 'http';
+    s.src = p + "://api.content-ad.net/Scripts/widget2.aspx?" + qs.join('&');
+    d.getElementById("contentad314793").appendChild(s);
+  })(document);
 }
 else {
   (function() {

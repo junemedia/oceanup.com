@@ -31,7 +31,8 @@ if (have_posts()) { $count = 0;
 		}
 	} // End WHILE Loop
 
-	get_template_part( 'partials/ads/ci', 'post' );
+	get_template_part( 'partials/ads/contentad', 'post' );
+	get_template_part( 'partials/ads/zergnet', 'post' );
 
 } else {
 	get_template_part( 'content', 'noposts' );
