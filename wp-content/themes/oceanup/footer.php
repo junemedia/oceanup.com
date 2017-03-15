@@ -57,6 +57,7 @@
 }?>
 <?php get_template_part( 'partials/ads/underdog', 'edge' ); ?>
 <?php get_template_part( 'partials/ads/liveramp' ); ?>
+<?php get_template_part( 'partials/ads/zedo', 'clb' ); ?>
 
 </body>
 </html>
