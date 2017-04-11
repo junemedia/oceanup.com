@@ -25,7 +25,6 @@ OU.setScreenContext = function setScreenContext(screenWidth) {
 }
 
 OU.screenContext = OU.setScreenContext(document.documentElement.clientWidth);
-console.info('screen context:', OU.screenContext);
 
 
 // Initialize OpenX ads array
@@ -100,7 +99,6 @@ if (OU.screenContext === 'desktop') {
 else {
   // ad at bottom of post
   if (document.getElementById('538014858_300x250POST-1') !== null) {
-    console.log('here');
     OX_ads.push({
       slot_id: '538014858_300x250POST-1',
       auid: '538014858'
