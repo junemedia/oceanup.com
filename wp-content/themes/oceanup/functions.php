@@ -323,6 +323,21 @@ if (!function_exists('ou_enqueue_scripts')){
 }
 add_action( 'wp_enqueue_scripts', 'ou_enqueue_scripts' );
 
+// Enqueue JS for Insticator ad calls
+if (!function_exists('insticator_enqueue_scripts')){
+	function insticator_enqueue_scripts(){
+		wp_register_script(
+			'insticator-init',
+      get_stylesheet_directory_uri() . '/partials/ads/insticator_init.js',
+			false,
+			false,
+			false
+		);
+		wp_enqueue_script( 'insticator-init' );
+	}
+}
+add_action( 'wp_enqueue_scripts', 'insticator_enqueue_scripts' );
+
 //Global options setup
 function oceanup_global_options(){
 	// Populate WooThemes option in array for use in theme

@@ -23,19 +23,12 @@ if (OU.screenContext === 'desktop') {
     // header banner ad
     { slot_id: 'header_728x90ATF', auid: '538014853' },
 
-    // rail big box 1
-    { slot_id: '538014855_300x250ATF', auid: '538014855' },
-
-    // rail big box 2
-    { slot_id: '538014856_300x250BTF', auid: '538014856' },
-
     // rail skyscraper
     { slot_id: '538096517_160x600BTF', auid: '538096517' },
 
     // footer banner ad
     { slot_id: 'footer_728x90BTF', auid: '538014854' }
   );
-
 
   // Content.ad 1x6 right rail unit
   (function(d) {
