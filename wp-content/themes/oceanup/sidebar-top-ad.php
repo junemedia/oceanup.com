@@ -25,7 +25,7 @@
 
 	<?php get_template_part( 'partials/ads/openx', '160x600btf' ); ?>
 
-	<?php get_template_part( 'partials/ads/zergnet', 'paid' ); ?>
+	<?php get_template_part( 'partials/ads/zergnet', 'sidebar' ); ?>
 
 	<?php woo_sidebar( $barname.$barsuffix ); ?>
 

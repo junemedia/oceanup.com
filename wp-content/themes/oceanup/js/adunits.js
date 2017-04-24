@@ -84,12 +84,12 @@ if (OU.screenContext === 'desktop') {
     d.getElementById("contentad314792").appendChild(s);
   })(document);
 
-  // Zergnet 2x2 paid unit
+  // Zergnet sidebar unit
   (function() {
     var zergnet = document.createElement('script');
     zergnet.type = 'text/javascript';
     zergnet.async = true;
-    zergnet.src = (document.location.protocol == "https:" ? "https:" : "http:") + '//www.zergnet.com/zerg.js?id=46179';
+    zergnet.src = (document.location.protocol == "https:" ? "https:" : "http:") + '//www.zergnet.com/zerg.js?id=51911';
     var znscr = document.getElementsByTagName('script')[0];
     znscr.parentNode.insertBefore(zergnet, znscr);
   })();

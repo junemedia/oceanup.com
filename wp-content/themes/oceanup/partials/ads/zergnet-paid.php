@@ -1,4 +1,4 @@
-<?php // CrowdIgnite, gets initiated in js/adunits.js ?>
+<?php // gets initiated in js/adunits.js ?>
 <div class="widget widget-text">
   <div class="textwidget">
     <div id="zergnet-widget-46179"></div>
