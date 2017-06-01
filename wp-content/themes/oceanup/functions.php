@@ -307,6 +307,22 @@ if (!function_exists('openx_enqueue_scripts')){
 }
 add_action( 'woo_head', 'openx_enqueue_scripts' );
 
+// Enqueue JS to init OU namespace
+if (!function_exists('ou_enqueue_scripts')){
+	function ou_enqueue_scripts(){
+		wp_register_script(
+			'ou-init',
+      get_stylesheet_directory_uri() . '/js/OU_init.js',
+			false,
+			false,
+			false
+		);
+
+		wp_enqueue_script( 'ou-init' );
+	}
+}
+add_action( 'wp_enqueue_scripts', 'ou_enqueue_scripts' );
+
 //Global options setup
 function oceanup_global_options(){
 	// Populate WooThemes option in array for use in theme
