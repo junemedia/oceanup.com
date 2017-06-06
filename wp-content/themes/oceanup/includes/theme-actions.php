@@ -221,8 +221,9 @@ function woo_load_responsive_meta_tags () {
 	$html .= '<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />' . "\n";
 
 	/* Remove this if not responsive design */
-	$html .= "\n" . '<!--  Mobile viewport scale -->' . "\n";
-	$html .= '<meta content="initial-scale=1.0, maximum-scale=1.0, user-scalable=yes" name="viewport"/>' . "\n";
+  /* commented out by JS 06/06/2017, moved higher up in head */
+	/* $html .= "\n" . '<!--  Mobile viewport scale -->' . "\n"; */
+	/* $html .= '<meta content="initial-scale=1.0, maximum-scale=1.0, user-scalable=yes" name="viewport"/>' . "\n"; */
 
 	echo $html;
 } // End woo_load_responsive_meta_tags()

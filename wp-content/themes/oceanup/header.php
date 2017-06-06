@@ -12,6 +12,8 @@
 <head>
 <link rel="publisher" href="https://plus.google.com/112032429635316978822"/>
 <meta charset="<?php echo esc_attr( get_bloginfo( 'charset' ) ); ?>" />
+<!--  Mobile viewport scale -->
+<meta content="initial-scale=1.0, maximum-scale=1.0, user-scalable=yes" name="viewport"/>
 <title><?php woo_title(); ?></title>
 <?php woo_meta(); ?>
 <?php qsou_meta(); ?>
