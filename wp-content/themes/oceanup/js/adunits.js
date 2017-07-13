@@ -23,6 +23,9 @@ if (OU.screenContext === 'desktop') {
     // header banner ad
     { slot_id: 'header_728x90ATF', auid: '538014853' },
 
+    // rail big box 1
+    { slot_id: '538014855_300x250ATF', auid: '538014855' },
+
     // rail skyscraper
     { slot_id: '538096517_160x600BTF', auid: '538096517' },
 

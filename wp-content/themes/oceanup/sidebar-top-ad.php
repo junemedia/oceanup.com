@@ -15,6 +15,8 @@
 <aside id="sidebar-top-ad">
 	<?php woo_sidebar_inside_before(); ?>
 
+  <?php get_template_part( 'partials/ads/openx', '300x250atf' ); ?>
+
 	<?php get_template_part( 'partials/ads/insticator', '300x850' ); ?>
 
 	<?php get_template_part( 'partials/ads/contentad', 'rail' ); ?>
