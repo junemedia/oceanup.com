@@ -1,5 +1,5 @@
 <!-- Insticator API Fire Widget -->
-<div id="insticator-container">
+<div id="insticator-container" class="widget adspace-widget" style="margin: 0 auto 20px;width: 300px;">
   <div id="div-insticator-ad-1" adonis-marker></div>
   <div id="insticator-embed"></div>
   <div id="div-insticator-ad-2" adonis-marker></div>
