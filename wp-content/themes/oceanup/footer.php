@@ -56,7 +56,6 @@
   get_template_part( 'partials/ads/swoop' );
 }?>
 <?php get_template_part( 'partials/ads/underdog', 'edge' ); ?>
-<?php get_template_part( 'partials/ads/liveramp' ); ?>
 
 </body>
 </html>
