@@ -16,28 +16,16 @@
 
 // ** MySQL settings - You can get this info from your web host ** //
 /** The name of the database for WordPress */
-define('WP_CACHE', true); //Added by WP-Cache Manager
-define( 'WPCACHEHOME', '/home/oceanup/public_html/wp-content/plugins/wp-super-cache/' ); //Added by WP-Cache Manager
+define('DB_NAME', 'database_name_here');
 
-/*
- * https://markjaquith.wordpress.com/2011/06/24/wordpress-local-dev-tips/
- */
-if ( file_exists( dirname( __FILE__ ) . '/local-config.php' ) ) {
-  include( dirname( __FILE__ ) . '/local-config.php' );
-  #define( 'WP_LOCAL_DEV', true );
-} else {
-  define('DB_NAME', 'oceanup_www');
-  // wpadmin user ouadmin, asdftyghbn
-  /** MySQL database username */
-  define('DB_USER', 'oceanup_www');
+/** MySQL database username */
+define('DB_USER', 'username_here');
 
-  /** MySQL database password */
-  #define('DB_PASSWORD', 'pun$vmaChat');
-  define('DB_PASSWORD', 'UPGtm2aiwNYhdEez');
+/** MySQL database password */
+define('DB_PASSWORD', 'password_here');
 
-  /** MySQL hostname */
-  define('DB_HOST', '2d7e6c49ff630b3899942e9d35b02e566c4f405a.rackspaceclouddb.com');
-}
+/** MySQL hostname */
+define('DB_HOST', 'localhost');
 
 /** Database Charset to use in creating database tables. */
 define('DB_CHARSET', 'utf8');
@@ -74,16 +62,6 @@ define('NONCE_SALT',       'put your unique phrase here');
 $table_prefix  = 'wp_';
 
 /**
- * WordPress Localized Language, defaults to English.
- *
- * Change this to localize WordPress. A corresponding MO file for the chosen
- * language must be installed to wp-content/languages. For example, install
- * de_DE.mo to wp-content/languages and set WPLANG to 'de_DE' to enable German
- * language support.
- */
-define('WPLANG', '');
-
-/**
  * For developers: WordPress debugging mode.
  *
  * Change this to true to enable the display of notices during development.
@@ -96,8 +74,7 @@ define('WP_DEBUG', false);
 
 /** Absolute path to the WordPress directory. */
 if ( !defined('ABSPATH') )
-	define('ABSPATH', dirname(__FILE__) . '/');
+  define('ABSPATH', dirname(__FILE__) . '/');
 
 /** Sets up WordPress vars and included files. */
 require_once(ABSPATH . 'wp-settings.php');
-
