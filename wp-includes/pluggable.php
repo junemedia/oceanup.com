@@ -669,7 +669,10 @@ function wp_validate_auth_cookie($cookie = '', $scheme = '') {
 	$pass_frag = substr($user->user_pass, 8, 4);
 
 	$key = wp_hash( $username . '|' . $pass_frag . '|' . $expiration . '|' . $token, $scheme );
-	$hash = hash_hmac( 'sha256', $username . '|' . $expiration . '|' . $token, $key );
+
+	// If ext/hash is not present, compat.php's hash_hmac() does not support sha256.
+	$algo = function_exists( 'hash' ) ? 'sha256' : 'sha1';
+	$hash = hash_hmac( $algo, $username . '|' . $expiration . '|' . $token, $key );
 
 	if ( ! hash_equals( $hash, $hmac ) ) {
 		/**
@@ -734,7 +737,10 @@ function wp_generate_auth_cookie( $user_id, $expiration, $scheme = 'auth', $toke
 	$pass_frag = substr($user->user_pass, 8, 4);
 
 	$key = wp_hash( $user->user_login . '|' . $pass_frag . '|' . $expiration . '|' . $token, $scheme );
-	$hash = hash_hmac( 'sha256', $user->user_login . '|' . $expiration . '|' . $token, $key );
+
+	// If ext/hash is not present, compat.php's hash_hmac() does not support sha256.
+	$algo = function_exists( 'hash' ) ? 'sha256' : 'sha1';
+	$hash = hash_hmac( $algo, $user->user_login . '|' . $expiration . '|' . $token, $key );
 
 	$cookie = $user->user_login . '|' . $expiration . '|' . $token . '|' . $hash;
 
@@ -1002,18 +1008,14 @@ function auth_redirect() {
 		}
 	}
 
-	if ( is_user_admin() ) {
-		$scheme = 'logged_in';
-	} else {
-		/**
-		 * Filter the authentication redirect scheme.
-		 *
-		 * @since 2.9.0
-		 *
-		 * @param string $scheme Authentication redirect scheme. Default empty.
-		 */
-		$scheme = apply_filters( 'auth_redirect_scheme', '' );
-	}
+	/**
+	 * Filters the authentication redirect scheme.
+	 *
+	 * @since 2.9.0
+	 *
+	 * @param string $scheme Authentication redirect scheme. Default empty.
+	 */
+	$scheme = apply_filters( 'auth_redirect_scheme', '' );
 
 	if ( $user_id = wp_validate_auth_cookie( '',  $scheme) ) {
 		/**
@@ -1241,7 +1243,7 @@ if ( !function_exists('wp_validate_redirect') ) :
  * @return string redirect-sanitized URL
  **/
 function wp_validate_redirect($location, $default = '') {
-	$location = trim( $location );
+	$location = trim( $location, " \t\n\r\0\x08\x0B" );
 	// browsers will assume 'http' is your protocol, and will obey a redirect to a URL starting with '//'
 	if ( substr($location, 0, 2) == '//' )
 		$location = 'http:' . $location;
@@ -1249,7 +1251,8 @@ function wp_validate_redirect($location, $default = '') {
 	// In php 5 parse_url may fail if the URL query part contains http://, bug #38143
 	$test = ( $cut = strpos($location, '?') ) ? substr( $location, 0, $cut ) : $location;
 
-	$lp  = parse_url($test);
+	// @-operator is used to prevent possible warnings in PHP < 5.3.3.
+	$lp = @parse_url($test);
 
 	// Give up if malformed URL
 	if ( false === $lp )
@@ -1259,9 +1262,17 @@ function wp_validate_redirect($location, $default = '') {
 	if ( isset($lp['scheme']) && !('http' == $lp['scheme'] || 'https' == $lp['scheme']) )
 		return $default;
 
-	// Reject if scheme is set but host is not. This catches urls like https:host.com for which parse_url does not set the host field.
-	if ( isset($lp['scheme'])  && !isset($lp['host']) )
+	// Reject if certain components are set but host is not. This catches urls like https:host.com for which parse_url does not set the host field.
+	if ( ! isset( $lp['host'] ) && ( isset( $lp['scheme'] ) || isset( $lp['user'] ) || isset( $lp['pass'] ) || isset( $lp['port'] ) ) ) {
 		return $default;
+	}
+
+	// Reject malformed components parse_url() can return on odd inputs.
+	foreach ( array( 'user', 'pass', 'host' ) as $component ) {
+		if ( isset( $lp[ $component ] ) && strpbrk( $lp[ $component ], ':/?#@' ) ) {
+			return $default;
+		}
+	}
 
 	$wpp = parse_url(home_url());
 
@@ -1933,7 +1944,7 @@ function wp_check_password($password, $hash, $user_id = '') {
 
 	// If the hash is still md5...
 	if ( strlen($hash) <= 32 ) {
-		$check = ( $hash == md5($password) );
+		$check = hash_equals( $hash, md5( $password ) );
 		if ( $check && $user_id ) {
 			// Rehash using new hash.
 			wp_set_password($password, $user_id);

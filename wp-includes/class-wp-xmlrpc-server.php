@@ -320,6 +320,11 @@ class wp_xmlrpc_server extends IXR_Server {
 			if ( isset($meta['id']) ) {
 				$meta['id'] = (int) $meta['id'];
 				$pmeta = get_metadata_by_mid( 'post', $meta['id'] );
+
+				if ( ! $pmeta || $pmeta->post_id != $post_id ) {
+					continue;
+				}
+
 				if ( isset($meta['key']) ) {
 					$meta['key'] = wp_unslash( $meta['key'] );
 					if ( $meta['key'] !== $pmeta->meta_key )
@@ -1138,6 +1143,56 @@ class wp_xmlrpc_server extends IXR_Server {
 		return $count > 1;
 	}
 
+	private function _validate_boolean( $var ) {
+		if ( is_bool( $var ) ) {
+			return $var;
+		}
+
+		if ( is_string( $var ) && 'false' === strtolower( $var ) ) {
+			return false;
+		}
+
+		return (bool) $var;
+	}
+
+	/**
+	 * Encapsulate the logic for sticking a post
+	 * and determining if the user has permission to do so
+	 *
+	 * @since 4.3.0
+	 * @access private
+	 *
+	 * @param array $post_data
+	 * @param bool  $update
+	 * @return void|IXR_Error
+	 */
+	private function _toggle_sticky( $post_data, $update = false ) {
+		$post_type = get_post_type_object( $post_data['post_type'] );
+
+		// Private and password-protected posts cannot be stickied.
+		if ( 'private' === $post_data['post_status'] || ! empty( $post_data['post_password'] ) ) {
+			// Error if the client tried to stick the post, otherwise, silently unstick.
+			if ( ! empty( $post_data['sticky'] ) ) {
+				return new IXR_Error( 401, __( 'Sorry, you cannot stick a private post.' ) );
+			}
+
+			if ( $update ) {
+				unstick_post( $post_data['ID'] );
+			}
+		} elseif ( isset( $post_data['sticky'] ) )  {
+			if ( ! current_user_can( $post_type->cap->edit_others_posts ) ) {
+				return new IXR_Error( 401, __( 'Sorry, you are not allowed to stick this post.' ) );
+			}
+
+			$sticky = $this->_validate_boolean( $post_data['sticky'] );
+			if ( $sticky ) {
+				stick_post( $post_data['ID'] );
+			} else {
+				unstick_post( $post_data['ID'] );
+			}
+		}
+	}
+
 	/**
 	 * Helper method for wp_newPost and wp_editPost, containing shared logic.
 	 *
@@ -1148,10 +1203,31 @@ class wp_xmlrpc_server extends IXR_Server {
 	 * @param array $content_struct Post data to insert.
 	 */
 	protected function _insert_post( $user, $content_struct ) {
-		$defaults = array( 'post_status' => 'draft', 'post_type' => 'post', 'post_author' => 0,
-			'post_password' => '', 'post_excerpt' => '', 'post_content' => '', 'post_title' => '' );
+		$defaults = array(
+			'post_status'    => 'draft',
+			'post_type'      => 'post',
+			'post_author'    => null,
+			'post_password'  => null,
+			'post_excerpt'   => null,
+			'post_content'   => null,
+			'post_title'     => null,
+			'post_date'      => null,
+			'post_date_gmt'  => null,
+			'post_format'    => null,
+			'post_name'      => null,
+			'post_thumbnail' => null,
+			'post_parent'    => null,
+			'ping_status'    => null,
+			'comment_status' => null,
+			'custom_fields'  => null,
+			'terms_names'    => null,
+			'terms'          => null,
+			'sticky'         => null,
+			'enclosure'      => null,
+			'ID'             => null,
+		);
 
-		$post_data = wp_parse_args( $content_struct, $defaults );
+		$post_data = wp_parse_args( array_intersect_key( $content_struct, $defaults ), $defaults );
 
 		$post_type = get_post_type_object( $post_data['post_type'] );
 		if ( ! $post_type )
@@ -1230,20 +1306,9 @@ class wp_xmlrpc_server extends IXR_Server {
 		$post_ID = $post_data['ID'];
 
 		if ( $post_data['post_type'] == 'post' ) {
-			// Private and password-protected posts cannot be stickied.
-			if ( $post_data['post_status'] == 'private' || ! empty( $post_data['post_password'] ) ) {
-				// Error if the client tried to stick the post, otherwise, silently unstick.
-				if ( ! empty( $post_data['sticky'] ) )
-					return new IXR_Error( 401, __( 'Sorry, you cannot stick a private post.' ) );
-				if ( $update )
-					unstick_post( $post_ID );
-			} elseif ( isset( $post_data['sticky'] ) )  {
-				if ( ! current_user_can( $post_type->cap->edit_others_posts ) )
-					return new IXR_Error( 401, __( 'Sorry, you are not allowed to stick this post.' ) );
-				if ( $post_data['sticky'] )
-					stick_post( $post_ID );
-				else
-					unstick_post( $post_ID );
+			$error = $this->_toggle_sticky( $post_data, $update );
+			if ( $error ) {
+				return $error;
 			}
 		}
 
@@ -1343,9 +1408,6 @@ class wp_xmlrpc_server extends IXR_Server {
 
 			$post_data['tax_input'] = $terms;
 			unset( $post_data['terms'], $post_data['terms_names'] );
-		} else {
-			// do not allow direct submission of 'tax_input', clients must use 'terms' and/or 'terms_names'
-			unset( $post_data['tax_input'], $post_data['post_category'], $post_data['tags_input'] );
 		}
 
 		if ( isset( $post_data['post_format'] ) ) {
@@ -4617,10 +4679,12 @@ class wp_xmlrpc_server extends IXR_Server {
 
 		// Only posts can be sticky
 		if ( $post_type == 'post' && isset( $content_struct['sticky'] ) ) {
-			if ( $content_struct['sticky'] == true )
-				stick_post( $post_ID );
-			elseif ( $content_struct['sticky'] == false )
-				unstick_post( $post_ID );
+			$data = $postdata;
+			$data['sticky'] = $content_struct['sticky'];
+			$error = $this->_toggle_sticky( $data );
+			if ( $error ) {
+				return $error;
+			}
 		}
 
 		if ( isset($content_struct['custom_fields']) )
@@ -4902,11 +4966,12 @@ class wp_xmlrpc_server extends IXR_Server {
 
 		$tags_input = isset( $content_struct['mt_keywords'] ) ? $content_struct['mt_keywords'] : null;
 
-		if ( ('publish' == $post_status) ) {
-			if ( ( 'page' == $post_type ) && !current_user_can('publish_pages') )
-				return new IXR_Error(401, __('Sorry, you do not have the right to publish this page.'));
-			else if ( !current_user_can('publish_posts') )
-				return new IXR_Error(401, __('Sorry, you do not have the right to publish this post.'));
+		if ( 'publish' == $post_status || 'private' == $post_status ) {
+			if ( 'page' == $post_type && ! current_user_can( 'publish_pages' ) ) {
+				return new IXR_Error( 401, __( 'Sorry, you do not have the right to publish this page.' ) );
+			} elseif ( ! current_user_can( 'publish_posts' ) ) {
+				return new IXR_Error( 401, __( 'Sorry, you do not have the right to publish this post.' ) );
+			}
 		}
 
 		if ( $post_more )
@@ -4946,10 +5011,13 @@ class wp_xmlrpc_server extends IXR_Server {
 
 		// Only posts can be sticky
 		if ( $post_type == 'post' && isset( $content_struct['sticky'] ) ) {
-			if ( $content_struct['sticky'] == true )
-				stick_post( $post_ID );
-			elseif ( $content_struct['sticky'] == false )
-				unstick_post( $post_ID );
+			$data = $newpost;
+			$data['sticky'] = $content_struct['sticky'];
+			$data['post_type'] = 'post';
+			$error = $this->_toggle_sticky( $data, true );
+			if ( $error ) {
+				return $error;
+			}
 		}
 
 		if ( isset($content_struct['custom_fields']) )

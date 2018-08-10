@@ -659,6 +659,9 @@ $_old_files = array(
 'wp-includes/js/tinymce/plugins/paste/editor_plugin_src.js',
 'wp-includes/js/tinymce/plugins/paste/pastetext.htm',
 'wp-includes/js/tinymce/langs/wp-langs.php',
+// 4.9.2
+'wp-includes/js/mediaelement/flashmediaelement.swf',
+'wp-includes/js/mediaelement/silverlightmediaelement.xap',
 );
 
 /**
@@ -1008,8 +1011,15 @@ function update_core($from, $to) {
 		$old_file = $to . $old_file;
 		if ( !$wp_filesystem->exists($old_file) )
 			continue;
-		$wp_filesystem->delete($old_file, true);
+
+		// If the file isn't deleted, try writing an empty string to the file instead.
+		if ( ! $wp_filesystem->delete( $old_file, true ) && $wp_filesystem->is_file( $old_file ) ) {
+			$wp_filesystem->put_contents( $old_file, '' );
+		}
 	}
+
+	// Remove any Genericons example.html's from the filesystem
+	_upgrade_422_remove_genericons();
 
 	// Upgrade DB with separate request
 	/** This filter is documented in wp-admin/includes/update-core.php */
@@ -1149,3 +1159,67 @@ window.location = 'about.php?updated';
 	exit();
 }
 add_action( '_core_updated_successfully', '_redirect_to_about_wordpress' );
+
+/**
+ * Cleans up Genericons example files.
+ *
+ * @since 4.2.2
+ */
+function _upgrade_422_remove_genericons() {
+	global $wp_theme_directories, $wp_filesystem;
+
+	// A list of the affected files using the filesystem absolute paths.
+	$affected_files = array();
+
+	// Themes
+	foreach ( $wp_theme_directories as $directory ) {
+		$affected_theme_files = _upgrade_422_find_genericons_files_in_folder( $directory );
+		$affected_files       = array_merge( $affected_files, $affected_theme_files );
+	}
+
+	// Plugins
+	$affected_plugin_files = _upgrade_422_find_genericons_files_in_folder( WP_PLUGIN_DIR );
+	$affected_files        = array_merge( $affected_files, $affected_plugin_files );
+
+	foreach ( $affected_files as $file ) {
+		$gen_dir = $wp_filesystem->find_folder( trailingslashit( dirname( $file ) ) );
+		if ( empty( $gen_dir ) ) {
+			continue;
+		}
+
+		// The path when the file is accessed via WP_Filesystem may differ in the case of FTP
+		$remote_file = $gen_dir . basename( $file );
+
+		if ( ! $wp_filesystem->exists( $remote_file ) ) {
+			continue;
+		}
+
+		if ( ! $wp_filesystem->delete( $remote_file, false, 'f' ) ) {
+			$wp_filesystem->put_contents( $remote_file, '' );
+		}
+	}
+}
+
+/**
+ * Recursively find Genericons example files in a given folder.
+ *
+ * @ignore
+ * @since 4.2.2
+ *
+ * @param string $directory Directory path. Expects trailingslashed.
+ * @return array
+ */
+function _upgrade_422_find_genericons_files_in_folder( $directory ) {
+	$directory = trailingslashit( $directory );
+	$files     = array();
+
+	if ( file_exists( "{$directory}example.html" ) && false !== strpos( file_get_contents( "{$directory}example.html" ), '<title>Genericons</title>' ) ) {
+		$files[] = "{$directory}example.html";
+	}
+
+	foreach ( glob( $directory . '*', GLOB_ONLYDIR ) as $dir ) {
+		$files = array_merge( $files, _upgrade_422_find_genericons_files_in_folder( $dir ) );
+	}
+
+	return $files;
+}

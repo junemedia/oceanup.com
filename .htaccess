@@ -1,12 +1,24 @@
 RewriteEngine On
 RewriteRule /trackback$ - [F,L]
 
+
 <IfModule mod_alias.c>
 	RedirectMatch 403 /xmlrpc.php
 </IfModule>
 
 <IfModule mod_alias.c>
 	RedirectMatch 403 /xmlrpc.php
+</IfModule>
+
+# Added 2015-10-22
+# Start Bad Bot Prevention
+<IfModule mod_setenvif.c>
+  SetEnvIfNoCase User-Agent "^Typhoeus.*" bad_bot
+  <Limit GET POST PUT>
+    Order Allow,Deny
+    Allow from all
+    Deny from env=bad_bot
+  </Limit>
 </IfModule>
 
 # BEGIN WordPress
