@@ -1,5 +1,4 @@
 error_log
-*.sw*
 
 # https://markjaquith.wordpress.com/2011/06/24/wordpress-local-dev-tips/
 local-config.php
