@@ -1,8 +1,0 @@
-[11-Sep-2013 22:25:29 UTC] PHP Warning:  call_user_func_array() expects parameter 1 to be a valid callback, function 'accord_theme_setup' not found or invalid function name in /home/quadshot/dev-sites/sites/oceanup/dev/wp-includes/plugin.php on line 406
-[25-Sep-2013 01:56:20 UTC] PHP Parse error:  syntax error, unexpected 'h' (T_STRING), expecting '(' in /home/quadshot/dev-sites/sites/oceanup/dev/wp-content/themes/oceanup/functions.php on line 3
-[25-Sep-2013 01:59:52 UTC] PHP Parse error:  syntax error, unexpected end of file in /home/quadshot/dev-sites/sites/oceanup/dev/wp-content/themes/oceanup/functions.php on line 6
-[04-Oct-2013 01:47:55 UTC] PHP Parse error:  syntax error, unexpected '}' in /home/quadshot/dev-sites/sites/oceanup/dev/wp-content/themes/oceanup/functions.php on line 102
-[08-Oct-2013 12:55:22 UTC] PHP Fatal error:  Call to undefined function has_attachment() in /home/quadshot/dev-sites/sites/oceanup/dev/wp-content/themes/oceanup/functions.php on line 77
-[08-Oct-2013 12:56:59 UTC] PHP Fatal error:  Call to undefined function has_attachment() in /home/quadshot/dev-sites/sites/oceanup/dev/wp-content/themes/oceanup/functions.php on line 77
-[08-Oct-2013 13:21:25 UTC] PHP Parse error:  syntax error, unexpected 'return' (T_RETURN) in /home/quadshot/dev-sites/sites/oceanup/dev/wp-content/themes/oceanup/functions.php on line 103
-[08-Oct-2013 13:21:27 UTC] PHP Parse error:  syntax error, unexpected 'return' (T_RETURN) in /home/quadshot/dev-sites/sites/oceanup/dev/wp-content/themes/oceanup/functions.php on line 103
