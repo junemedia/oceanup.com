@@ -22,7 +22,8 @@
 <?php wp_head(); ?>
 <?php woo_head(); ?>
 
-<meta name="google-site-verification" content="TgIB1gz9bK1CokHPqDr6z6K6RPM5_qPOoEdjghctIas" />
+<?php // site owner: silvercarrot2012@gmail.com ?>
+<meta name="google-site-verification" content="20ZLldDjVYGq2rFw1XgNrYmcgYnGLxJzN90k6dGnbGk" />
 </head>
 <body <?php body_class(); ?>>
 
