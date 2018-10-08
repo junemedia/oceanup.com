@@ -17,8 +17,6 @@
 
   <?php get_template_part( 'partials/ads/openx', '300x250atf' ); ?>
 
-	<?php get_template_part( 'partials/ads/insticator', '300x850' ); ?>
-
 	<?php get_template_part( 'partials/ads/contentad', 'rail' ); ?>
 
 	<div class="widget yarpp"> <?php if ( is_single() ) { related_posts(); } ?> </div>
