@@ -113,11 +113,6 @@ appnexus.com, 1356, RESELLER, f5ab79cb980f11d1
 emxdgt.com, 326, RESELLER, 1e1d41537f7cad7f
 
 
-#   Content.ad
-# ----------------------------------------------------------------------
-content-ad.net,235638,DIRECT
-
-
 #   BidGear
 # ----------------------------------------------------------------------
 bidgear.com, 1702, DIRECT

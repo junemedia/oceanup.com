@@ -38,7 +38,6 @@ get_header();
 
 	woo_loop_after();
 
-	get_template_part( 'partials/ads/contentad', 'post' );
 	get_template_part( 'partials/ads/zergnet', 'post' );
 ?>
             </section><!-- /#main -->
