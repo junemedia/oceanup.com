@@ -15,11 +15,7 @@
 <aside id="sidebar-top-ad">
 	<?php woo_sidebar_inside_before(); ?>
 
-  <?php get_template_part( 'partials/ads/openx', '300x250atf' ); ?>
-
 	<div class="widget yarpp"> <?php if ( is_single() ) { related_posts(); } ?> </div>
-
-	<?php get_template_part( 'partials/ads/openx', '160x600btf' ); ?>
 
 	<?php get_template_part( 'partials/ads/zergnet', 'sidebar' ); ?>
 

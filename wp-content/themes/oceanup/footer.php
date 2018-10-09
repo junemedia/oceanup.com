@@ -15,12 +15,9 @@
 
 ?>
 	<div class="bottom-widget-area">
-
 		<?php if (is_active_sidebar('bottom-widget-area')): ?>
 			<?php dynamic_sidebar('bottom-widget-area'); ?>
 		<?php endif; ?>
-
-		<?php get_template_part( 'partials/ads/openx', '728x90btf' ); ?>
 	</div>
 
 	<footer id="footer" class="col-full">

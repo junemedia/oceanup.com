@@ -88,10 +88,6 @@ woo_post_inside_after();
 <?php endif; ?>
 </article><!-- /.post -->
 
-<?php if (is_single()) {
-	get_template_part( 'partials/ads/openx', '300x250post1' );
-} ?>
-
 <?php
 woo_post_after();
 $comm = $settings['comments'];
