@@ -43,13 +43,6 @@ if (OU.screenContext === 'desktop') {
     znscr.parentNode.insertBefore(zergnet, znscr);
   })();
 
-  // 33Across SiteCTRL
-  var Tynt=Tynt||[];Tynt.push('dDKOmWzM4r56O3aKltUXmc');
-  (function(){var h,s=document.createElement('script');
-  s.src=(window.location.protocol==='https:'?
-      'https':'http')+'://cdn.tynt.com/ti.js';
-  h=document.getElementsByTagName('script')[0];
-  h.parentNode.insertBefore(s,h);})();
 }
 
 /* Tablet and mobile ad units */
