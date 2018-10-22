@@ -24,6 +24,9 @@
 
 <?php // site owner: silvercarrot2012@gmail.com ?>
 <meta name="google-site-verification" content="20ZLldDjVYGq2rFw1XgNrYmcgYnGLxJzN90k6dGnbGk" />
+
+<?php get_template_part( 'partials/ads/adthrive', 'js' ); ?>
+
 </head>
 <body <?php body_class(); ?>>
 
