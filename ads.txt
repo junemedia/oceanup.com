@@ -1,8 +1,8 @@
 # ads.txt oceanup.com
-# 2018-10-22
+# 2018-10-29
 # ----------------------------------------------------------------------
 
-#   CafeMeia/AdThrive
+#   CafeMedia/AdThrive
 # ----------------------------------------------------------------------
 # CafeMedia ads.txt v2.5
 google.com, pub-8501674430909082, DIRECT #banner
@@ -54,3 +54,8 @@ triplelift.com, 5895, DIRECT, 6c33edb13117fd86 #banner
 undertone.com, 2002, DIRECT #banner
 appnexus.com, 2234, RESELLER #banner
 openx.com, 537153564, RESELLER, 6a698e2ec38604c6 #banner
+
+
+#   Lockerdome
+# ----------------------------------------------------------------------
+lockerdome.com, 8567891478090497, DIRECT

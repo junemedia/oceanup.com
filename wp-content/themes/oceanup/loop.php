@@ -24,6 +24,11 @@ if (have_posts()) { $count = 0;
 <?php
 	while (have_posts()) { the_post(); $count++;
 		woo_get_template_part( 'content', get_post_type() );
+    if ( $count == 2 ) {
+      echo '<div class="widget">';
+      get_template_part( 'partials/ads/lockerdome' );
+      echo '</div>';
+    }
 	} // End WHILE Loop
 
 	get_template_part( 'partials/ads/zergnet', 'post' );

@@ -88,6 +88,12 @@ woo_post_inside_after();
 <?php endif; ?>
 </article><!-- /.post -->
 
+<?php if (is_single()) {
+  echo '<div class="widget">';
+  get_template_part( 'partials/ads/lockerdome' );
+  echo '</div>';
+} ?>
+
 <?php
 woo_post_after();
 $comm = $settings['comments'];
