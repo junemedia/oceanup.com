@@ -163,20 +163,6 @@ if ( ! function_exists( 'oceanup_nav_social' ) ) {
 add_action( 'woo_nav_after', 'oceanup_nav_social', 30 );
 register_nav_menu( 'social-menu', 'Social Menu' );
 
-// Tag Drop down
-if ( ! function_exists( 'oceanup_tag_dropdown' ) ){
-	function oceanup_tag_dropdown(){
-		echo '<div id="star-hunt-container" class="box left"><a href="#" id="flexcroll-toggle">Star Hunt</a><span class="arrow"></span><div class="flexcroll" id="flex-list">';
-		$tags = get_tags();
-		foreach ( $tags as $tag ) {
-			$tag_link = get_tag_link( $tag->term_id );
-			echo "<a href='{$tag_link}' title='{$tag->name} Tag' class='{$tag->slug}'>{$tag->name}</a>";
-		}
-		echo '</div></div>';
-	}
-}
-add_action( 'woo_nav_after', 'oceanup_tag_dropdown', 40 );
-
 // Search Box
 if ( ! function_exists( 'oceanup_search_field' ) ) {
 	function oceanup_search_field() {
