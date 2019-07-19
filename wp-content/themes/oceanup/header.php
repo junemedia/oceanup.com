@@ -18,6 +18,8 @@
 <?php woo_meta(); ?>
 <?php qsou_meta(); ?>
 
+<meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests;block-all-mixed-content">
+
 <link rel="pingback" href="<?php echo esc_url( get_bloginfo( 'pingback_url' ) ); ?>" />
 <?php wp_head(); ?>
 <?php woo_head(); ?>
